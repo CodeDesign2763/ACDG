@@ -45,7 +45,7 @@
 
 ### Функциональные требования
 
-1.	Лицензия: GNU GPL3.
+1.	Лицензия: GNU GPLv3.
 2.	ЯП: Java (OpenJDK).
 3. 	Библиотека модульного тестирования: JUnit.
 4.	Средство для генерации UML-диаграмм: PlantUML.
@@ -154,7 +154,7 @@ dot -Tpng NamesList.dot -o NamesList.png
 
 ![GPLv3 Logo](./Elaboration/1/GPLv3.png)
 
-Если включать jar-файлы **PlantUML** и **Bullwinkle** в итоговый jar-файл, то, основываясь на данных о совместимости лицензий, наиболее оптимальным видится использование лицензии [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html). О некоторых ее преимуществах можно почитать на сайте [GNU](https://www.gnu.org/licenses/rms-why-gplv3.html). Обновление лицензии GPLv2 до GPLv3 [допустимо](https://www.gnu.org/licenses/gpl-faq.html#v3HowToUpgrade). 
+Если включать jar-файлы **PlantUML** и **Bullwinkle** в итоговый архив, то, основываясь на данных о совместимости лицензий, наиболее оптимальным видится использование лицензии [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html). О некоторых ее преимуществах можно почитать на сайте [GNU](https://www.gnu.org/licenses/rms-why-gplv3.html). Обновление лицензии GPLv2 до GPLv3 [допустимо](https://www.gnu.org/licenses/gpl-faq.html#v3HowToUpgrade). 
 
 ##### Как применить лицензию GPLv3 к своей программе?
 [Официальная инструкция](https://www.gnu.org/licenses/gpl-howto.html) по применению лицензий GNU к своим программам. 
