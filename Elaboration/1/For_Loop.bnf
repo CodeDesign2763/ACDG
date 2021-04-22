@@ -1,0 +1,27 @@
+#Грамматика для синтаксического анализа цикла For в Си
+
+#Стартовый символ - первый символ (ForLoop)
+
+
+<ForLoop> := for ( <ForLoopHeadCmd1> <ForLoopHeadCmd2>
+ <ForLoopHeadCmd3> ) { <BodyCmdList> };
+
+<BodyCmdList> := <BodyCmdSublist> | <Command>;
+#Дополнительные случаи для уменьшения глубины рекурсии
+<BodyCmdSublist> := <Command> <Command> <Command> <Command> <Command>
+ <Command> <Command> <Command> <Command> <Command> <BodyCmdList> |
+ <Command> <Command> <Command> <Command> <Command> <BodyCmdList> |
+  <Command> <BodyCmdList>;
+
+<ForLoopHeadCmd1> := <Command>;
+<ForLoopHeadCmd2> := <Command>;
+#<ForLoopHeadCmd3> := ^[A-z]([^\)])*((\+\+)|(\-\-));
+# *? - ленивая квантификация - поиск строки минимальной длины
+<ForLoopHeadCmd3> := ^[A-z].*?((\+\+)|(\-\-));
+
+#[^A] - не A
+#Если не использовать [^\u003b], то из двух команд
+#asd;def; - будет считаны не "asd;" и "def;", а "asd;def;"
+<Command> := ^[A-z]([^\u003b])*\u003b;
+
+
