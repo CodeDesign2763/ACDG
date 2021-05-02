@@ -123,7 +123,7 @@ dot -Tpng NamesList.dot -o NamesList.png
 
 На этот раз попробуем провести синтаксический анализ цикла **For** на языке **C**. 
 
-Сначала был подготовлен [тестовый пример](./Elaboration/1/For_Loop_Test.txt). Затем описана [грамматика](./Elaboration/1/For_Loop.). Дерево синтаксического разбора представлено ниже:
+Сначала был подготовлен [тестовый пример](./Elaboration/1/For_Loop_Test.txt). Затем описана [грамматика](./Elaboration/1/For_Loop.bnf). Дерево синтаксического разбора представлено ниже:
 
 ![Дерево синтаксического разбора для примера с циклом For](./Elaboration/1/For_Loop_Test.png).
 
@@ -222,6 +222,39 @@ dot -Tpng NamesList.dot -o NamesList.png
 ##### Реляционная модель
 
 ![Реляционная модель](./Elaboration/2/relational_scheme.png)
+
+### Итерация 3
+
+Разработка MWE, демонстрирующего использование **JUnit** для автоматического модульного тестирования.
+
+#### Справочная информация по JUnit
+
+Справочная информация по фреймворку **JUnit** представлена, например, на [dev.to](https://dev.to/saiupadhyayula/junit-5-tutorial-for-beginners-o8a#chapter-7). Вопрос запуска тестов при помощи **CLI** освещается, например, на [junit.org](https://junit.org/junit5/docs/current/user-guide/#running-tests-console-launcher) и на [stackoverflow.com](https://stackoverflow.com/questions/2235276/how-to-run-junit-test-cases-from-the-command-line).
+
+#### MWE
+
+Далее демонстрируется использование **Jupiter / JUnit 5** на компьютере с ОС Debian и IDE Geany. 
+
+Необходимо:
+
+1.	Создать [класс](./Elaboration/3/ClassForTesting.java), который будет тестироваться.
+2.	Создать [класс](./Elaboration/3/ClassWithTests.java) с тестами.
+3.	Загрузить [JAR -файл с JUnit](https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone) и поместить его в каталог с проектом.
+4.	Добавить 2 упомянутых выше класса в новый проект **Geany** и установить для него опции компиляции и запуска, представленные на рисунке ниже.
+5.	Скомпилировать проект.
+6.	Запустить тестирование. Его результаты представлены ниже.
+
+##### Настройки Geany
+
+![Настройки Geany](./Elaboration/3/JUnitMWE/GeanySettings.png)
+
+##### Результаты тестирования
+
+![Результаты тестирования](./Elaboration/3/JUnitMWE/TestOutput.png)
+
+
+
+
 
 
 

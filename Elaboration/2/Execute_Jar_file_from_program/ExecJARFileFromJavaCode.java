@@ -22,10 +22,10 @@ import java.lang.Exception;
 import java.io.InputStream;
 
 /**
- * Класс предназначен для шифрования и расшифрования
- * символьных строк (String) при помощи шифров Цезаря и Виженера.
- * Реализован как простой шифр Виженера, так и шифр Виженера с ключом.
+ * Класс предназначен для демонстрации возможности запуска
+ * внешних jar-файлов из кода java
  */
+ 
 public class ExecJARFileFromJavaCode {
 	public static void main (String[] args) {
 		Process proc;
@@ -33,7 +33,8 @@ public class ExecJARFileFromJavaCode {
 		InputStream errStream;
 		
 		try {
-			proc = Runtime.getRuntime().exec("java -jar plantuml.jar -tpng united.plantuml");
+			proc = Runtime.getRuntime().exec(
+					"java -jar plantuml.jar -tpng united.plantuml");
 			proc.waitFor();
 			
 			/* Получение текстового вывода программы */
