@@ -1,0 +1,238 @@
+#
+# Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
+#
+# This is a part of ACDG
+#
+# ACDG is free software: you can redistribute it and/or 
+# modify it under the terms of the GNU General Public License as 
+# published by the Free Software Foundation, either version 3 of the 
+# License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  
+# If not, see <https://www.gnu.org/licenses/>.
+#
+ 
+#Грамматика для синтаксического анализа кода на языке Java при
+#помощи синтаксического анализатора Bullwinkle для приложения ACDG
+
+#Если в процессе отладки вместо нетерминалов появляются символы
+# то значит, что вышестоящий код не закомментирован
+
+#Особенности многострочного поиска в Bullwinkle:
+#1. Не работают РВ вроде ^X.*Y
+#2. Работают РВ вроде ^([^[\{\}]])*
+#3. Работают правила вывода
+
+#Класс
+<Class> := <ModifierListWithClassType>
+ <ClassIdentifierWithInheritanceBlocks> <LeftCurlyBracket>
+ <ClassElementList> <RightCurlyBracket>;
+
+#Тип класса со списком модификаторов
+<ModifierListWithClassType> :=
+ <ModifierList> <ClassType> | <ClassType>;
+
+#Класс или интерфейс
+<ClassType> := ^(class|interface);
+
+#Идентификатор класса с блоками наследования
+<ClassIdentifierWithInheritanceBlocks> := 
+ <Identifier> <InheritanceBlock> <InheritanceBlock> |
+ <Identifier> <InheritanceBlock> |
+ <Identifier>;
+
+
+#Наследование либо реализация интерфейса
+<InheritanceBlock> := <InheritanceModifiers> <InheritanceList>;
+
+#Список классов или интерфейсов для наследования/реализации
+
+<InheritanceList> := <InheritanceSublist> | <Identifier>;
+#Дополнительные случаи для уменьшения глубины рекурсии
+<InheritanceSublist> := 
+<Identifier> <Comma> <Identifier> <Comma> <Identifier> <Comma>
+ <Identifier> <Comma> <Identifier> <Comma> <Identifier> <Comma> 
+ <Identifier> <Comma> <Identifier> <Comma> <Identifier> <Comma> 
+ <Identifier> <Comma> <InheritanceList> |
+ <Identifier> <Comma> <Identifier> <Comma> <Identifier> <Comma>
+ <Identifier> <Comma> <Identifier> <Comma> <InheritanceList> |
+ <Identifier> <Comma> <InheritanceList>; 
+
+
+#Модификаторы наследования
+<InheritanceModifiers> := ^(extends|implements);
+
+#Список элементов класса
+<ClassElementList> := <ClassElementSublist> | <ClassElement>;
+#Дополнительные случаи для уменьшения глубины рекурсии
+<ClassElementSublist> := <ClassElement> <ClassElement>
+ <ClassElement> <ClassElement> <ClassElement> <ClassElement>
+ <ClassElement> <ClassElement> <ClassElement> <ClassElement>
+ <ClassElementList> |
+ <ClassElement> <ClassElement> <ClassElement> <ClassElement>
+ <ClassElement> <ClassElementList> | <ClassElement>
+ <ClassElementList>;
+
+
+#Элемент класса (метод или поле)
+<ClassElement> := <MethodWithAnnotation> | <Field>;
+
+#Метод с аннотацией
+<MethodWithAnnotation> := <Annotation> <Method> | <Method>;
+
+#Аннотация
+#BOGUS: Многострочные аннотации не работают
+# Наверно нужно по тому же принципу, что и телом метода
+<Annotation> := ^\@\w+(\(.*?\))?;
+
+#Метод
+<Method> := <CommonMethod> | <Constructor>;
+
+#Обычный Метод
+<CommonMethod> := <ModifierList> <MethodDataType> <MethodIdentifier>
+ <ParameterListWithBrackets> <MethodBodyWithBrackets>;
+
+#Конструктор
+<Constructor> := <ModifierList> <MethodIdentifier>
+ <ParameterListWithBrackets> <MethodBodyWithBrackets>;
+
+
+#Идентификатор метода
+<MethodIdentifier> := <Identifier>;
+
+#Тип возвращаемого значения метода
+<MethodDataType> := <AbstractDataType>;
+
+#Список параметров со скобками
+<ParameterListWithBrackets> := <LeftBracket> <ParameterList> 
+ <RightBracket> | <LeftBracket> <RightBracket>;
+
+#Тело метода со скобками
+<MethodBodyWithBrackets> := <LeftCurlyBracket> <MethodBodyStructure>
+ <RightCurlyBracket> | <LeftCurlyBracket> <RightCurlyBracket>;
+#Другой способ
+#<MethodBodyWithBrackets> := <CurlyBracketsBlock>;
+
+#Блок из фигурных скобок
+
+<CurlyBracketsBlock> := ^\{(([^\}])*\})*;
+#UPD: ЭТО НЕ НУЖНО! 
+# Нужно было в версии тела метода с разбором 
+# Заменить EmptyFigureBrackes на LeftFigureBracket и
+#RightFigureBrackets
+# Такая комбинация всегда будет работать в многострочном режиме
+
+
+#Актуальная редакция
+<MethodBodyStructure> := <SimpleMethodBodyStructure> 
+ <LeftCurlyBracket> <RightCurlyBracket> <MethodBodySubStructure> 
+ | <SimpleMethodBodyStructure> <LeftCurlyBracket>
+ <MethodBodySubStructure> <RightCurlyBracket> <MethodBodySubStructure>
+ | <SimpleMethodBodyStructure> <LeftCurlyBracket>
+ <MethodBodySubStructure> <RightCurlyBracket> 
+ | <SimpleMethodBodyStructure> <LeftCurlyBracket> <RightCurlyBracket> 
+ | <LeftCurlyBracket> <RightCurlyBracket>
+ | <SimpleMethodBodyStructure>;
+
+<MethodBodySubStructure> := <MethodBodyStructure>;
+
+#Фрагмент тела метода без фигурных скобок
+# Если использоваться жадную квантификацию, то не работает перенос
+# на следующую строку
+#<SimpleMethodBodyStructure> := ^((([^[\{\}]])*)|(\n)*);
+<SimpleMethodBodyStructure> := ^([^[\{\}]])*;
+
+#Пустые операторные скобки
+<EmptyCurlyBrackets> := ^\{([^[\{\}]])*\};
+
+#Символ "}"
+<RightCurlyBracket> := ^\};
+
+#Символ "{"
+<LeftCurlyBracket> := ^\{;
+
+#Символ ")"
+<RightBracket> := ^\);
+
+#Символ "("
+<LeftBracket> := ^\(;
+
+#Поле класса
+<Field> := <ModifierList> <FieldDataType> <FieldIdentifier>
+ <Initializer> <Semicolon> |
+ <ModifierList> <FieldDataType> <FieldIdentifier> <Semicolon>;
+ 
+#Инициализатор
+<Initializer> := ^\=([^\u003b])+;
+
+#Отладка
+#<Field> := <ModifierList> <FieldIdentifier>;
+
+#Список модификаторов
+<ModifierList> := <ModifierSublist> | <Modifier>;
+#Дополнительные случаи для уменьшения глубины рекурсии
+<ModifierSublist> := <Modifier> <Modifier> <Modifier> <Modifier>
+ <Modifier>
+ <Modifier> <Modifier> <Modifier> <Modifier> <Modifier>
+ <ModifierList> |
+ <Modifier> <Modifier> <Modifier> <Modifier> <Modifier> <ModifierList>
+ | <Modifier> <ModifierList>;
+
+#Модификатор
+<Modifier> := ^(public|private|protected|abstract|final|static);
+
+#Тип данных поля класса
+<FieldDataType> := <AbstractDataType>;
+
+#Идентификатор поля класса
+<FieldIdentifier> := <Identifier>;
+
+#Точка с запятой
+<Semicolon> := ^\u003b;
+
+#Пробелы
+<Space> := ^\s.;
+
+#Список параметров
+<ParameterList> := <ParameterSublist> | <Parameter>;
+#Дополнительные случаи для уменьшения глубины рекурсии
+<ParameterSublist> := 
+<Parameter> <Comma> <Parameter> <Comma> <Parameter> <Comma>
+ <Parameter> <Comma> <Parameter> <Comma> <Parameter> <Comma> 
+ <Parameter> <Comma> <Parameter> <Comma> <Parameter> <Comma> 
+ <Parameter> <Comma> <ParameterList> |
+ <Parameter> <Comma> <Parameter> <Comma> <Parameter> <Comma>
+ <Parameter> <Comma> <Parameter> <Comma> <ParameterList> |
+ <Parameter> <Comma> <ParameterList>; 
+
+#Запятая
+<Comma> := ^\,;
+
+#Параметр
+<Parameter> := <ParameterDataType> <ParameterIdentifier> |
+ <ParameterDataType> <EmptyArray> <ParameterIdentifier>;
+
+#Идентификатор параметра
+<ParameterIdentifier> := <Identifier>;
+
+#Тип данных параметра
+<ParameterDataType> := <AbstractDataType>;
+
+#Абстрактный тип данных
+<AbstractDataType> := <Identifier> <EmptyArray>
+ | <Identifier> <TemplateType> | <Identifier>;
+
+#Обозначения типа для шаблона
+<TemplateType> := ^\u003c.*?\u003e;
+
+#Обозначение массива
+<EmptyArray> := ^(\[\]);
+
+#Абстрактный идентификатор
+<Identifier> := ^\w+(\[\d.\])?;
