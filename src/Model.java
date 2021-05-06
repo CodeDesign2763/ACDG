@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import static java.lang.System.out;
 import java.io.FileWriter;
+import java.util.ArrayList;
 
 enum ProgramLanguage {
 	JAVA,
@@ -43,6 +44,17 @@ class Model {
 	public Repository<Relation> relations;
 	public Repository<FileWithClass> filesWithClasses;
 	private ProgramLanguage programLanguage;
+	
+	public static ArrayList<CProgramLanguage> PLs;
+	static {
+		PLs=new ArrayList<CProgramLanguage>();
+		PLs.add((int) ProgramLanguage.JAVA.ordinal(),
+				new CProgramLanguage("Java",true,"java.bnf"));
+		PLs.add((int) ProgramLanguage.CSHARP.ordinal(),
+				new CProgramLanguage("C#",false,"cs.bnf"));
+		PLs.add((int) ProgramLanguage.CPP.ordinal(),
+				new CProgramLanguage("C++",false,"cpp.bnf"));
+	}
 	
 	public Model(ProgramLanguage pl) {
 		programLanguage=pl;
@@ -89,6 +101,7 @@ class Model {
 			while (scanfile.hasNext())
 			{
 				s=scanfile.nextLine();
+				out.println("Строка из файла "+s);
 				matcherImport = patternImport.matcher(s);
 				matcherPackage = patternPackage.matcher(s);
 				matcherCPPComment = patternCPPComment.matcher(s);
@@ -99,10 +112,9 @@ class Model {
 				/* Если включен режим комментариев С или
 				 * язык - Java и строчка начинается с package или
 				 * import - вообще ее не записывать в выходной файл */
-				if ((fCComment) ||
-						((programLanguage == ProgramLanguage.JAVA) &&
+				if ((programLanguage == ProgramLanguage.JAVA) &&
 						((matcherImport.find()) ||
-						(matcherPackage.find()) ))) {
+						(matcherPackage.find()) )) {
 					fDontWriteLine = true;
 				}
 				
@@ -110,9 +122,40 @@ class Model {
 					s=s.substring(0,s.indexOf("//"));
 				}
 				
-				if (matcherCCommentOpen.find()) {
+				if ((matcherCCommentOpen.find()) && 
+						(!matcherCCommentClose.find()) ){
 					s=s.substring(0,s.indexOf("/*"));
 					fCComment=true;
+				}
+				
+				matcherCCommentOpen.reset();
+				matcherCCommentClose.reset();
+				
+				if ((matcherCCommentClose.find()) && 
+						(!matcherCCommentOpen.find())) {
+					if (s.indexOf("*/") + 2 < s.length()) {
+						s=s.substring(s.indexOf("*/")+2);
+					} else s="";
+					fCComment=false;
+					out.println("RR" +s);
+				}
+				
+				matcherCCommentOpen.reset();
+				matcherCCommentClose.reset();
+				
+				if ((matcherCCommentOpen.find()) && 
+						(matcherCCommentClose.find())) {
+					if (s.indexOf("*/") + 2 < s.length()) {
+						s=s.substring(0,s.indexOf("/*")) + 
+								s.substring(s.indexOf("*/")+2);
+					} else s=s.substring(0,s.indexOf("/*"));
+					out.println("CR");
+				}
+				
+				
+				if ((!fDontWriteLine) && (!s.equals("")) && (!fCComment)) {
+					writer.write(s+"\n");
+					out.println(s);
 				}
 				
 				//if (i<=6)

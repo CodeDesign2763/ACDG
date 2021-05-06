@@ -28,14 +28,20 @@ long_line_behaviour=1
 long_line_column=70
 
 [files]
-current_page=2
-FILE_NAME_0=1333;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FClassFromCode.java;0;4
+current_page=12
+FILE_NAME_0=6041;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FFileWithClass.java;0;4
 FILE_NAME_1=1245;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FTestsForRepository.java;0;4
-FILE_NAME_2=1522;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FModel.java;0;4
+FILE_NAME_2=1724;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FModel.java;0;4
 FILE_NAME_3=1036;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FIRepository.java;0;4
-FILE_NAME_4=0;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FRelation.java;0;4
-FILE_NAME_5=254;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FТеория%20автоматов%2FЛаб1%2FCode1%2FCreateTestCasesTable.java;0;4
-FILE_NAME_6=19;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fbin%2FACDG%2Fxxx.txt;0;4
+FILE_NAME_4=1124;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FCProgramLanguage.java;0;4
+FILE_NAME_5=192;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FТеория%20автоматов%2FЛаб1%2FCode1%2FCreateTestCasesTable.java;0;4
+FILE_NAME_6=213;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fbin%2FACDG%2Fxxx.txt;0;4
+FILE_NAME_7=0;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Foutput.txt;0;4
+FILE_NAME_8=3507;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FTestsForFileWithClass.java;0;4
+FILE_NAME_9=39;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fdata%2FJavaCommentsDeletionTest.txt;0;4
+FILE_NAME_10=860;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FRepository.java;0;4
+FILE_NAME_11=0;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fjava.bnf;0;4
+FILE_NAME_12=0;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fdata%2Fsource.txt;0;4
 
 [build-menu]
 EX_00_LB=_Выполнить
@@ -46,7 +52,7 @@ JavaFT_00_CM=javac "%f" -d ../bin
 JavaFT_00_WD=
 filetypes=Java;
 JavaFT_01_LB=Скомпилировать тесты
-JavaFT_01_CM=javac -cp ../lib/junit*jar *.java -d ../bin
+JavaFT_01_CM=javac -Xlint:unchecked -cp ../lib/junit*jar *.java -d ../bin
 JavaFT_01_WD=
 EX_01_LB=Выполнить тесты
 EX_01_CM=java -jar ../lib/junit*jar -cp ../bin --scan-class-path

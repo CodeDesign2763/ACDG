@@ -22,11 +22,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Disabled;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import static java.lang.System.out;
+import java.io.IOException;
+import java.util.Arrays;
+import java.lang.Exception;
+import java.io.File;
+
+/* Для тестирования приватных методов */
+import java.lang.reflect.*;
 
 /**
- * Класс c набором тестов для класса ClassFromCode
+ * Класс c набором тестов для класса FileWithClass
  */
-class TestsForClassFromCode {
+class TestsForFileWithClass {
 	
 	@Test
 	@DisplayName("Метод getClassName")
@@ -34,4 +44,68 @@ class TestsForClassFromCode {
 		FileWithClass cfc1 = new FileWithClass("ClassA.java");
 		assertEquals(cfc1.getClassName(),"ClassA");
 	}	
+	
+	@Test
+	@DisplayName("Метод getFileName")
+	public void testGetFileName() {
+		FileWithClass fwc1= 
+				new FileWithClass("/home/user1/ClassB.java");
+		assertEquals(fwc1.getFileName(),"ClassB.java");
+	}
+	
+	@Test
+	@DisplayName("Предварительное удаление комментариев")
+	public void testCommentDeletion() {
+		byte[] CorrectResult;
+		byte[] TestResult;
+		Method targetMethod;
+		Object retValue;
+		Class fwcClass;
+		//JavaCommentsDeletionTest.txt_wo_comments
+		try {
+			FileWithClass fwc1 = new FileWithClass(
+					"../data/JavaCommentsDeletionTest.txt");
+			
+			/* Если файл существует - удалим его */
+			Files.deleteIfExists(Paths.get(
+					"../temp/" + 
+					"JavaCommentsDeletionTest.txt_wo_comments"));
+			
+			/* Сделаем тестируемый метод видимым при помощи
+			 * рефлексии */
+			fwcClass=Class.forName("ACDG.FileWithClass");
+			targetMethod=fwcClass.getDeclaredMethod(
+					"deleteCommentsAndOtherStuff",
+					ProgramLanguage.class);
+			targetMethod.setAccessible(true);
+			retValue=targetMethod.invoke(fwc1,ProgramLanguage.JAVA);
+		
+			/* Простейший способ сравнить 2 файла */
+			CorrectResult= Files.readAllBytes(Paths.get(
+					"../data/" + 
+					"JavaCommentsDeletionTest_CORRECT_OUTPUT.txt"));
+			TestResult= Files.readAllBytes(Paths.get(
+					"../temp/" + 
+					"JavaCommentsDeletionTest.txt_wo_comments"));
+			
+			/* Нужно именно использовать Arrays */
+			assertEquals(true,
+					Arrays.equals(CorrectResult,TestResult));
+		}	catch (IOException e) {
+			out.println("Файлы не найдены");
+			e.printStackTrace();
+			fail();
+		}	catch (Exception e) {
+			fail();
+		}
+	}
+	
+	@Test
+	@DisplayName("Синтаксический анализ")
+	public void testXMLTreeGeneration() {
+		FileWithClass fwc1 = new FileWithClass("../data/source.txt");
+		//fwc1.deleteCommentsAndOtherStuff(ProgramLanguage.JAVA);
+		fwc1.convSourceFile2XML(ProgramLanguage.JAVA);
+	}
+	
 }
