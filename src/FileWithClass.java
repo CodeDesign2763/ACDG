@@ -34,6 +34,10 @@ import java.io.FileWriter;
 import static java.lang.System.out;
 import java.lang.Exception;
 import java.io.InputStream;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Класс предметной области
@@ -58,9 +62,9 @@ class FileWithClass {
 		return fClearedOfComments;
 	}
 	
-	public void setConvResult(boolean result) {
-		convResult=result;
-	}
+	//public void setConvResult(boolean result) {
+		//convResult=result;
+	//}
 	
 	public String getPath2File() {
 		return path2File;
@@ -90,6 +94,9 @@ class FileWithClass {
 		return "../temp/"+getFileName()+"_wo_comments";
 	}
 	
+	/* Убирает из исходного файла комментарии и некоторые декларации
+	 * и сохраняет результат в файл, определяемый при помощи
+	 * getPath2FileWOComments() */
 	private void deleteCommentsAndOtherStuff(
 			ProgramLanguage progLang) {
 		/* Классы для работы с регулярными выражениями */
@@ -110,10 +117,11 @@ class FileWithClass {
 		
 		boolean fDontWriteLine=false;
 		
-		//Адрес в момент КОМПИЛЯЦИИ
-		File f=new File(path2File);
-		Scanner scanfile;
 		try {
+			//Адрес в момент КОМПИЛЯЦИИ
+			File f=new File(path2File);
+			Scanner scanfile;
+			
 			scanfile=new Scanner(f);
 			String s;
 			FileWriter writer = 
@@ -183,11 +191,15 @@ class FileWithClass {
 			}
 			scanfile.close();
 			writer.close();
+			
+			//Меняем флаг класса
 			fClearedOfComments = true;
 		}	catch (IOException ex1) {
-				ex1.printStackTrace();
-		}		
+				//ex1.printStackTrace();
+		}	catch (Exception e) {}
+			
 	}
+	
 	
 	public String getPath2XMLTree() {
 		return getPath2FileWOComments()+"_XML";
@@ -195,59 +207,68 @@ class FileWithClass {
 	
 	public void convSourceFile2XML(ProgramLanguage pl) {
 		Process proc;
-		InputStream inputStream;
-		InputStream errStream;
 		boolean fSuccess=true;
 		
 		deleteCommentsAndOtherStuff(pl);
 		
-		fSuccess=(fSuccess && isClearedOfComments());
+		fSuccess=isClearedOfComments();
 		
-		String grammarFileName=
-				Model.PLs.get(pl.ordinal()).getGrammarFileName();
+		String path2Grammar=
+				Model.availablePLList.get(
+						pl.ordinal()).getPath2Grammar();
 		String errStr;
 		String stoutStr;
 					 
 		try {
 			
-			//proc = Runtime.getRuntime().exec(
-					//"java -jar ../bin/bullwinkle.jar -f xml"
-					//+ " ../src/" + grammarFileName + " "
-					//+ getPath2FileWOComments()
-					//+ " > " + getPath2XMLTree());
-			
-			proc = Runtime.getRuntime().exec(
-					"java -jar ../bin/bullwinkle.jar ../src/java.bnf ../data/source1.txt >> ../qqq.xml");
-			
-		
-			
-			/* Получение текстового вывода программы */
-			//inputStream = proc.getInputStream();
-			//errStream = proc.getErrorStream();
-			
+			/* Запускаем bullwinkle.jar и перенаправляем stdout
+			 * в xml-файл */
+			out.println(path2Grammar);
+			var processBuilder = new ProcessBuilder();
+			processBuilder.command("java",
+					"-jar",
+					"../bin/bullwinkle.jar",
+					path2Grammar,
+					getPath2FileWOComments());
+			var fileXML = new File(getPath2XMLTree());
+			processBuilder.redirectOutput(fileXML);
+			proc = processBuilder.start();
 			proc.waitFor();
 			
-			//byte inp[]=new byte[inputStream.available()];
-			//inputStream.read(inp,0,inp.length);
-			//stoutStr=new String(inp);
-			//out.println("Вывод STDIN:\n " + stoutStr);
+			/* Определяем, удачно ли произведено преобразование через
+			 * подсчет числа строк в полученном xml-файле */
+			BufferedReader reader = 
+					new BufferedReader(
+					new FileReader(getPath2XMLTree()));
+			long lines=0;
+			while (reader.readLine()!=null) lines++;
+			reader.close();
+			
+			if (lines>5) {
+				//out.println("Преобразование прошло удачно");
+			} else {
+				//out.println("Преобразование прошло неудачно");
+				fSuccess=false;
+			}
 
-			//byte err[]=new byte[errStream.available()];
-			//errStream.read(err,0,err.length);
-			//errStr=new String(err);
-			//out.println("Вывод STDERR:\n" + errStr);
-			
-			//if ((!errStr.equals("")) 
-					//|| (stoutStr.indexOf("rror") == -1)) {
-				//fSuccess=false;
-			//}
-			
 			out.println("Выполнение программы завершено");
+			
+		
 		} catch (Exception e) { 
 			fSuccess=false;
-		};
+		} finally {
+			try {
+				/* Удаляем промежуточный файл */
+				Files.deleteIfExists(
+						Paths.get(getPath2FileWOComments()));
+			}	catch (Exception e) {}
+		}
 		
 		convResult=fSuccess;
+		/* Для отладки */
+		out.println(fSuccess);
+		
+	
 
 	}
 }

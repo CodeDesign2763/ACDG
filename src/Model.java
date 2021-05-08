@@ -45,14 +45,14 @@ class Model {
 	public Repository<FileWithClass> filesWithClasses;
 	private ProgramLanguage programLanguage;
 	
-	public static ArrayList<CProgramLanguage> PLs;
+	public static ArrayList<CProgramLanguage> availablePLList;
 	static {
-		PLs=new ArrayList<CProgramLanguage>();
-		PLs.add((int) ProgramLanguage.JAVA.ordinal(),
+		availablePLList=new ArrayList<CProgramLanguage>();
+		availablePLList.add((int) ProgramLanguage.JAVA.ordinal(),
 				new CProgramLanguage("Java",true,"java.bnf"));
-		PLs.add((int) ProgramLanguage.CSHARP.ordinal(),
+		availablePLList.add((int) ProgramLanguage.CSHARP.ordinal(),
 				new CProgramLanguage("C#",false,"cs.bnf"));
-		PLs.add((int) ProgramLanguage.CPP.ordinal(),
+		availablePLList.add((int) ProgramLanguage.CPP.ordinal(),
 				new CProgramLanguage("C++",false,"cpp.bnf"));
 	}
 	

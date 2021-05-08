@@ -101,11 +101,35 @@ class TestsForFileWithClass {
 	}
 	
 	@Test
-	@DisplayName("Синтаксический анализ")
-	public void testXMLTreeGeneration() {
-		FileWithClass fwc1 = new FileWithClass("../data/source.txt");
-		//fwc1.deleteCommentsAndOtherStuff(ProgramLanguage.JAVA);
+	@DisplayName("Синт. анализ файла SimpleClassXMLConvTest.txt")
+	public void testSimpleClassXMLConv() {
+		FileWithClass fwc1 = new FileWithClass("../data/SimpleClassXMLConvTest.txt");
 		fwc1.convSourceFile2XML(ProgramLanguage.JAVA);
+		assertEquals(true,fwc1.getConvResult());
+	}
+	
+	@Test
+	@DisplayName("Синт. анализ несуществующего файла")
+	public void testXMLConvIncorrectFilePath() {
+		FileWithClass fwc1 = new FileWithClass("../data/source2.txt");
+		fwc1.convSourceFile2XML(ProgramLanguage.JAVA);
+		assertEquals(false,fwc1.getConvResult());
+	}
+	
+	@Test
+	@DisplayName("Синт. анализ SpecialityForm.java")
+	public void testSpecialityFormXMLConv() {
+		FileWithClass fwc1 = new FileWithClass("../data/SpecialityForm.java");
+		fwc1.convSourceFile2XML(ProgramLanguage.JAVA);
+		assertEquals(true,fwc1.getConvResult());
+	}
+	
+	@Test
+	@DisplayName("Синт. анализ MainForm.java")
+	public void testMainFormXMLConv() {
+		FileWithClass fwc1 = new FileWithClass("../data/MainForm.java");
+		fwc1.convSourceFile2XML(ProgramLanguage.JAVA);
+		assertEquals(true,fwc1.getConvResult());
 	}
 	
 }
