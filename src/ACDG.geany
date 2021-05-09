@@ -28,8 +28,8 @@ long_line_behaviour=1
 long_line_column=70
 
 [files]
-current_page=12
-FILE_NAME_0=6041;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FFileWithClass.java;0;4
+current_page=0
+FILE_NAME_0=2478;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FFileWithClass.java;0;4
 FILE_NAME_1=1245;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FTestsForRepository.java;0;4
 FILE_NAME_2=1724;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FModel.java;0;4
 FILE_NAME_3=1036;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FIRepository.java;0;4
@@ -41,7 +41,6 @@ FILE_NAME_8=3507;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол
 FILE_NAME_9=39;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fdata%2FJavaCommentsDeletionTest.txt;0;4
 FILE_NAME_10=860;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FRepository.java;0;4
 FILE_NAME_11=0;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fjava.bnf;0;4
-FILE_NAME_12=0;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fdata%2Fsource.txt;0;4
 
 [build-menu]
 EX_00_LB=_Выполнить

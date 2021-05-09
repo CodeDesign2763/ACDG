@@ -94,6 +94,10 @@ class FileWithClass {
 		return "../temp/"+getFileName()+"_wo_comments";
 	}
 	
+	private String getPath2XMLTreeWOFalseTags() {
+		return getPath2XMLTree()+"_WFT";
+	}
+	
 	/* Убирает из исходного файла комментарии и некоторые декларации
 	 * и сохраняет результат в файл, определяемый при помощи
 	 * getPath2FileWOComments() */
@@ -267,9 +271,59 @@ class FileWithClass {
 		convResult=fSuccess;
 		/* Для отладки */
 		out.println(fSuccess);
-		
+	}
 	
-
+	/* Удаление из XML-файла тэгов token,
+	 * вложенных в тэг token вместе с их содержимым */
+	public void xmlWrongTagDeletion() {
+		boolean fTokenTag = false;
+		boolean fDeleteLine = false;
+		//Pattern patternTokenOpen = Pattern.compile("\\<Token\\>");
+		//Pattern patternTokenClose = Pattern.compile("\\</Token\\>");
+		Pattern patternTokenOpen = Pattern.compile("\\<token\\>");
+		Pattern patternTokenClose = Pattern.compile("<\\/token>");
+		Matcher matcherTokenOpen;
+		Matcher matcherTokenClose;
+		try {
+			File f=new File(getPath2XMLTree());
+			Scanner scanfile;
+			
+			scanfile=new Scanner(f);
+			String s;
+			FileWriter writer = 
+					new 
+					FileWriter(getPath2XMLTreeWOFalseTags(),false);
+			while (scanfile.hasNext())
+				{
+					s=scanfile.nextLine();
+					matcherTokenOpen = patternTokenOpen.matcher(s);
+					matcherTokenClose = patternTokenClose.matcher(s);
+					if (matcherTokenOpen.find()) {
+						if (fTokenTag==false) {
+							fTokenTag=true;
+						} else {
+							fDeleteLine=true;
+						}
+					}
+					if (!fDeleteLine) writer.write(s + "\n");
+					if (matcherTokenClose.find()) {
+						if (fDeleteLine==true) {
+							fDeleteLine=false;
+						} else {
+							fTokenTag=false;
+						}
+					}
+			
+				}
+				scanfile.close();
+				writer.close();
+			
+				//Меняем флаг класса
+				fClearedOfComments = true;
+		}	catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
 
