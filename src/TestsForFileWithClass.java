@@ -38,10 +38,19 @@ import java.lang.reflect.*;
  */
 class TestsForFileWithClass {
 	
+	/* Язык программирования Java */
+	private static CProgramLanguage javaPL;
+	static {
+		javaPL = new CProgramLanguage("Java", true, "java.bnf", 
+				ProgramLanguage.JAVA);
+	}
+	
 	@Test
 	@DisplayName("Метод getClassName")
 	public void testConstructorAndConv2String() {
-		FileWithClass cfc1 = new FileWithClass("ClassA.java");
+		FileWithClass cfc1 = new FileWithClass("ClassA.java",
+				javaPL
+				);
 		assertEquals(cfc1.getClassName(),"ClassA");
 	}	
 	
@@ -49,7 +58,8 @@ class TestsForFileWithClass {
 	@DisplayName("Метод getFileName")
 	public void testGetFileName() {
 		FileWithClass fwc1= 
-				new FileWithClass("/home/user1/ClassB.java");
+				new FileWithClass("/home/user1/ClassB.java",
+				javaPL);
 		assertEquals(fwc1.getFileName(),"ClassB.java");
 	}
 	
@@ -64,7 +74,8 @@ class TestsForFileWithClass {
 		//JavaCommentsDeletionTest.txt_wo_comments
 		try {
 			FileWithClass fwc1 = new FileWithClass(
-					"../data/JavaCommentsDeletionTest.txt");
+					"../data/JavaCommentsDeletionTest.txt",
+					javaPL);
 			
 			/* Если файл существует - удалим его */
 			Files.deleteIfExists(Paths.get(
@@ -75,10 +86,9 @@ class TestsForFileWithClass {
 			 * рефлексии */
 			fwcClass=Class.forName("ACDG.FileWithClass");
 			targetMethod=fwcClass.getDeclaredMethod(
-					"deleteCommentsAndOtherStuff",
-					ProgramLanguage.class);
+					"deleteCommentsAndOtherStuff");
 			targetMethod.setAccessible(true);
-			retValue=targetMethod.invoke(fwc1,ProgramLanguage.JAVA);
+			retValue=targetMethod.invoke(fwc1);
 		
 			/* Простейший способ сравнить 2 файла */
 			CorrectResult= Files.readAllBytes(Paths.get(
@@ -103,33 +113,70 @@ class TestsForFileWithClass {
 	@Test
 	@DisplayName("Синт. анализ файла SimpleClassXMLConvTest.txt")
 	public void testSimpleClassXMLConv() {
-		FileWithClass fwc1 = new FileWithClass("../data/SimpleClassXMLConvTest.txt");
-		fwc1.convSourceFile2XML(ProgramLanguage.JAVA);
+		FileWithClass fwc1 = new 
+				FileWithClass("../data/SimpleClassXMLConvTest.txt",
+				javaPL);
+		fwc1.convSourceFile2XML();
 		assertEquals(true,fwc1.getConvResult());
 	}
 	
 	@Test
 	@DisplayName("Синт. анализ несуществующего файла")
 	public void testXMLConvIncorrectFilePath() {
-		FileWithClass fwc1 = new FileWithClass("../data/source2.txt");
-		fwc1.convSourceFile2XML(ProgramLanguage.JAVA);
+		FileWithClass fwc1 = new FileWithClass("../data/source2.txt",
+				javaPL);
+		fwc1.convSourceFile2XML();
 		assertEquals(false,fwc1.getConvResult());
 	}
 	
 	@Test
 	@DisplayName("Синт. анализ SpecialityForm.java")
 	public void testSpecialityFormXMLConv() {
-		FileWithClass fwc1 = new FileWithClass("../data/SpecialityForm.java");
-		fwc1.convSourceFile2XML(ProgramLanguage.JAVA);
+		FileWithClass fwc1 = 
+				new FileWithClass("../data/SpecialityForm.java",
+				javaPL);
+		fwc1.convSourceFile2XML();
 		assertEquals(true,fwc1.getConvResult());
 	}
 	
 	@Test
 	@DisplayName("Синт. анализ MainForm.java")
 	public void testMainFormXMLConv() {
-		FileWithClass fwc1 = new FileWithClass("../data/MainForm.java");
-		fwc1.convSourceFile2XML(ProgramLanguage.JAVA);
+		FileWithClass fwc1 = 
+				new FileWithClass("../data/MainForm.java",
+				javaPL);
+		fwc1.convSourceFile2XML();
 		assertEquals(true,fwc1.getConvResult());
 	}
 	
+	//@Test
+	//@DisplayName("Проверка удаления ошибочных тэгов token")
+	//public void testExtraTokenTagsDeletion() {
+		//Method targetMethod;
+		//Object retValue;
+		//Class fwcClass;
+		//try {
+				//FileWithClass fwc1 = new FileWithClass(
+					//"../data/WrongTagDeletionTest.xml");
+				///* Сделаем тестируемый метод видимым при помощи
+				//* рефлексии */
+				//fwcClass=Class.forName("ACDG.FileWithClass");
+				//targetMethod=fwcClass.getDeclaredMethod(
+						//"xmlWrongTagDeletion");
+				//targetMethod.setAccessible(true);
+				//retValue=targetMethod.invoke(fwc1);
+				///* Простейший способ сравнить 2 файла */
+				//CorrectResult= Files.readAllBytes(Paths.get(
+					//"../data/" + 
+					//"WrongTagDeletionTestCorrect.xml"));
+				//TestResult= Files.readAllBytes(Paths.get(
+					//"../temp/" + 
+					//"JavaCommentsDeletionTest.txt_wo_comments"));
+			
+			///* Нужно именно использовать Arrays */
+			//assertEquals(true,
+					//Arrays.equals(CorrectResult,TestResult));
+				
+		
+	//}
 }

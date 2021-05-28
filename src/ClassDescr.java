@@ -1,5 +1,5 @@
 /*
- * Класс CProgramLanguage
+ * Класс ClassDescr
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -21,39 +21,38 @@
 
 package ACDG;
 import static java.lang.System.out;
+import java.util.ArrayList;
 
 
 /**
- * Класс предметной области
- * описывающий поддерживаемый язык программирования
+ * Описание класса (интефейса) с точки зрения plantuml
  */
-class CProgramLanguage {
-	private String plName;
-	private boolean fSupported;
-	private String grammarFileName;
-	private ProgramLanguage plID;
+class ClassDescr {
+	/* Класс или интерфейс? */
+	private boolean fClass;
+	private String id;
+	ArrayList<ClassElement> classElementList;
 	
-	public CProgramLanguage(String name, boolean fs, String g, ProgramLanguage pl) {
-		plName=name;
-		fSupported=fs;
-		grammarFileName=g;
-		plID=pl;
+	public ClassDescr(boolean fC, String name) {
+		fClass=fC;
+		id=name;
+		classElementList=new ArrayList<ClassElement>();
 	}
 	
-	public String getPLName() {
-		return plName;
+	public void addClassElement(ClassElement ce) {
+		classElementList.add(ce);
 	}
 	
-	public ProgramLanguage getPLID() {
-		return plID;
-	}
-	
-	public boolean isSupported() {
-		return fSupported;
-	}
-	
-	public String getPath2Grammar() {
-		return "../src/"+grammarFileName;
+	public String conv2PlantUML() {
+		String res="";
+		res = (fClass) ? "class" : "interface";
+		res=res + " " + id + " {\n";
+		for (ClassElement ce : classElementList) {
+			res = res + ce.genPlantUMLCode()+"\n";
+		}
+		res=res+"} \n";
+		return res;
+		
 	}
 	
 }

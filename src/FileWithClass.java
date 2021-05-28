@@ -50,12 +50,16 @@ class FileWithClass {
 	private boolean convResult;
 	
 	private boolean fClearedOfComments;
+	private ClassDescr classDescription;
 	
-	public FileWithClass(String fn) {
+	private CProgramLanguage programLanguage;
+	
+	public FileWithClass(String fn, CProgramLanguage pl) {
 		path2File=fn;
 		convResult=false;
-		
 		fClearedOfComments=false;
+		programLanguage=pl;
+		
 	}
 	
 	public boolean isClearedOfComments() {
@@ -101,8 +105,7 @@ class FileWithClass {
 	/* Убирает из исходного файла комментарии и некоторые декларации
 	 * и сохраняет результат в файл, определяемый при помощи
 	 * getPath2FileWOComments() */
-	private void deleteCommentsAndOtherStuff(
-			ProgramLanguage progLang) {
+	private void deleteCommentsAndOtherStuff() {
 		/* Классы для работы с регулярными выражениями */
 		/* Экранирование двойным \\ */
 		Pattern patternImport = Pattern.compile("^import");
@@ -115,6 +118,8 @@ class FileWithClass {
 		Matcher matcherCPPComment;
 		Matcher matcherCCommentOpen;
 		Matcher matcherCCommentClose;
+		
+		ProgramLanguage progLang = programLanguage.getPLID();
 		
 		/* Режим комментариев С */
 		boolean fCComment=false;
@@ -209,17 +214,20 @@ class FileWithClass {
 		return getPath2FileWOComments()+"_XML";
 	}
 	
-	public void convSourceFile2XML(ProgramLanguage pl) {
+	public void convSourceFile2XML() {
+		ProgramLanguage pl = programLanguage.getPLID();
 		Process proc;
 		boolean fSuccess=true;
 		
-		deleteCommentsAndOtherStuff(pl);
+		/* Удаляем комментарии и некоторые инструкции */
+		deleteCommentsAndOtherStuff();
 		
+		/* Если предыдущий шаг выполнить не удалось, то итог
+		 * выполнения метода convSourceFile2XML - неудача */
 		fSuccess=isClearedOfComments();
 		
 		String path2Grammar=
-				Model.availablePLList.get(
-						pl.ordinal()).getPath2Grammar();
+				programLanguage.getPath2Grammar();
 		String errStr;
 		String stoutStr;
 					 
@@ -268,6 +276,16 @@ class FileWithClass {
 			}	catch (Exception e) {}
 		}
 		
+		/* Удаляем с XML-файла лишние вложенные тэги token */
+		fSuccess = fSuccess && xmlWrongTagDeletion();
+		/* Удаляем промежуточный файл */
+		try {
+			/* Удаляем промежуточный файл */
+			Files.deleteIfExists(
+			Paths.get(getPath2XMLTree()));
+		}	catch (Exception e) {}
+		
+		
 		convResult=fSuccess;
 		/* Для отладки */
 		out.println(fSuccess);
@@ -275,15 +293,17 @@ class FileWithClass {
 	
 	/* Удаление из XML-файла тэгов token,
 	 * вложенных в тэг token вместе с их содержимым */
-	public void xmlWrongTagDeletion() {
+	public boolean xmlWrongTagDeletion() {
 		boolean fTokenTag = false;
 		boolean fDeleteLine = false;
+		boolean fResult = true;
 		//Pattern patternTokenOpen = Pattern.compile("\\<Token\\>");
 		//Pattern patternTokenClose = Pattern.compile("\\</Token\\>");
 		Pattern patternTokenOpen = Pattern.compile("\\<token\\>");
 		Pattern patternTokenClose = Pattern.compile("<\\/token>");
 		Matcher matcherTokenOpen;
 		Matcher matcherTokenClose;
+		
 		try {
 			File f=new File(getPath2XMLTree());
 			Scanner scanfile;
@@ -322,8 +342,10 @@ class FileWithClass {
 				fClearedOfComments = true;
 		}	catch (Exception e) {
 			e.printStackTrace();
+			fResult=false;
 		}
 		
+		return fResult;
 	}
 }
 
