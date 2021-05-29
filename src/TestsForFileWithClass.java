@@ -33,6 +33,7 @@ import java.io.File;
 /* Для тестирования приватных методов */
 import java.lang.reflect.*;
 
+import FunctionsForJUnit.FunctionsForTesting;
 /**
  * Класс c набором тестов для класса FileWithClass
  */
@@ -65,13 +66,14 @@ class TestsForFileWithClass {
 	
 	@Test
 	@DisplayName("Предварительное удаление комментариев")
-	public void testCommentDeletion() {
+	public void testCommentDeletion2() {
 		byte[] CorrectResult;
 		byte[] TestResult;
 		Method targetMethod;
 		Object retValue;
 		Class fwcClass;
 		//JavaCommentsDeletionTest.txt_wo_comments
+		
 		try {
 			FileWithClass fwc1 = new FileWithClass(
 					"../data/JavaCommentsDeletionTest.txt",
@@ -82,25 +84,14 @@ class TestsForFileWithClass {
 					"../temp/" + 
 					"JavaCommentsDeletionTest.txt_wo_comments"));
 			
-			/* Сделаем тестируемый метод видимым при помощи
-			 * рефлексии */
-			fwcClass=Class.forName("ACDG.FileWithClass");
-			targetMethod=fwcClass.getDeclaredMethod(
-					"deleteCommentsAndOtherStuff");
-			targetMethod.setAccessible(true);
-			retValue=targetMethod.invoke(fwc1);
-		
-			/* Простейший способ сравнить 2 файла */
-			CorrectResult= Files.readAllBytes(Paths.get(
+			assertEquals(true, 
+					FunctionsForTesting.checkPrivMethodWOParameters(
+					fwc1, "ACDG.FileWithClass", 
+					"deleteCommentsAndOtherStuff", "../temp/" + 
+					"JavaCommentsDeletionTest.txt_wo_comments", 
 					"../data/" + 
 					"JavaCommentsDeletionTest_CORRECT_OUTPUT.txt"));
-			TestResult= Files.readAllBytes(Paths.get(
-					"../temp/" + 
-					"JavaCommentsDeletionTest.txt_wo_comments"));
 			
-			/* Нужно именно использовать Arrays */
-			assertEquals(true,
-					Arrays.equals(CorrectResult,TestResult));
 		}	catch (IOException e) {
 			out.println("Файлы не найдены");
 			e.printStackTrace();

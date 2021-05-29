@@ -339,7 +339,7 @@ class FileWithClass {
 				writer.close();
 			
 				//Меняем флаг класса
-				fClearedOfComments = true;
+				//fClearedOfComments = true;
 		}	catch (Exception e) {
 			e.printStackTrace();
 			fResult=false;
