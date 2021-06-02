@@ -43,7 +43,7 @@ class ClassDescr {
 		classElementList.add(ce);
 	}
 	
-	public String conv2PlantUML() {
+	public String conv2PlantUMLString() {
 		String res="";
 		res = (fClass) ? "class" : "interface";
 		res=res + " " + id + " {\n";

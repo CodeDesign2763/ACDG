@@ -93,5 +93,17 @@ class Relation {
 		return String.valueOf(class1Ind) + " " + relName + " " + 
 				String.valueOf(class2Ind);
 	}
+	
+	/* Переопределяем метод от класса Object,
+	 * который используется для сравнения объектов ArrayList */
+	@Override
+	public boolean equals(Object o) {
+		boolean result=true;
+		Relation r = (Relation) o;
+		if (class1Ind != r.getClass1Ind()) result=false;
+		if (class2Ind != r.getClass2Ind()) result=false;
+		if (relationCode != r.getRelationCode()) result=false;
+		return result;
+	}
 }
 

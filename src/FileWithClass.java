@@ -39,6 +39,13 @@ import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import javax.xml.parsers.DocumentBuilderFactory;  
+import javax.xml.parsers.DocumentBuilder;  
+import org.w3c.dom.Document;  
+import org.w3c.dom.NodeList;  
+import org.w3c.dom.Node;  
+import org.w3c.dom.Element;  
+
 /**
  * Класс предметной области
  * описывающий файл с описанием класса на языке Java
@@ -47,7 +54,7 @@ import java.nio.file.Paths;
 class FileWithClass {
 	private String path2File;
 	private String fileName;
-	private boolean convResult;
+	private boolean conv2XMLResult;
 	
 	private boolean fClearedOfComments;
 	private ClassDescr classDescription;
@@ -56,21 +63,21 @@ class FileWithClass {
 	
 	public FileWithClass(String fn, CProgramLanguage pl) {
 		path2File=fn;
-		convResult=false;
+		conv2XMLResult=false;
 		fClearedOfComments=false;
 		programLanguage=pl;
 		
 	}
 	
-	public boolean isClearedOfComments() {
+	private boolean isClearedOfComments() {
 		return fClearedOfComments;
 	}
 	
 	//public void setConvResult(boolean result) {
-		//convResult=result;
+		//conv2XMLResult=result;
 	//}
 	
-	public String getPath2File() {
+	private String getPath2File() {
 		return path2File;
 	}
 	
@@ -79,8 +86,8 @@ class FileWithClass {
 		path2File.substring(path2File.lastIndexOf("/")+1) : path2File;
 	}
 	
-	public boolean getConvResult() {
-		return convResult;
+	public boolean getConv2XMLResult() {
+		return conv2XMLResult;
 	}
 	
 	public String getClassName() {
@@ -194,6 +201,13 @@ class FileWithClass {
 				
 				if ((!fDontWriteLine) && (!s.equals(""))
 						&& 	(!fCComment)) {
+					/* Замена "<" и ">" на "я" и "ч" */
+					/* иначе xml распознается некорректно */
+					s=s.replaceAll("<","zzzzz");
+					s=s.replaceAll(">","xxxxx");
+					s=s.replaceAll("&","wwwww");
+					
+					
 					writer.write(s + "\n");
 					//out.println(s);
 				}
@@ -210,7 +224,7 @@ class FileWithClass {
 	}
 	
 	
-	public String getPath2XMLTree() {
+	private String getPath2XMLTree() {
 		return getPath2FileWOComments()+"_XML";
 	}
 	
@@ -286,7 +300,7 @@ class FileWithClass {
 		}	catch (Exception e) {}
 		
 		
-		convResult=fSuccess;
+		conv2XMLResult=fSuccess;
 		/* Для отладки */
 		out.println(fSuccess);
 	}
@@ -346,6 +360,30 @@ class FileWithClass {
 		}
 		
 		return fResult;
+	}
+	
+	/* Для отладки - вывод списка методов на экран */
+	public void showMethodsList() {
+		
+		try {
+			File f=new File(getPath2XMLTreeWOFalseTags());
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
+			DocumentBuilder db = dbf.newDocumentBuilder();  
+			Document doc = db.parse(f);  
+			doc.getDocumentElement().normalize();  
+		
+			NodeList nodeList = doc.getElementsByTagName("Method"); 
+			for (int i = 0; i < nodeList.getLength(); i++) {  
+				Node node = nodeList.item(i);  
+				//System.out.println("\nNode Name :" + node.getNodeName());  
+				if (node.getNodeType() == Node.ELEMENT_NODE) {  
+					Element eElement = (Element) node;
+					out.println("Название метода: "+ eElement.getElementsByTagName("MethodIdentifier").item(0).getTextContent().trim());  
+				}  
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
 

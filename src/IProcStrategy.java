@@ -1,5 +1,5 @@
 /*
- * Класс Repo
+ * Интерфейс IProcStrategy
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -23,41 +23,21 @@ package ACDG;
 import static java.lang.System.out;
 import java.util.ArrayList;
 
+
 /**
- * Класс RelationRepo, реализующий шаблонированный интефейс 
- * Repository
+ * Интерфейс для стратегия распознавания xml-дерева
  */
-class Repository<T> implements IRepository<T> {
-	
-	private ArrayList<T> list;
-	
-	public Repository() {
-		list = new ArrayList<T>();
+interface IProcStrategy {
+	/* Обратная подстановка для символов "<", ">", "&" */
+	default public String reverseSubst(String s) {
+		s=s.replaceAll("zzzzz","<");
+		s=s.replaceAll("xxxxx",">");
+		s=s.replaceAll("wwwww","&");
+		return s;
 	}
 	
-	@Override
-	public void add(T entity) {
-		list.add(entity);
-	}
-	
-	@Override
-	public T get(int index) {
-		return list.get(index);
-	}
-	
-	@Override
-	public void update(int index, T entity) {
-		list.remove(index);
-		list.add(index,entity);
-	}
-	
-	@Override
-	public void delete(int index) {
-		list.remove(index);
-	}
-	
-	@Override
-	public boolean contains(T entity) {
-		return list.contains(entity);
-	}
+	/* Метод для распознавания XML-дерева */
+	public ClassDescr readXMLFile(String path2File, 
+			ModelScannerIface model);
 }
+

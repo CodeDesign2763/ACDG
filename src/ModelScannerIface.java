@@ -1,5 +1,5 @@
 /*
- * Класс Repo
+ * Интерфейс ModelScannerIface
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -23,41 +23,14 @@ package ACDG;
 import static java.lang.System.out;
 import java.util.ArrayList;
 
+
 /**
- * Класс RelationRepo, реализующий шаблонированный интефейс 
- * Repository
+ * Интерфейс модели, который используется стратегией распознавания
+ * XML файла для добавления обнаруженных отношений
  */
-class Repository<T> implements IRepository<T> {
+interface ModelScannerIface {
+	/* Добавить отношение */
+	public void addRelation(Relation r);
 	
-	private ArrayList<T> list;
-	
-	public Repository() {
-		list = new ArrayList<T>();
-	}
-	
-	@Override
-	public void add(T entity) {
-		list.add(entity);
-	}
-	
-	@Override
-	public T get(int index) {
-		return list.get(index);
-	}
-	
-	@Override
-	public void update(int index, T entity) {
-		list.remove(index);
-		list.add(index,entity);
-	}
-	
-	@Override
-	public void delete(int index) {
-		list.remove(index);
-	}
-	
-	@Override
-	public boolean contains(T entity) {
-		return list.contains(entity);
-	}
 }
+

@@ -1,5 +1,5 @@
 /*
- * Класс Repo
+ * Класс AvailablePLs
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -30,43 +30,25 @@ import static java.lang.System.out;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-enum ProgramLanguage {
-	JAVA,
-	CSHARP,
-	CPP
-}
 
 /**
- * Класс RelationRepo, реализующий шаблонированный интефейс 
- * Repository
+ * Доступные языки программирования
  */
-class Model implements ModelScannerIface {
-	private IRepository<Relation> relations;
-	private IRepository<FileWithClass> filesWithClasses;
-	private CProgramLanguage cProgramLanguage;
-		
-	public Model(CProgramLanguage pl) {
-		cProgramLanguage=pl;
-		relations=new Repository<Relation>();
-		filesWithClasses=new Repository<FileWithClass>();
+class AvailablePLs {
+	
+	public static ArrayList<CProgramLanguage> availablePLList;
+	
+	static {
+		availablePLList=new ArrayList<CProgramLanguage>();
+		availablePLList.add((int) ProgramLanguage.JAVA.ordinal(),
+				new CProgramLanguage("Java",true,"java.bnf",
+				ProgramLanguage.JAVA));
+		availablePLList.add((int) ProgramLanguage.CSHARP.ordinal(),
+				new CProgramLanguage("C#",false,"cs.bnf",
+				ProgramLanguage.CSHARP));
+		availablePLList.add((int) ProgramLanguage.CPP.ordinal(),
+				new CProgramLanguage("C++",false,"cpp.bnf",
+				ProgramLanguage.CPP));
 	}
-	
-	/* Имеется ли такое отношение */
-	private boolean hasRelation(Relation r) {
-		return relations.contains(r);
-	}
-	
-	@Override
-	public void addRelation(Relation r) {
-		if (!hasRelation(r)) {
-			relations.add(r);
-			out.println("Такого отношения еще не было");
-		} else {
-			out.println("Такое отношение уже есть");
-		}
-	}
-	
-	
-	
 		
 }

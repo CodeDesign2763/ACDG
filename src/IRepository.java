@@ -25,6 +25,7 @@ import static java.lang.System.out;
 /**
  * Шаблонированный интерфейс, реализующий паттерн "Репозиторий"
  * с операциями add, get, update, delete
+ * и одновременно шаблон "Адаптер"
  */
 interface IRepository<T> {
 	
@@ -35,5 +36,7 @@ interface IRepository<T> {
 	public void update(int index, T entity);
 	
 	public void delete(int index);
+	
+	public boolean contains(T entity);
 	
 }

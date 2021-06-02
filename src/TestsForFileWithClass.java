@@ -108,7 +108,8 @@ class TestsForFileWithClass {
 				FileWithClass("../data/SimpleClassXMLConvTest.txt",
 				javaPL);
 		fwc1.convSourceFile2XML();
-		assertEquals(true,fwc1.getConvResult());
+		fwc1.showMethodsList();
+		assertEquals(true,fwc1.getConv2XMLResult());
 	}
 	
 	@Test
@@ -117,7 +118,7 @@ class TestsForFileWithClass {
 		FileWithClass fwc1 = new FileWithClass("../data/source2.txt",
 				javaPL);
 		fwc1.convSourceFile2XML();
-		assertEquals(false,fwc1.getConvResult());
+		assertEquals(false,fwc1.getConv2XMLResult());
 	}
 	
 	@Test
@@ -127,7 +128,10 @@ class TestsForFileWithClass {
 				new FileWithClass("../data/SpecialityForm.java",
 				javaPL);
 		fwc1.convSourceFile2XML();
-		assertEquals(true,fwc1.getConvResult());
+		fwc1.showMethodsList();
+		
+		assertEquals(true,fwc1.getConv2XMLResult());
+		
 	}
 	
 	@Test
@@ -137,7 +141,22 @@ class TestsForFileWithClass {
 				new FileWithClass("../data/MainForm.java",
 				javaPL);
 		fwc1.convSourceFile2XML();
-		assertEquals(true,fwc1.getConvResult());
+		fwc1.showMethodsList();
+		assertEquals(true,fwc1.getConv2XMLResult());
+	}
+	
+	@Test
+	@DisplayName("Проверка универсальной функции для тестирования")
+	public void testUnivTestFunction() {
+		FileWithClass fwc1 = 
+				new FileWithClass("../data/MainForm.java",
+				javaPL);
+		assertEquals("../temp/MainForm.java_wo_comments",
+				(String) FunctionsForTesting.checkPrivMethod(
+				fwc1, "ACDG.FileWithClass",
+				"getPath2FileWOComments",null,null));
+		
+		
 	}
 	
 	//@Test
