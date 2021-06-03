@@ -59,6 +59,8 @@ class FileWithClass {
 	private boolean fClearedOfComments;
 	private ClassDescr classDescription;
 	
+	
+	
 	private CProgramLanguage programLanguage;
 	
 	public FileWithClass(String fn, CProgramLanguage pl) {

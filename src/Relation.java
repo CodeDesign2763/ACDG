@@ -54,6 +54,24 @@ class Relation {
 		
 	}
 	
+	public Relation(String c1Name, String c2Name, RelationCode rcode, 
+			String st,
+			ModelRelationIface m) {
+			mRelIface = m;
+		class1Ind=mRelIface.getClassInd(c1Name);
+		class2Ind=mRelIface.getClassInd(c2Name);
+		relationCode=rcode;
+		stereotype=st;
+		if ((class1Ind == -1) || (class2Ind == -1)) {
+			out.println("Ошибка при создании отношения!\n"
+					+ "Неверный индекс класса\n"
+					+ c1Name + "," + c2Name);
+		}
+		
+	
+		
+	}
+	
 	public int getClass1Ind() {
 		return class1Ind;
 	}

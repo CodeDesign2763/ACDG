@@ -31,5 +31,7 @@ import java.util.ArrayList;
 interface ModelRelationIface {
 	/* Получить имя класса по индексу */
 	public String getClassName(int index);
+	public int getClassInd(String name);
+	
 }
 

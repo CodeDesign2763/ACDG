@@ -45,6 +45,7 @@ class Model implements ModelScannerIface, ModelRelationIface {
 	//private IRepository<FileWithClass> filesWithClasses;
 	private ArrayList<Relation> relations;
 	private ArrayList<FileWithClass> filesWithClasses;
+	private ArrayList<String> classes;
 	
 	private CProgramLanguage cProgramLanguage;
 		
@@ -52,6 +53,7 @@ class Model implements ModelScannerIface, ModelRelationIface {
 		cProgramLanguage=pl;
 		relations=new ArrayList<Relation>();
 		filesWithClasses=new ArrayList<FileWithClass>();
+		classes = new ArrayList<String>();
 	}
 	
 	/* Имеется ли такое отношение */
@@ -72,12 +74,23 @@ class Model implements ModelScannerIface, ModelRelationIface {
 	/* Возвращает имя класса по индексу файла с классом */
 	@Override
 	public String getClassName(int index) {
-		return filesWithClasses.get(index).getClassName();
+		return classes.get(index);
+	}
+	
+	/* Возвращает индекс класса по его имени */
+	@Override
+	public int getClassInd(String s) {
+			
+		return classes.indexOf(s);
 	}
 	
 	/* Добавить файл */
 	public void addFileWithClass(String path2File) {
-		filesWithClasses.add(new FileWithClass(path2File, cProgramLanguage));
+		FileWithClass newFWC = 
+				new FileWithClass(path2File, cProgramLanguage);
+				
+		filesWithClasses.add(newFWC);
+		classes.add(newFWC.getClassName());
 	}
 	
 	/* Сгенерировать код PlantUML для отношений */
@@ -87,6 +100,12 @@ class Model implements ModelScannerIface, ModelRelationIface {
 			res += r.genPlantUMLCode() + "\n";
 		}
 		return res;
+	}
+	
+	/* Добавить класс */
+	@Override
+	public void addClass(String className) {
+		classes.add(className);
 	}
 	
 	

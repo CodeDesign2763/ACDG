@@ -38,7 +38,8 @@ import java.io.File;
 class JavaProcStrategy implements IProcStrategy {
 	@Override
 	public ClassDescr readXMLFile(String path2File, 
-			ModelScannerIface model) {
+			ModelScannerIface model,
+			ModelRelationIface modelRelIFace) {
 		
 		NodeList nodeList;
 		
@@ -54,8 +55,11 @@ class JavaProcStrategy implements IProcStrategy {
 		boolean fSub;
 		String parameters="";
 		String paramDataType;
-		String paramID;		
+		String paramID;
 		
+		RelationCode relCode;		
+		String class2Name;
+				
 		ClassDescr classDescr;
 		
 		/* Первая задача - вывести все на печать */
@@ -88,6 +92,56 @@ class JavaProcStrategy implements IProcStrategy {
 			
 			classDescr= new ClassDescr(fClass, classID);
 			
+			/* [Отношения] Наследование / реализация */
+			if (doc.getElementsByTagName("InheritanceBlock")
+						.getLength()>0) {
+				
+				nodeList = doc
+						.getElementsByTagName(
+						"InheritanceBlock"); 
+				for (int i=0; i < nodeList.getLength(); i++) {
+					/* Определяем тип отношения */
+					String inhModif = 
+							( (Element) nodeList.item(i))
+							.getElementsByTagName(
+							"InheritanceModifiers")
+							.item(0)
+							.getTextContent()
+							.trim();
+					relCode = inhModif.equals("extends") ? 
+							RelationCode.INHERITANCE : 
+							RelationCode.REALIZATION;
+							
+					NodeList classNameList = 
+							( (Element) nodeList.item(i))
+							.getElementsByTagName(
+							"Identifier");
+					for (int k=0; k< classNameList.getLength(); k++ ) 
+							{
+						class2Name = 
+								( (Element) classNameList.item(k))
+								.getTextContent().trim();
+						if (modelRelIFace.getClassInd(class2Name)==-1) 
+								{
+							model.addClass(class2Name);
+							
+						}
+						model.addRelation(new Relation(classID, 
+								class2Name,
+								relCode, "", modelRelIFace));
+					}
+				
+				}
+				
+					//elemDataType=elem
+							//.getElementsByTagName(
+							//"MethodDataType")
+							//.item(0)
+							//.getTextContent()
+							//.trim();
+			}
+			
+			
 			/* Поля */
 			
 			fSub=false;
@@ -118,6 +172,11 @@ class JavaProcStrategy implements IProcStrategy {
 							.getTextContent()
 							.trim();
 					elemDataType = reverseSubst(elemDataType);
+					
+					/* [Отношения] Ассоциация */
+					dataTypeRelProc(classID, elemDataType,
+							modelRelIFace, model, 
+							RelationCode.ASSOCIATION, "");
 					
 					/* Изучаем модификаторы */
 					fStatic=false;
@@ -195,6 +254,12 @@ class JavaProcStrategy implements IProcStrategy {
 					}
 					elemDataType = reverseSubst(elemDataType);
 					
+					/* [Отношения] Зависимость "Создание" */
+					dataTypeRelProc(classID, elemDataType,
+							modelRelIFace, model, 
+							RelationCode.DEPENDENCY, "Create");
+					
+					
 					/* Изучаем модификаторы */
 					fStatic=false;
 					NodeList modifList = elem
@@ -261,6 +326,11 @@ class JavaProcStrategy implements IProcStrategy {
 							if (k>0) parameters += ", ";
 							parameters += paramDataType + " " 
 								+ paramID;
+							
+							/* [Отношения] Зависимость "derive" */
+							dataTypeRelProc(classID, paramDataType,
+							modelRelIFace, model, 
+							RelationCode.DEPENDENCY, "Derive");
 						}
 					}
 					parameters = "(" + parameters + ")";

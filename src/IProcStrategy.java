@@ -36,8 +36,46 @@ interface IProcStrategy {
 		return s;
 	}
 	
+	/* Распознавание отношений из типов данных */
+	default public void dataTypeRelProc(String cl1Name,
+			String dataType, ModelRelationIface modelRelIFace,
+			ModelScannerIface modelScanIFace,
+			RelationCode relCode, String stereotype) {
+		String dataType1;
+		String dataType2;
+		if (dataType.indexOf("<")>-1) {
+			dataType1 = 
+					dataType.substring(0,
+					dataType.indexOf("<")-1).trim();
+			dataType2 = 
+					dataType.substring(dataType.indexOf("<")
+					+ 1,dataType.indexOf(">")).trim();
+			if (modelRelIFace.getClassInd(dataType1)>-1) {
+				modelScanIFace.addRelation(
+						new Relation(cl1Name, dataType1,
+						relCode, stereotype,
+						modelRelIFace));
+			}
+			if (modelRelIFace.getClassInd(dataType2)>-1) {
+				modelScanIFace.addRelation(
+						new Relation(cl1Name, dataType2,
+						relCode, stereotype,
+						modelRelIFace));
+			}
+		} else {
+			if (modelRelIFace.getClassInd(dataType)>-1) {
+				modelScanIFace.addRelation(
+						new Relation(cl1Name, dataType,
+						relCode, stereotype,
+						modelRelIFace));
+			}
+		}
+		
+	}
+	
 	/* Метод для распознавания XML-дерева */
 	public ClassDescr readXMLFile(String path2File, 
-			ModelScannerIface model);
+			ModelScannerIface model,
+			ModelRelationIface modelRelIface);
 }
 

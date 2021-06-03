@@ -32,6 +32,8 @@ interface ModelScannerIface {
 	/* Добавить отношение */
 	public void addRelation(Relation r);
 	
+	public void addClass(String className);
+	
 	/* Есть ли такой класс */
 }
 
