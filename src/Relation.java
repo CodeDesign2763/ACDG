@@ -29,7 +29,7 @@ enum RelationCode{
     DEPENDENCY,
     AGREGATION,
     COMPOSITION,
-    ASSOCIATION
+    ASSOCIATION,
     
 }
 
@@ -41,11 +41,17 @@ class Relation {
 	private int class1Ind;
 	private int class2Ind;
 	private RelationCode relationCode;
+	private String stereotype;
+	private ModelRelationIface mRelIface;
 	
-	public Relation(int c1i, int c2i, RelationCode rcode) {
+	public Relation(int c1i, int c2i, RelationCode rcode, String st,
+			ModelRelationIface m) {
 		class1Ind=c1i;
 		class2Ind=c2i;
 		relationCode=rcode;
+		stereotype=st;
+		mRelIface = m;
+		
 	}
 	
 	public int getClass1Ind() {
@@ -60,7 +66,12 @@ class Relation {
 		return relationCode;
 	}
 	
+	public String getStereotype() {
+		return stereotype;
+	}
+	
 	/* Генерация словесного описания отношения */
+	/* Нужна для граф интерфейса */
 	public String conv2String() {
 		String relName="";
 		
@@ -75,7 +86,7 @@ class Relation {
 			break;
 			
 		case DEPENDENCY:
-			relName="зависит";
+			relName="зависит от";
 			break;
 		
 		case AGREGATION:
@@ -85,13 +96,50 @@ class Relation {
 		case COMPOSITION:
 			relName="содержит (комп.)";
 			break;
-		
+			
 		case ASSOCIATION:
 			relName="ссылается";
 		}
 		
 		return String.valueOf(class1Ind) + " " + relName + " " + 
 				String.valueOf(class2Ind);
+	}
+	
+	public String genPlantUMLCode() {
+		String res="";
+		res += mRelIface.getClassName(class1Ind);
+		res += " ";
+		
+		switch (relationCode) {
+		case INHERITANCE:
+			res += "--|>";
+			break;
+			
+		case REALIZATION: 
+			res += "..|>";
+			break;
+			
+		case DEPENDENCY:
+			res += "..>";
+			break;
+		
+		case AGREGATION:
+			res += "o--";
+			break;
+		
+		case COMPOSITION:
+			res += "*--";
+			break;
+		
+		case ASSOCIATION:
+			res += "-->";
+		}
+		
+		res += " ";
+		res += mRelIface.getClassName(class2Ind);
+		res += " : " + stereotype;
+
+		return res;
 	}
 	
 	/* Переопределяем метод от класса Object,
@@ -103,6 +151,7 @@ class Relation {
 		if (class1Ind != r.getClass1Ind()) result=false;
 		if (class2Ind != r.getClass2Ind()) result=false;
 		if (relationCode != r.getRelationCode()) result=false;
+		if (!stereotype.equals(r.getStereotype())) result=false;
 		return result;
 	}
 }

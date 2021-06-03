@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  
  * If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 
 
@@ -69,7 +69,7 @@ class FileWithClass {
 		
 	}
 	
-	private boolean isClearedOfComments() {
+	public boolean isClearedOfComments() {
 		return fClearedOfComments;
 	}
 	
@@ -112,19 +112,68 @@ class FileWithClass {
 	/* Убирает из исходного файла комментарии и некоторые декларации
 	 * и сохраняет результат в файл, определяемый при помощи
 	 * getPath2FileWOComments() */
-	private void deleteCommentsAndOtherStuff() {
+	public void deleteCommentsAndOtherStuff() {
 		/* Классы для работы с регулярными выражениями */
 		/* Экранирование двойным \\ */
+		
+		/* FIXME */
+		/* Это жесть - нужно все переписать !!! */
+		/* S меняется, а паттерн все ищет там что-то */
+		fClearedOfComments = true;
+		
 		Pattern patternImport = Pattern.compile("^import");
 		Pattern patternPackage = Pattern.compile("^package");
 		Pattern patternCPPComment = Pattern.compile("\\/\\/");
 		Pattern patternCCommentOpen = Pattern.compile("\\/\\*");;
 		Pattern patternCCommentClose = Pattern.compile("\\*\\/");;
+		
+		Pattern patternCPPCommentInsideDQ = 
+				Pattern.compile("\".*\\/\\/.*\"");
+		Pattern patternCCommentOpenInsideDQ = 
+				Pattern.compile("\".*\\/\\*.*\"");
+		Pattern patternCCommentCloseInsideDQ = 
+				Pattern.compile("\".*\\*\\/.*\"");
+		
+		Pattern patternClass = Pattern.compile("^class");
+		Pattern patternEnum = Pattern.compile("enum");
+		Pattern patternRBrace = Pattern.compile("\\}");
+		
 		Matcher matcherImport;
 		Matcher matcherPackage;
 		Matcher matcherCPPComment;
 		Matcher matcherCCommentOpen;
 		Matcher matcherCCommentClose;
+		Matcher matcherCPPCommentInsideDQ;
+		Matcher matcherCCommentOpenInsideDQ;
+		Matcher matcherCCommentCloseInsideDQ;
+		Matcher matcherClass;
+		Matcher matcherEnum;
+		Matcher matcherRBrace;
+		
+		
+		/* В строке найден import */
+		boolean fImport;
+		/* В строке найден package */
+		boolean fPackage;
+		/* В строке найден /* */
+		boolean fCCommentOpen;
+		/* В строке найдена закр комб коммент Си*/
+		boolean fCCommentClose; 
+		/* В строке найдены коммент CPP*/
+		boolean fCPPComment; 
+		/* "class" уже встречался */
+		boolean fClass=false;
+		/* В строке найдена "enum" */
+		boolean fEnum;
+		/* Состояние enum */
+		boolean fEnumMode=false;
+		/* В строке найдена "}" */
+		boolean fRBrace;
+		
+		/* Строка для хранения строки файла для отладки при ошибках */
+		String s1="Строка отсутствует";
+		
+		 
 		
 		ProgramLanguage progLang = programLanguage.getPLID();
 		
@@ -146,6 +195,7 @@ class FileWithClass {
 			while (scanfile.hasNext())
 			{
 				s=scanfile.nextLine();
+				s1=s;
 				//out.println("Строка из файла "+s);
 				matcherImport = patternImport.matcher(s);
 				matcherPackage = patternPackage.matcher(s);
@@ -153,32 +203,88 @@ class FileWithClass {
 				matcherCCommentOpen = patternCCommentOpen.matcher(s);
 				matcherCCommentClose = 
 						patternCCommentClose.matcher(s);
+				matcherCPPCommentInsideDQ = 
+						patternCPPCommentInsideDQ.matcher(s);
+				matcherCCommentOpenInsideDQ = 
+						patternCCommentOpenInsideDQ.matcher(s);
+				matcherCCommentCloseInsideDQ = 
+						patternCCommentCloseInsideDQ.matcher(s);
+						
+				matcherClass = patternClass.matcher(s);
+				matcherEnum = patternEnum.matcher(s);
+				matcherRBrace = patternRBrace.matcher(s);
 				
-				fDontWriteLine = false;
+				
+				/* Получение значений флагов */
+				fImport = matcherImport.find();
+				fPackage = matcherPackage.find();
+				fCPPComment = matcherCPPComment.find()
+						& (!matcherCPPCommentInsideDQ.find());
+				fCCommentOpen= matcherCCommentOpen.find()
+						& (!matcherCCommentOpenInsideDQ.find());
+				fCCommentClose= matcherCCommentClose.find()
+						& (!matcherCCommentCloseInsideDQ.find());
+						
+				fRBrace = matcherRBrace.find();
+				fEnum = matcherEnum.find();
+				
+				
+				if (matcherClass.find()) {
+					fClass=true; 
+				}
+				
+				/* Для удаления одной строки */
+				if ((fDontWriteLine) && (!fEnumMode)) {
+					fDontWriteLine=false;
+					//out.println(s);
+				}
+				
+				
+				/* Удаление enum */
+				
+				if (!fClass) {
+				
+					/* Enum на одной строке */
+					if ((fEnum) && (fRBrace) && (!fEnumMode)) {
+						/* Удаляем всего одну строку */
+						fDontWriteLine=true;
+						out.println(s);
+					}
+					
+					if ((fEnum) && (!fRBrace) && (!fEnumMode)) {
+						fEnumMode=true;
+						fDontWriteLine=true; 
+					}
+					
+					if ((!fEnum) && (fRBrace) && (fEnumMode)) {
+						fEnumMode=false;
+						/* А строка все равно будет удалена */
+					}
+						
+				}
+				
 				/* Если включен режим комментариев С или
 				 * язык - Java и строчка начинается с package или
 				 * import - вообще ее не записывать в выходной файл */
 				if ((progLang == ProgramLanguage.JAVA) &&
-						((matcherImport.find()) ||
-						(matcherPackage.find()) )) {
+						(fImport) ||
+						(fPackage) ) {
 					fDontWriteLine = true;
 				}
 				
-				if ((!fCComment) && (matcherCPPComment.find())) {
+				if ((!fCComment) && (fCPPComment)) {
 					s=s.substring(0,s.indexOf("//"));
 				}
 				
-				if ((matcherCCommentOpen.find()) && 
-						(!matcherCCommentClose.find()) ){
+				if ((fCCommentOpen) && 
+						(!fCCommentClose) ){
 					s=s.substring(0,s.indexOf("/*"));
 					fCComment=true;
 				}
 				
-				matcherCCommentOpen.reset();
-				matcherCCommentClose.reset();
 				
-				if ((matcherCCommentClose.find()) && 
-						(!matcherCCommentOpen.find())) {
+				if ((fCCommentClose) && 
+						(!fCCommentOpen)) {
 					if (s.indexOf("*/") + 2 < s.length()) {
 						s=s.substring(s.indexOf("*/")+2);
 					} else s="";
@@ -186,12 +292,13 @@ class FileWithClass {
 					//out.println("RR" +s);
 				}
 				
-				matcherCCommentOpen.reset();
-				matcherCCommentClose.reset();
 				
-				if ((matcherCCommentOpen.find()) 
-						&& (matcherCCommentClose.find())) {
+				
+				if ((fCCommentOpen) 
+						&& (fCCommentClose)) {
+					
 					if (s.indexOf("*/") + 2 < s.length()) {
+						/* BOGUS */
 						s=s.substring(0,s.indexOf("/*")) + 
 								s.substring(s.indexOf("*/")+2);
 					} else s=s.substring(0,s.indexOf("/*"));
@@ -215,11 +322,16 @@ class FileWithClass {
 			scanfile.close();
 			writer.close();
 			
-			//Меняем флаг класса
-			fClearedOfComments = true;
+			
 		}	catch (IOException ex1) {
-				//ex1.printStackTrace();
-		}	catch (Exception e) {}
+				ex1.printStackTrace();
+				fClearedOfComments = false;
+		}	catch (Exception e) {
+				e.printStackTrace();
+				fClearedOfComments = false;
+				out.println("Строка, которая вызвала ошибку:"
+						+ s1);
+		}
 			
 	}
 	
@@ -277,11 +389,12 @@ class FileWithClass {
 				fSuccess=false;
 			}
 
-			out.println("Выполнение программы завершено");
+			//out.println("Выполнение программы завершено");
 			
 		
 		} catch (Exception e) { 
 			fSuccess=false;
+			e.printStackTrace();
 		} finally {
 			try {
 				/* Удаляем промежуточный файл */
@@ -302,7 +415,7 @@ class FileWithClass {
 		
 		conv2XMLResult=fSuccess;
 		/* Для отладки */
-		out.println(fSuccess);
+		//out.println(fSuccess);
 	}
 	
 	/* Удаление из XML-файла тэгов token,

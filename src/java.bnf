@@ -186,7 +186,8 @@
  | <Modifier> <ModifierList>;
 
 #Модификатор
-<Modifier> := ^(public|private|protected|abstract|final|static);
+<Modifier> := ^(public|private|protected|abstract|final|static
+|default);
 
 #Тип данных поля класса
 <FieldDataType> := <AbstractDataType>;

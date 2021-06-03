@@ -36,7 +36,7 @@ import java.util.ArrayList;
  */
 class AvailablePLs {
 	
-	public static ArrayList<CProgramLanguage> availablePLList;
+	private static ArrayList<CProgramLanguage> availablePLList;
 	
 	static {
 		availablePLList=new ArrayList<CProgramLanguage>();
@@ -49,6 +49,10 @@ class AvailablePLs {
 		availablePLList.add((int) ProgramLanguage.CPP.ordinal(),
 				new CProgramLanguage("C++",false,"cpp.bnf",
 				ProgramLanguage.CPP));
+	}
+	
+	public static CProgramLanguage getPLbyEnum(ProgramLanguage pl) {
+		return availablePLList.get(pl.ordinal());
 	}
 		
 }

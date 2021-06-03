@@ -218,12 +218,13 @@ class JavaProcStrategy implements IProcStrategy {
 									break;
 								case "static":
 									fStatic = true;
-									break;
-								default:
-									throw 
-											new 
-											Exception(
-											"Неверный модификатор");
+									//break;
+								
+								//default:
+									//throw 
+											//new 
+											//Exception(
+											//"Неверный модификатор");
 							}
 						}
 					}

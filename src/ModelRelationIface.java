@@ -1,5 +1,5 @@
 /*
- * Интерфейс ModelScannerIface
+ * Интерфейс ModelRelationIface
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -25,13 +25,11 @@ import java.util.ArrayList;
 
 
 /**
- * Интерфейс модели, который используется стратегией распознавания
- * XML файла для добавления обнаруженных отношений
+ * Интерфейс модели, который используется классом Relation для 
+ * генерации PlantUML-кода
  */
-interface ModelScannerIface {
-	/* Добавить отношение */
-	public void addRelation(Relation r);
-	
-	/* Есть ли такой класс */
+interface ModelRelationIface {
+	/* Получить имя класса по индексу */
+	public String getClassName(int index);
 }
 

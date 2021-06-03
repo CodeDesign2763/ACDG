@@ -40,15 +40,18 @@ enum ProgramLanguage {
  * Класс RelationRepo, реализующий шаблонированный интефейс 
  * Repository
  */
-class Model implements ModelScannerIface {
-	private IRepository<Relation> relations;
-	private IRepository<FileWithClass> filesWithClasses;
+class Model implements ModelScannerIface, ModelRelationIface {
+	//private IRepository<Relation> relations;
+	//private IRepository<FileWithClass> filesWithClasses;
+	private ArrayList<Relation> relations;
+	private ArrayList<FileWithClass> filesWithClasses;
+	
 	private CProgramLanguage cProgramLanguage;
 		
 	public Model(CProgramLanguage pl) {
 		cProgramLanguage=pl;
-		relations=new Repository<Relation>();
-		filesWithClasses=new Repository<FileWithClass>();
+		relations=new ArrayList<Relation>();
+		filesWithClasses=new ArrayList<FileWithClass>();
 	}
 	
 	/* Имеется ли такое отношение */
@@ -66,6 +69,25 @@ class Model implements ModelScannerIface {
 		}
 	}
 	
+	/* Возвращает имя класса по индексу файла с классом */
+	@Override
+	public String getClassName(int index) {
+		return filesWithClasses.get(index).getClassName();
+	}
+	
+	/* Добавить файл */
+	public void addFileWithClass(String path2File) {
+		filesWithClasses.add(new FileWithClass(path2File, cProgramLanguage));
+	}
+	
+	/* Сгенерировать код PlantUML для отношений */
+	public String genPlantUMLCode4Relations() {
+		String res="\n";
+		for (Relation r : relations) {
+			res += r.genPlantUMLCode() + "\n";
+		}
+		return res;
+	}
 	
 	
 		

@@ -34,18 +34,18 @@ class TestsForRepository {
 		Repository<Relation> rr = new Repository<Relation>();
 				
 		/* Проверка add и get */
-		rr.add(new Relation(1,2,RelationCode.DEPENDENCY));
-		assertEquals(rr.get(0).conv2String(),new Relation(1,2,RelationCode.DEPENDENCY).conv2String());
+		rr.add(new Relation(1,2,RelationCode.DEPENDENCY, "",null));
+		assertEquals(rr.get(0).conv2String(),new Relation(1,2,RelationCode.DEPENDENCY, "",null).conv2String());
 		
 		/* Проверка update */
-		rr.add(new Relation(3,4,RelationCode.ASSOCIATION));
-		rr.add(new Relation(5,6,RelationCode.COMPOSITION));
-		rr.update(1,new Relation(10,20,RelationCode.REALIZATION));
-		assertEquals(rr.get(1).conv2String(),new Relation(10,20,RelationCode.REALIZATION).conv2String());
+		rr.add(new Relation(3,4,RelationCode.ASSOCIATION, "",null));
+		rr.add(new Relation(5,6,RelationCode.COMPOSITION, "",null));
+		rr.update(1,new Relation(10,20,RelationCode.REALIZATION, "",null));
+		assertEquals(rr.get(1).conv2String(),new Relation(10,20,RelationCode.REALIZATION, "",null).conv2String());
 		
 		/* Проверка delete */
 		rr.delete(1);
-		assertEquals(rr.get(1).conv2String(),new Relation(5,6,RelationCode.COMPOSITION).conv2String());
+		assertEquals(rr.get(1).conv2String(),new Relation(5,6,RelationCode.COMPOSITION, "",null).conv2String());
 		
 	}	
 }
