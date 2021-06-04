@@ -46,16 +46,17 @@ interface IProcStrategy {
 		if (dataType.indexOf("<")>-1) {
 			dataType1 = 
 					dataType.substring(0,
-					dataType.indexOf("<")-1).trim();
+					dataType.indexOf("<")).trim();
 			dataType2 = 
 					dataType.substring(dataType.indexOf("<")
 					+ 1,dataType.indexOf(">")).trim();
+			try {
 			if (modelRelIFace.getClassInd(dataType1)>-1) {
 				modelScanIFace.addRelation(
 						new Relation(cl1Name, dataType1,
 						relCode, stereotype,
 						modelRelIFace));
-			}
+			} } catch (Exception e) {out.println("XXX:"+dataType +"\n"+dataType1+"|"+dataType2); out.println(modelRelIFace.getClassInd(dataType1));}
 			if (modelRelIFace.getClassInd(dataType2)>-1) {
 				modelScanIFace.addRelation(
 						new Relation(cl1Name, dataType2,
@@ -76,6 +77,7 @@ interface IProcStrategy {
 	/* Метод для распознавания XML-дерева */
 	public ClassDescr readXMLFile(String path2File, 
 			ModelScannerIface model,
-			ModelRelationIface modelRelIface);
+			ModelRelationIface modelRelIface)
+			throws Exception;
 }
 

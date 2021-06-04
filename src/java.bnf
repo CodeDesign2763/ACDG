@@ -81,15 +81,19 @@
  <ClassElementList>;
 
 
-#Элемент класса (метод или поле)
-<ClassElement> := <MethodWithAnnotation> | <Field>;
+#Элемент класса (метод, поле или блок статической инициализации)
+<ClassElement> := <MethodWithAnnotation> | <Field> | <StaticBlock>;
+
+#Блок для статической инициализации
+<StaticBlock> := <StaticKeyword> <MethodBodyWithBrackets>;
+<StaticKeyword> := ^static;
 
 #Метод с аннотацией
 <MethodWithAnnotation> := <Annotation> <Method> | <Method>;
 
 #Аннотация
 #BOGUS: Многострочные аннотации не работают
-# Наверно нужно по тому же принципу, что и телом метода
+# Наверно нужно по тому же принципу, что и с телом метода
 <Annotation> := ^\@\w+(\(.*?\))?;
 
 #Метод
@@ -97,11 +101,27 @@
 
 #Обычный Метод
 <CommonMethod> := <ModifierList> <MethodDataType> <MethodIdentifier>
- <ParameterListWithBrackets> <MethodBodyWithBrackets>;
+ <ParameterListWithBrackets> <MethodBodyWithBrackets> |
+ <ModifierList> <MethodDataType> <MethodIdentifier>
+ <ParameterListWithBrackets>
+ <ThrowsKeyword> <ExceptionList> <MethodBodyWithBrackets>;
 
 #Конструктор
 <Constructor> := <ModifierList> <MethodIdentifier>
  <ParameterListWithBrackets> <MethodBodyWithBrackets>;
+
+#Конструкция throws
+<ThrowsKeyword> := ^throws;
+<ExceptionList> := <ExceptionSublist> | <Identifier>;
+#Дополнительные случаи для уменьшения глубины рекурсии
+<ExceptionSublist> := 
+<Identifier> <Comma> <Identifier> <Comma> <Identifier> <Comma>
+ <Identifier> <Comma> <Identifier> <Comma> <Identifier> <Comma> 
+ <Identifier> <Comma> <Identifier> <Comma> <Identifier> <Comma> 
+ <Identifier> <Comma> <ExceptionList> |
+ <Identifier> <Comma> <Identifier> <Comma> <Identifier> <Comma>
+ <Identifier> <Comma> <Identifier> <Comma> <ExceptionList> |
+ <Identifier> <Comma> <ExceptionList>; 
 
 
 #Идентификатор метода
@@ -186,8 +206,7 @@
  | <Modifier> <ModifierList>;
 
 #Модификатор
-<Modifier> := ^(public|private|protected|abstract|final|static
-|default);
+<Modifier> := ^(public|private|protected|abstract|final|static);
 
 #Тип данных поля класса
 <FieldDataType> := <AbstractDataType>;

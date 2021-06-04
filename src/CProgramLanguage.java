@@ -32,12 +32,16 @@ class CProgramLanguage {
 	private boolean fSupported;
 	private String grammarFileName;
 	private ProgramLanguage plID;
+	private IProcStrategy strategy;
 	
-	public CProgramLanguage(String name, boolean fs, String g, ProgramLanguage pl) {
+	
+	public CProgramLanguage(String name, boolean fs, String g, 
+			ProgramLanguage pl, IProcStrategy str) {
 		plName=name;
 		fSupported=fs;
 		grammarFileName=g;
 		plID=pl;
+		strategy=str;
 	}
 	
 	public String getPLName() {
@@ -54,6 +58,10 @@ class CProgramLanguage {
 	
 	public String getPath2Grammar() {
 		return "../src/"+grammarFileName;
+	}
+	
+	public IProcStrategy getProcStrategy() {
+		return strategy;
 	}
 	
 }

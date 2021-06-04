@@ -42,8 +42,7 @@ class TestsForFileWithClass {
 	/* Язык программирования Java */
 	private static CProgramLanguage javaPL;
 	static {
-		javaPL = new CProgramLanguage("Java", true, "java.bnf", 
-				ProgramLanguage.JAVA);
+		javaPL = AvailablePLs.getPLbyEnum(ProgramLanguage.JAVA);
 	}
 	
 	@Test
@@ -97,6 +96,7 @@ class TestsForFileWithClass {
 			e.printStackTrace();
 			fail();
 		}	catch (Exception e) {
+			e.printStackTrace();
 			fail();
 		}
 	}
@@ -118,6 +118,7 @@ class TestsForFileWithClass {
 		FileWithClass fwc1 = new FileWithClass("../data/source2.txt",
 				javaPL);
 		fwc1.convSourceFile2XML();
+		
 		assertEquals(false,fwc1.getConv2XMLResult());
 	}
 	

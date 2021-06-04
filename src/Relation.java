@@ -124,6 +124,8 @@ class Relation {
 	}
 	
 	public String genPlantUMLCode() {
+		/* От 1-го класса ко 2-му */
+		
 		String res="";
 		res += mRelIface.getClassName(class1Ind);
 		res += " ";
@@ -155,8 +157,10 @@ class Relation {
 		
 		res += " ";
 		res += mRelIface.getClassName(class2Ind);
-		res += " : " + stereotype;
-
+		if (!stereotype.equals("")) {
+			res += " : " + stereotype;
+		} 
+		
 		return res;
 	}
 	

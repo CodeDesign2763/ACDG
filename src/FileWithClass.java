@@ -54,8 +54,9 @@ import org.w3c.dom.Element;
 class FileWithClass {
 	private String path2File;
 	private String fileName;
-	private boolean conv2XMLResult;
 	
+	private boolean conv2XMLResult;
+	private boolean xmlFileAnalysisResult;
 	private boolean fClearedOfComments;
 	private ClassDescr classDescription;
 	
@@ -63,12 +64,34 @@ class FileWithClass {
 	
 	private CProgramLanguage programLanguage;
 	
+	private ModelScannerIface modScanIFace;
+	private ModelRelationIface modRelIFace;
+	
+	/* Версия конструктора для отладки */
 	public FileWithClass(String fn, CProgramLanguage pl) {
 		path2File=fn;
 		conv2XMLResult=false;
 		fClearedOfComments=false;
 		programLanguage=pl;
+		modScanIFace=null;
+		modRelIFace=null;
 		
+	}
+	
+	public FileWithClass(String fn, CProgramLanguage pl,
+			ModelScannerIface scanIFace, ModelRelationIface relIFace) {
+		path2File=fn;
+		conv2XMLResult=false;
+		fClearedOfComments=false;
+		xmlFileAnalysisResult=false;
+		programLanguage=pl;
+		modScanIFace=scanIFace;
+		modRelIFace=relIFace;
+		
+	}
+	
+	public boolean getXMLFileAnalysisResult() {
+		return xmlFileAnalysisResult;
 	}
 	
 	public boolean isClearedOfComments() {
@@ -250,7 +273,7 @@ class FileWithClass {
 					if ((fEnum) && (fRBrace) && (!fEnumMode)) {
 						/* Удаляем всего одну строку */
 						fDontWriteLine=true;
-						out.println(s);
+						//out.println(s);
 					}
 					
 					if ((fEnum) && (!fRBrace) && (!fEnumMode)) {
@@ -363,7 +386,7 @@ class FileWithClass {
 			
 			/* Запускаем bullwinkle.jar и перенаправляем stdout
 			 * в xml-файл */
-			out.println(path2Grammar);
+			//out.println(path2Grammar);
 			var processBuilder = new ProcessBuilder();
 			processBuilder.command("java",
 					"-jar",
@@ -477,6 +500,42 @@ class FileWithClass {
 		return fResult;
 	}
 	
+	/* Чтение XML-дерева 
+	 * В итоге заполняется classDescription и добавляются
+	 * отношения в модель */
+	private void readXMLFile() {
+		xmlFileAnalysisResult = true;
+		try {
+			classDescription = programLanguage.getProcStrategy()
+					.readXMLFile(getPath2XMLTreeWOFalseTags(),
+					modScanIFace, modRelIFace);
+		} catch (Exception e) {
+			e.printStackTrace();
+			xmlFileAnalysisResult = false;
+		}
+				
+	}
+	
+	public void genClassDescr() {
+		convSourceFile2XML();
+		readXMLFile();
+		/* Для отладки */
+		out.println("Имя файла:" + getFileName() + "\n"
+				+ "Предварительная обработка:"
+				+ String.valueOf(isClearedOfComments()) + "\n"
+				+ "Преобразование в XML-дерево:" 
+				+ String.valueOf(getConv2XMLResult()) + "\n"
+				+ "Анализ XML-дерева:"
+				+ String.valueOf(
+				getXMLFileAnalysisResult()) + "\n");
+	}
+	
+	/* Получение PlantUML кода для файла с классом */
+	public String conv2PlantUMLString() {
+		return classDescription.conv2PlantUMLString();
+	}
+	
+	
 	/* Для отладки - вывод списка методов на экран */
 	public void showMethodsList() {
 		
@@ -500,5 +559,7 @@ class FileWithClass {
 			e.printStackTrace();
 		}
 	}
+	
+	
 }
 

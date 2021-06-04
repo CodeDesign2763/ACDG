@@ -39,7 +39,7 @@ class JavaProcStrategy implements IProcStrategy {
 	@Override
 	public ClassDescr readXMLFile(String path2File, 
 			ModelScannerIface model,
-			ModelRelationIface modelRelIFace) {
+			ModelRelationIface modelRelIFace) throws Exception {
 		
 		NodeList nodeList;
 		
@@ -65,7 +65,7 @@ class JavaProcStrategy implements IProcStrategy {
 		/* Первая задача - вывести все на печать */
 		
 		
-		try {
+		//try {
 			File f=new File(path2File);
 			DocumentBuilderFactory dbf = 
 					DocumentBuilderFactory.newInstance();  
@@ -340,12 +340,12 @@ class JavaProcStrategy implements IProcStrategy {
 						elemName, elemDataType, am, fStatic, fSub,
 						parameters));
 			}
-			out.println(classDescr.conv2PlantUMLString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			//out.println(classDescr.conv2PlantUMLString());
+		//} catch (Exception e) {
+			//e.printStackTrace();
+		//}
 		
-		return null;
+		return classDescr;
 	}
 	
 	

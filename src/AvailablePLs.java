@@ -40,15 +40,17 @@ class AvailablePLs {
 	
 	static {
 		availablePLList=new ArrayList<CProgramLanguage>();
+		JavaProcStrategy javaProcStrategy = new JavaProcStrategy();
+		
 		availablePLList.add((int) ProgramLanguage.JAVA.ordinal(),
 				new CProgramLanguage("Java",true,"java.bnf",
-				ProgramLanguage.JAVA));
+				ProgramLanguage.JAVA,javaProcStrategy));
 		availablePLList.add((int) ProgramLanguage.CSHARP.ordinal(),
 				new CProgramLanguage("C#",false,"cs.bnf",
-				ProgramLanguage.CSHARP));
+				ProgramLanguage.CSHARP,null));
 		availablePLList.add((int) ProgramLanguage.CPP.ordinal(),
 				new CProgramLanguage("C++",false,"cpp.bnf",
-				ProgramLanguage.CPP));
+				ProgramLanguage.CPP,null));
 	}
 	
 	public static CProgramLanguage getPLbyEnum(ProgramLanguage pl) {

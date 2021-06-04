@@ -46,6 +46,8 @@ class Model implements ModelScannerIface, ModelRelationIface {
 	private ArrayList<Relation> relations;
 	private ArrayList<FileWithClass> filesWithClasses;
 	private ArrayList<String> classes;
+	private String projectName;
+	
 	
 	private CProgramLanguage cProgramLanguage;
 		
@@ -54,6 +56,15 @@ class Model implements ModelScannerIface, ModelRelationIface {
 		relations=new ArrayList<Relation>();
 		filesWithClasses=new ArrayList<FileWithClass>();
 		classes = new ArrayList<String>();
+		projectName="DefaultProjectName";
+	}
+	
+	public Model(CProgramLanguage pl, String pName) {
+		cProgramLanguage=pl;
+		relations=new ArrayList<Relation>();
+		filesWithClasses=new ArrayList<FileWithClass>();
+		classes = new ArrayList<String>();
+		projectName=pName;
 	}
 	
 	/* Имеется ли такое отношение */
@@ -65,9 +76,9 @@ class Model implements ModelScannerIface, ModelRelationIface {
 	public void addRelation(Relation r) {
 		if (!hasRelation(r)) {
 			relations.add(r);
-			out.println("Такого отношения еще не было");
+			//out.println("Такого отношения еще не было");
 		} else {
-			out.println("Такое отношение уже есть");
+			//out.println("Такое отношение уже есть");
 		}
 	}
 	
@@ -87,7 +98,8 @@ class Model implements ModelScannerIface, ModelRelationIface {
 	/* Добавить файл */
 	public void addFileWithClass(String path2File) {
 		FileWithClass newFWC = 
-				new FileWithClass(path2File, cProgramLanguage);
+				new FileWithClass(path2File, cProgramLanguage,
+				this,this);
 				
 		filesWithClasses.add(newFWC);
 		classes.add(newFWC.getClassName());
@@ -101,6 +113,42 @@ class Model implements ModelScannerIface, ModelRelationIface {
 		}
 		return res;
 	}
+	
+	/* Путь до итогового PlantUML файла */
+	public String getPath2FinalPlantUMLFile() {
+		String res="../output/"+projectName+".plantuml";
+		return res;
+	}
+	
+	
+	/* Сгенерировать итоговый PlantUML код */
+	public void genFinalPlantUMLFile() {
+		try {
+			FileWriter writer = 
+					new 
+					FileWriter(getPath2FinalPlantUMLFile(),false);
+			/* Добавляем @startuml */
+			writer.write("@startuml\n");
+			
+			/* Добавляем описание классов для всех файлов проекта */
+			for (FileWithClass fwc : filesWithClasses) {
+				fwc.genClassDescr();
+				writer.write(fwc.conv2PlantUMLString());
+			}
+			
+			/* Добавляем описание отношений */
+			writer.write(genPlantUMLCode4Relations());
+			
+			/* Добавляем @enduml */
+			writer.write("@enduml\n");
+			
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	
 	/* Добавить класс */
 	@Override

@@ -28,17 +28,18 @@ long_line_behaviour=1
 long_line_column=70
 
 [files]
-current_page=5
-FILE_NAME_0=1463;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FConstruction%2F1%2Fjava.bnf;0;4
+current_page=0
+FILE_NAME_0=4644;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FConstruction%2F1%2Fjava.bnf;0;4
 FILE_NAME_1=649;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FElaboration%2F1%2FFor_Loop.bnf;0;4
 FILE_NAME_2=64;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FConstruction%2F1%2Fsource.txt;0;4
 FILE_NAME_3=4;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FConstruction%2F1%2FRelation.java;0;4
 FILE_NAME_4=2974;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FConstruction%2F1%2FFileWithClass.java_wo_comments;0;4
 FILE_NAME_5=0;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FRelation.java;0;4
+FILE_NAME_6=2;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FConstruction%2F1%2FAvailablePLs.java;0;4
 
 [build-menu]
 EX_00_LB=_Выполнить
-EX_00_CM=java -jar bullwinkle.jar -f xml java.bnf FileWithClass.java_wo_comments
+EX_00_CM=java -jar bullwinkle.jar -f xml java.bnf JavaProcStrategy.java_wo_comments
 EX_00_WD=
 EX_01_LB=Визуализация
 EX_01_CM=java -jar bullwinkle.jar -f dot java.bnf source.txt > output.dot && dot -Tpng output.dot -o output.png && ristretto output.png
