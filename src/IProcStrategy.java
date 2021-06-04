@@ -30,10 +30,11 @@ import java.util.ArrayList;
 interface IProcStrategy {
 	/* Обратная подстановка для символов "<", ">", "&" */
 	default public String reverseSubst(String s) {
-		s=s.replaceAll("zzzzz","<");
-		s=s.replaceAll("xxxxx",">");
-		s=s.replaceAll("wwwww","&");
-		return s;
+		String q=s;
+		q=q.replaceAll("zzzzz","<");
+		q=q.replaceAll("xxxxx",">");
+		q=q.replaceAll("wwwww","&");
+		return q;
 	}
 	
 	/* Распознавание отношений из типов данных */
@@ -50,13 +51,13 @@ interface IProcStrategy {
 			dataType2 = 
 					dataType.substring(dataType.indexOf("<")
 					+ 1,dataType.indexOf(">")).trim();
-			try {
+			//try {
 			if (modelRelIFace.getClassInd(dataType1)>-1) {
 				modelScanIFace.addRelation(
 						new Relation(cl1Name, dataType1,
 						relCode, stereotype,
 						modelRelIFace));
-			} } catch (Exception e) {out.println("XXX:"+dataType +"\n"+dataType1+"|"+dataType2); out.println(modelRelIFace.getClassInd(dataType1));}
+			} //} catch (Exception e) {out.println("XXX:"+dataType +"\n"+dataType1+"|"+dataType2); out.println(modelRelIFace.getClassInd(dataType1));}
 			if (modelRelIFace.getClassInd(dataType2)>-1) {
 				modelScanIFace.addRelation(
 						new Relation(cl1Name, dataType2,

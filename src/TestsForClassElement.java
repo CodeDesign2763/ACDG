@@ -44,7 +44,7 @@ class TestsForClassElement {
 				ACCESS_MODIFIERS.PUBLIC,
 				true,
 				false,
-				"");
+				"",false);
 		assertEquals("+ {static} a:int",ce.genPlantUMLCode());
 	}
 		
@@ -55,7 +55,7 @@ class TestsForClassElement {
 				ACCESS_MODIFIERS.PRIVATE,
 				false,
 				true,
-				"(String s)");
+				"(String s)",false);
 		assertEquals("- b(String s):void",ce.genPlantUMLCode());
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * Интерфейс ModelScannerIface
+ * Интерфейс ACDGEventSource
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -21,19 +21,13 @@
 
 package ACDG;
 import static java.lang.System.out;
-import java.util.ArrayList;
 
 
 /**
- * Интерфейс модели, который используется стратегией распознавания
- * XML файла для добавления обнаруженных отношений
+ * Интерфейс источника событий ACDGEvent
  */
-interface ModelScannerIface {
-	/* Добавить отношение */
-	public void addRelation(Relation r);
-	
-	/* Добавить класс */
-	public void addClass(String className);
+interface ACDGEventSource {
+	public void addACDGEventListener(ACDGEventListener listener);
 	
 }
 

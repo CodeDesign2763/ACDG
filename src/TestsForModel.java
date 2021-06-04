@@ -74,154 +74,43 @@ class TestsForModel {
 				Arrays.equals(CorrectResult,TestResult));
 	}
 	
-	///* Язык программирования Java */
-	//private static CProgramLanguage javaPL;
-	//static {
-		//javaPL = AvailablePLs.getPLbyEnum(ProgramLanguage.JAVA);
-	//}
 	
-	//@Test
-	//@DisplayName("Метод getClassName")
-	//public void testConstructorAndConv2String() {
-		//FileWithClass cfc1 = new FileWithClass("ClassA.java",
-				//javaPL
-				//);
-		//assertEquals(cfc1.getClassName(),"ClassA");
-	//}	
-	
-	//@Test
-	//@DisplayName("Метод getFileName")
-	//public void testGetFileName() {
-		//FileWithClass fwc1= 
-				//new FileWithClass("/home/user1/ClassB.java",
-				//javaPL);
-		//assertEquals(fwc1.getFileName(),"ClassB.java");
-	//}
-	
-	//@Test
-	//@DisplayName("Предварительное удаление комментариев")
-	//public void testCommentDeletion2() {
-		//byte[] CorrectResult;
-		//byte[] TestResult;
-		//Method targetMethod;
-		//Object retValue;
-		//Class fwcClass;
-		////JavaCommentsDeletionTest.txt_wo_comments
+	@Test
+	@DisplayName("Ген-я диаграммы классов для нек-х файлов")
+	public void testDiagrGeneration() {
+		byte[] CorrectResult=null;
+		byte[] TestResult=null;
+		String pName="FirstDiagram";
 		
-		//try {
-			//FileWithClass fwc1 = new FileWithClass(
-					//"../data/JavaCommentsDeletionTest.txt",
-					//javaPL);
+		Model m1 = new Model(
+				AvailablePLs.getPLbyEnum(ProgramLanguage.JAVA),
+				pName);
+		m1.addFileWithClass("../src/AvailablePLs.java");
+		m1.addFileWithClass("../src/CProgramLanguage.java");
+		m1.addFileWithClass("../src/Relation.java");
+		m1.addFileWithClass("../src/JavaProcStrategy.java");
+		//FileWithClass fwc= new FileWithClass("../src/JavaProcStrategy.java", AvailablePLs.getPLbyEnum(ProgramLanguage.JAVA));
+		//fwc.deleteCommentsAndOtherStuff();
+		m1.genFinalPlantUMLFile();
+		m1.genClassDiagr();
+		
+		try {
+
+			/* Простейший способ сравнить 2 файла */
+			CorrectResult= Files.readAllBytes(Paths.get(
+					"../data/" + 
+					pName+".png_CORRECT"));
+			TestResult= Files.readAllBytes(Paths.get(
+					"../output/" + 
+					pName + ".png"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
 			
-			///* Если файл существует - удалим его */
-			//Files.deleteIfExists(Paths.get(
-					//"../temp/" + 
-					//"JavaCommentsDeletionTest.txt_wo_comments"));
-			
-			//assertEquals(true, 
-					//FunctionsForTesting.checkPrivMethodWOParameters(
-					//fwc1, "ACDG.FileWithClass", 
-					//"deleteCommentsAndOtherStuff", "../temp/" + 
-					//"JavaCommentsDeletionTest.txt_wo_comments", 
-					//"../data/" + 
-					//"JavaCommentsDeletionTest_CORRECT_OUTPUT.txt"));
-			
-		//}	catch (IOException e) {
-			//out.println("Файлы не найдены");
-			//e.printStackTrace();
-			//fail();
-		//}	catch (Exception e) {
-			//fail();
-		//}
-	//}
+
+		assertEquals(true,
+				Arrays.equals(CorrectResult,TestResult));
+	}
 	
-	//@Test
-	//@DisplayName("Синт. анализ файла SimpleClassXMLConvTest.txt")
-	//public void testSimpleClassXMLConv() {
-		//FileWithClass fwc1 = new 
-				//FileWithClass("../data/SimpleClassXMLConvTest.txt",
-				//javaPL);
-		//fwc1.convSourceFile2XML();
-		//fwc1.showMethodsList();
-		//assertEquals(true,fwc1.getConv2XMLResult());
-	//}
-	
-	//@Test
-	//@DisplayName("Синт. анализ несуществующего файла")
-	//public void testXMLConvIncorrectFilePath() {
-		//FileWithClass fwc1 = new FileWithClass("../data/source2.txt",
-				//javaPL);
-		//fwc1.convSourceFile2XML();
-		
-		//assertEquals(false,fwc1.getConv2XMLResult());
-	//}
-	
-	//@Test
-	//@DisplayName("Синт. анализ SpecialityForm.java")
-	//public void testSpecialityFormXMLConv() {
-		//FileWithClass fwc1 = 
-				//new FileWithClass("../data/SpecialityForm.java",
-				//javaPL);
-		//fwc1.convSourceFile2XML();
-		//fwc1.showMethodsList();
-		
-		//assertEquals(true,fwc1.getConv2XMLResult());
-		
-	//}
-	
-	//@Test
-	//@DisplayName("Синт. анализ MainForm.java")
-	//public void testMainFormXMLConv() {
-		//FileWithClass fwc1 = 
-				//new FileWithClass("../data/MainForm.java",
-				//javaPL);
-		//fwc1.convSourceFile2XML();
-		//fwc1.showMethodsList();
-		//assertEquals(true,fwc1.getConv2XMLResult());
-	//}
-	
-	//@Test
-	//@DisplayName("Проверка универсальной функции для тестирования")
-	//public void testUnivTestFunction() {
-		//FileWithClass fwc1 = 
-				//new FileWithClass("../data/MainForm.java",
-				//javaPL);
-		//assertEquals("../temp/MainForm.java_wo_comments",
-				//(String) FunctionsForTesting.checkPrivMethod(
-				//fwc1, "ACDG.FileWithClass",
-				//"getPath2FileWOComments",null,null));
-		
-		
-	//}
-	
-	////@Test
-	////@DisplayName("Проверка удаления ошибочных тэгов token")
-	////public void testExtraTokenTagsDeletion() {
-		////Method targetMethod;
-		////Object retValue;
-		////Class fwcClass;
-		////try {
-				////FileWithClass fwc1 = new FileWithClass(
-					////"../data/WrongTagDeletionTest.xml");
-				/////* Сделаем тестируемый метод видимым при помощи
-				////* рефлексии */
-				////fwcClass=Class.forName("ACDG.FileWithClass");
-				////targetMethod=fwcClass.getDeclaredMethod(
-						////"xmlWrongTagDeletion");
-				////targetMethod.setAccessible(true);
-				////retValue=targetMethod.invoke(fwc1);
-				/////* Простейший способ сравнить 2 файла */
-				////CorrectResult= Files.readAllBytes(Paths.get(
-					////"../data/" + 
-					////"WrongTagDeletionTestCorrect.xml"));
-				////TestResult= Files.readAllBytes(Paths.get(
-					////"../temp/" + 
-					////"JavaCommentsDeletionTest.txt_wo_comments"));
-			
-			/////* Нужно именно использовать Arrays */
-			////assertEquals(true,
-					////Arrays.equals(CorrectResult,TestResult));
-				
-		
-	////}
 }

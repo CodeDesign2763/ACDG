@@ -46,12 +46,14 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;  
 import org.w3c.dom.Element;  
 
+import java.util.ArrayList;
+
 /**
  * Класс предметной области
  * описывающий файл с описанием класса на языке Java
  */
  
-class FileWithClass {
+class FileWithClass implements ACDGEventSource {
 	private String path2File;
 	private String fileName;
 	
@@ -66,6 +68,25 @@ class FileWithClass {
 	
 	private ModelScannerIface modScanIFace;
 	private ModelRelationIface modRelIFace;
+	private ModelFWCIface modFWCIface;
+	
+	private ArrayList<ACDGEventListener> eventListeners;
+	
+	@Override
+	public void addACDGEventListener(ACDGEventListener listener) {
+		eventListeners.add(listener);
+	}	
+	
+	private void fireEvent(ACDGEvent event) {
+		for (ACDGEventListener listener : eventListeners) {
+			listener.onACDGEventReceived(event);
+		}
+	}
+	
+	private void textMessage(String s) {
+		fireEvent(new ACDGEvent(this, ACDGEventType.TEXTMESSAGE,
+				s));
+	}
 	
 	/* Версия конструктора для отладки */
 	public FileWithClass(String fn, CProgramLanguage pl) {
@@ -75,6 +96,8 @@ class FileWithClass {
 		programLanguage=pl;
 		modScanIFace=null;
 		modRelIFace=null;
+		modFWCIface=new FWCIfaceMock();
+		eventListeners = new ArrayList<ACDGEventListener>();
 		
 	}
 	
@@ -87,7 +110,23 @@ class FileWithClass {
 		programLanguage=pl;
 		modScanIFace=scanIFace;
 		modRelIFace=relIFace;
+		modFWCIface=new FWCIfaceMock();
+		eventListeners = new ArrayList<ACDGEventListener>();
 		
+	}
+	
+	public FileWithClass(String fn, CProgramLanguage pl,
+			ModelScannerIface scanIFace, ModelRelationIface relIFace,
+			ModelFWCIface mFWCI) {
+		path2File=fn;
+		conv2XMLResult=false;
+		fClearedOfComments=false;
+		xmlFileAnalysisResult=false;
+		programLanguage=pl;
+		modScanIFace=scanIFace;
+		modRelIFace=relIFace;
+		modFWCIface=mFWCI;
+		eventListeners = new ArrayList<ACDGEventListener>();
 	}
 	
 	public boolean getXMLFileAnalysisResult() {
@@ -221,7 +260,7 @@ class FileWithClass {
 			{
 				s=scanfile.nextLine();
 				s1=s;
-				//out.println("Строка из файла "+s);
+				//textMessage("Строка из файла "+s);
 				matcherImport = patternImport.matcher(s);
 				matcherPackage = patternPackage.matcher(s);
 				matcherCPPComment = patternCPPComment.matcher(s);
@@ -261,7 +300,7 @@ class FileWithClass {
 				/* Для удаления одной строки */
 				if ((fDontWriteLine) && (!fEnumMode)) {
 					fDontWriteLine=false;
-					//out.println(s);
+					//textMessage(s);
 				}
 				
 				
@@ -273,7 +312,7 @@ class FileWithClass {
 					if ((fEnum) && (fRBrace) && (!fEnumMode)) {
 						/* Удаляем всего одну строку */
 						fDontWriteLine=true;
-						//out.println(s);
+						//textMessage(s);
 					}
 					
 					if ((fEnum) && (!fRBrace) && (!fEnumMode)) {
@@ -314,7 +353,7 @@ class FileWithClass {
 						s=s.substring(s.indexOf("*/")+2);
 					} else s="";
 					fCComment=false;
-					//out.println("RR" +s);
+					//textMessage("RR" +s);
 				}
 				
 				
@@ -327,7 +366,7 @@ class FileWithClass {
 						s=s.substring(0,s.indexOf("/*")) + 
 								s.substring(s.indexOf("*/")+2);
 					} else s=s.substring(0,s.indexOf("/*"));
-					//out.println("CR");
+					//textMessage("CR");
 				}
 				
 				
@@ -339,9 +378,11 @@ class FileWithClass {
 					s=s.replaceAll(">","xxxxx");
 					s=s.replaceAll("&","wwwww");
 					
-					
+					/* Удаляем все строковые константы
+					 * в режиме ленивой квантификации */
+					s=s.replaceAll("\".*?\"","");
 					writer.write(s + "\n");
-					//out.println(s);
+					//textMessage(s);
 				}
 			}
 			scanfile.close();
@@ -354,7 +395,7 @@ class FileWithClass {
 		}	catch (Exception e) {
 				e.printStackTrace();
 				fClearedOfComments = false;
-				out.println("Строка, которая вызвала ошибку:"
+				textMessage("Строка, которая вызвала ошибку:"
 						+ s1);
 		}
 			
@@ -386,9 +427,9 @@ class FileWithClass {
 			
 			/* Запускаем bullwinkle.jar и перенаправляем stdout
 			 * в xml-файл */
-			//out.println(path2Grammar);
+			//textMessage(path2Grammar);
 			var processBuilder = new ProcessBuilder();
-			processBuilder.command("java",
+			processBuilder.command(modFWCIface.getPath2Java(),
 					"-jar",
 					"../bin/bullwinkle.jar",
 					path2Grammar,
@@ -408,13 +449,13 @@ class FileWithClass {
 			reader.close();
 			
 			if (lines>5) {
-				//out.println("Преобразование прошло удачно");
+				//textMessage("Преобразование прошло удачно");
 			} else {
-				//out.println("Преобразование прошло неудачно");
+				//textMessage("Преобразование прошло неудачно");
 				fSuccess=false;
 			}
 
-			//out.println("Выполнение программы завершено");
+			//textMessage("Выполнение программы завершено");
 			
 		
 		} catch (Exception e) { 
@@ -440,7 +481,7 @@ class FileWithClass {
 		
 		conv2XMLResult=fSuccess;
 		/* Для отладки */
-		//out.println(fSuccess);
+		//textMessage(fSuccess);
 	}
 	
 	/* Удаление из XML-файла тэгов token,
@@ -520,7 +561,7 @@ class FileWithClass {
 		convSourceFile2XML();
 		readXMLFile();
 		/* Для отладки */
-		out.println("Имя файла:" + getFileName() + "\n"
+		textMessage("Имя файла:" + getFileName() + "\n"
 				+ "Предварительная обработка:"
 				+ String.valueOf(isClearedOfComments()) + "\n"
 				+ "Преобразование в XML-дерево:" 
@@ -549,10 +590,10 @@ class FileWithClass {
 			NodeList nodeList = doc.getElementsByTagName("Method"); 
 			for (int i = 0; i < nodeList.getLength(); i++) {  
 				Node node = nodeList.item(i);  
-				//System.out.println("\nNode Name :" + node.getNodeName());  
+				//System.textMessage("\nNode Name :" + node.getNodeName());  
 				if (node.getNodeType() == Node.ELEMENT_NODE) {  
 					Element eElement = (Element) node;
-					out.println("Название метода: "+ eElement.getElementsByTagName("MethodIdentifier").item(0).getTextContent().trim());  
+					textMessage("Название метода: "+ eElement.getElementsByTagName("MethodIdentifier").item(0).getTextContent().trim());  
 				}  
 			}
 		} catch (Exception e) {

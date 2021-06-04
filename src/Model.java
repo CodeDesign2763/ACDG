@@ -40,14 +40,45 @@ enum ProgramLanguage {
  * Класс RelationRepo, реализующий шаблонированный интефейс 
  * Repository
  */
-class Model implements ModelScannerIface, ModelRelationIface {
+class Model implements ModelScannerIface, ModelRelationIface, 
+		ModelFWCIface, ACDGEventListener, ACDGEventSource {
 	//private IRepository<Relation> relations;
 	//private IRepository<FileWithClass> filesWithClasses;
 	private ArrayList<Relation> relations;
 	private ArrayList<FileWithClass> filesWithClasses;
 	private ArrayList<String> classes;
 	private String projectName;
+	private String path2Java;
 	
+	private boolean classDiagrGenResult;
+	
+	private ArrayList<ACDGEventListener> eventListeners;
+	
+	public boolean getClassDiagrGenResult()	{
+		return classDiagrGenResult;
+	}
+	
+	@Override
+	public String getPath2Java() {
+		return path2Java;
+	}
+	
+	@Override
+	public void addACDGEventListener(ACDGEventListener listener) {
+		eventListeners.add(listener);
+	}	
+	
+	private void fireEvent(ACDGEvent event) {
+		for (ACDGEventListener listener : eventListeners) {
+			listener.onACDGEventReceived(event);
+		}
+	}
+	
+	@Override
+	public void onACDGEventReceived(ACDGEvent event) {
+		if (event.getEventType() == ACDGEventType.TEXTMESSAGE)
+			fireEvent(event);
+	}
 	
 	private CProgramLanguage cProgramLanguage;
 		
@@ -57,6 +88,9 @@ class Model implements ModelScannerIface, ModelRelationIface {
 		filesWithClasses=new ArrayList<FileWithClass>();
 		classes = new ArrayList<String>();
 		projectName="DefaultProjectName";
+		classDiagrGenResult=false;
+		path2Java="java";
+		eventListeners = new ArrayList<ACDGEventListener>();
 	}
 	
 	public Model(CProgramLanguage pl, String pName) {
@@ -65,6 +99,20 @@ class Model implements ModelScannerIface, ModelRelationIface {
 		filesWithClasses=new ArrayList<FileWithClass>();
 		classes = new ArrayList<String>();
 		projectName=pName;
+		classDiagrGenResult=false;
+		path2Java="java";
+		eventListeners = new ArrayList<ACDGEventListener>();
+	}
+	
+	public Model(CProgramLanguage pl, String pName, String p2J) {
+		cProgramLanguage=pl;
+		relations=new ArrayList<Relation>();
+		filesWithClasses=new ArrayList<FileWithClass>();
+		classes = new ArrayList<String>();
+		projectName=pName;
+		classDiagrGenResult=false;
+		path2Java=p2J;
+		eventListeners = new ArrayList<ACDGEventListener>();
 	}
 	
 	/* Имеется ли такое отношение */
@@ -99,14 +147,15 @@ class Model implements ModelScannerIface, ModelRelationIface {
 	public void addFileWithClass(String path2File) {
 		FileWithClass newFWC = 
 				new FileWithClass(path2File, cProgramLanguage,
-				this,this);
+				this,this,this);
+		newFWC.addACDGEventListener(this);
 				
 		filesWithClasses.add(newFWC);
 		classes.add(newFWC.getClassName());
 	}
 	
 	/* Сгенерировать код PlantUML для отношений */
-	public String genPlantUMLCode4Relations() {
+	private String genPlantUMLCode4Relations() {
 		String res="\n";
 		for (Relation r : relations) {
 			res += r.genPlantUMLCode() + "\n";
@@ -147,6 +196,26 @@ class Model implements ModelScannerIface, ModelRelationIface {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/* Сгенерировать диаграмму классов */
+	public void genClassDiagr() {
+		classDiagrGenResult=true;
+		Process proc;
+		try {
+			
+			var processBuilder = new ProcessBuilder();
+			processBuilder.command(path2Java,
+					"-jar",
+					"../bin/plantuml.jar",
+					"-tpng", getPath2FinalPlantUMLFile());
+			proc = processBuilder.start();
+			proc.waitFor();
+		
+		} catch (Exception e) { 
+			classDiagrGenResult=false;
+			e.printStackTrace();
+		} 
 	}
 	
 	

@@ -36,19 +36,22 @@ class ClassElement {
 	private String elemType;
 	private ACCESS_MODIFIERS accModif;
 	private boolean fStatic;
+	private boolean fDefault;
 	private boolean fSub;
 	
 	/* Параметры вместе со скобками */
 	private String parameters;
 	
 	public ClassElement(String eID, String eType, ACCESS_MODIFIERS
-			aM, boolean isStatic, boolean isSub, String p) {
+			aM, boolean isStatic, boolean isSub, String p,
+			boolean fDflt) {
 		elemID=eID;
 		elemType=eType;
 		accModif=aM;
 		fStatic=isStatic;
 		fSub=isSub;
 		parameters=p;
+		fDefault=fDflt;
 	}
 	
 	public String genPlantUMLCode() {
@@ -67,6 +70,7 @@ class ClassElement {
 		res=res+" ";
 		
 		if (fStatic) res=res+"{static} ";
+		if (fDefault) res=res+"<<default>> ";
 		
 		res=res+elemID;
 		

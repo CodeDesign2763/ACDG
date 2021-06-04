@@ -44,17 +44,28 @@ class AvailablePLs {
 		
 		availablePLList.add((int) ProgramLanguage.JAVA.ordinal(),
 				new CProgramLanguage("Java",true,"java.bnf",
-				ProgramLanguage.JAVA,javaProcStrategy));
+				ProgramLanguage.JAVA,javaProcStrategy, "java"));
 		availablePLList.add((int) ProgramLanguage.CSHARP.ordinal(),
 				new CProgramLanguage("C#",false,"cs.bnf",
-				ProgramLanguage.CSHARP,null));
+				ProgramLanguage.CSHARP,null,"cs"));
 		availablePLList.add((int) ProgramLanguage.CPP.ordinal(),
 				new CProgramLanguage("C++",false,"cpp.bnf",
-				ProgramLanguage.CPP,null));
+				ProgramLanguage.CPP,null,"cpp"));
 	}
 	
 	public static CProgramLanguage getPLbyEnum(ProgramLanguage pl) {
 		return availablePLList.get(pl.ordinal());
+	}
+	
+	public static CProgramLanguage getPLbyName(String name) {
+		CProgramLanguage res=null;
+		for (CProgramLanguage language : availablePLList) {
+			if (language.getPLName().equals(name)) {
+				res=language;
+				break;
+			}
+		}
+		return res;
 	}
 		
 }

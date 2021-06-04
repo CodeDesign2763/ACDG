@@ -1,5 +1,5 @@
 /*
- * Интерфейс ModelScannerIface
+ * Класс ACDGEvent
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -21,19 +21,37 @@
 
 package ACDG;
 import static java.lang.System.out;
-import java.util.ArrayList;
 
+enum ACDGEventType{
+  
+    TEXTMESSAGE
+}
 
 /**
- * Интерфейс модели, который используется стратегией распознавания
- * XML файла для добавления обнаруженных отношений
+ * Класс для описания универсального события
  */
-interface ModelScannerIface {
-	/* Добавить отношение */
-	public void addRelation(Relation r);
+class ACDGEvent {
+	private ACDGEventType eventType;
+	private Object payload;
+	private Object source;
 	
-	/* Добавить класс */
-	public void addClass(String className);
+	public ACDGEvent(Object s, ACDGEventType type, Object pload) {
+		source=s;
+		eventType=type;
+		payload=pload;
+	}
+	
+	public Object getSource() {
+		return source;
+	}
+	
+	public Object getPayload() {
+		return payload;
+	}
+	
+	public ACDGEventType getEventType() {
+		return eventType;
+	}
 	
 }
 

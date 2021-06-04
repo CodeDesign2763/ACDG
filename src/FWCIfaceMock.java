@@ -1,5 +1,5 @@
 /*
- * Интерфейс ModelScannerIface
+ * Класс FWCIfaceMock
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -21,19 +21,24 @@
 
 package ACDG;
 import static java.lang.System.out;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import static java.lang.System.out;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 
 /**
- * Интерфейс модели, который используется стратегией распознавания
- * XML файла для добавления обнаруженных отношений
+ * Класс-заглушка предназначенный для обеспечения 
+ * обратной совместимости устаревших конструкторов класса 
+ * FileWithClass
  */
-interface ModelScannerIface {
-	/* Добавить отношение */
-	public void addRelation(Relation r);
-	
-	/* Добавить класс */
-	public void addClass(String className);
-	
+class FWCIfaceMock implements ModelFWCIface {
+	@Override
+	public String getPath2Java() {
+		return new String("java");
+	}
 }
-

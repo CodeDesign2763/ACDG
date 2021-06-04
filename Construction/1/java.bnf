@@ -97,7 +97,14 @@
 <Annotation> := ^\@\w+(\(.*?\))?;
 
 #Метод
-<Method> := <CommonMethod> | <Constructor>;
+<Method> := <CommonMethod> | <Constructor> | <AbstractMethod>;
+
+#Абстрактный метод
+<AbstractMethod> := <ModifierList> <MethodDataType> <MethodIdentifier>
+ <ParameterListWithBrackets> <Semicolon>
+ | <ModifierList> <MethodDataType> <MethodIdentifier>
+ <ParameterListWithBrackets> <ThrowsKeyword> <ExceptionList>
+ <Semicolon>;
 
 #Обычный Метод
 <CommonMethod> := <ModifierList> <MethodDataType> <MethodIdentifier>
@@ -187,7 +194,9 @@
 #Поле класса
 <Field> := <ModifierList> <FieldDataType> <FieldIdentifier>
  <Initializer> <Semicolon> |
- <ModifierList> <FieldDataType> <FieldIdentifier> <Semicolon>;
+ <ModifierList> <FieldDataType> <FieldIdentifier> <Semicolon> |
+ <FieldDataType> <FieldIdentifier> <Initializer> <Semicolon> |
+ <FieldDataType> <FieldIdentifier> <Semicolon>;
  
 #Инициализатор
 <Initializer> := ^\=([^\u003b])+;
@@ -206,7 +215,7 @@
  | <Modifier> <ModifierList>;
 
 #Модификатор
-<Modifier> := ^(public|private|protected|abstract|final|static);
+<Modifier> := ^(public|private|protected|abstract|final|static|default);
 
 #Тип данных поля класса
 <FieldDataType> := <AbstractDataType>;
@@ -256,4 +265,4 @@
 <EmptyArray> := ^(\[\]);
 
 #Абстрактный идентификатор
-<Identifier> := ^\w+(\[\d.\])?;
+<Identifier> := ^\w+(\[\d.\])?(\[\])?;

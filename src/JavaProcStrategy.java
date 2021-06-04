@@ -51,6 +51,7 @@ class JavaProcStrategy implements IProcStrategy {
 		String elemName="";
 		String elemDataType="";
 		boolean fStatic=false;
+		boolean fDefault=false;
 		ACCESS_MODIFIERS am=ACCESS_MODIFIERS.PRIVATE;
 		boolean fSub;
 		String parameters="";
@@ -89,6 +90,8 @@ class JavaProcStrategy implements IProcStrategy {
 			classID = ((Element) nodeList.item(0))
 					.getElementsByTagName(
 					"Identifier").item(0).getTextContent().trim();
+			classID = reverseSubst(classID);
+			classID = classID.replaceAll("\\<.*\\>$","");
 			
 			classDescr= new ClassDescr(fClass, classID);
 			
@@ -121,6 +124,8 @@ class JavaProcStrategy implements IProcStrategy {
 						class2Name = 
 								( (Element) classNameList.item(k))
 								.getTextContent().trim();
+						class2Name = reverseSubst(class2Name);
+						class2Name = class2Name.replaceAll("\\<.*\\>$","");
 						if (modelRelIFace.getClassInd(class2Name)==-1) 
 								{
 							model.addClass(class2Name);
@@ -180,6 +185,7 @@ class JavaProcStrategy implements IProcStrategy {
 					
 					/* Изучаем модификаторы */
 					fStatic=false;
+					fDefault=false;
 					NodeList modifList = elem
 							.getElementsByTagName("Modifier");
 					for (int k=0; k < modifList.getLength(); k++) {
@@ -202,18 +208,21 @@ class JavaProcStrategy implements IProcStrategy {
 								case "static":
 									fStatic = true;
 									break;
-								default:
-									throw 
-											new 
-											Exception(
-											"Неверный модификатор");
+								case "default":
+									fDefault = true;
+									break;
+								//default:
+									//throw 
+											//new 
+											//Exception(
+											//"Неверный модификатор");
 							}
 						}
 					}
 				}
 				classDescr.addClassElement(new ClassElement(
 						elemName, elemDataType, am, fStatic, fSub,
-						parameters));
+						parameters,fDefault));
 			}
 			
 			/* Методы */
@@ -262,6 +271,7 @@ class JavaProcStrategy implements IProcStrategy {
 					
 					/* Изучаем модификаторы */
 					fStatic=false;
+					fDefault=false;
 					NodeList modifList = elem
 							.getElementsByTagName("Modifier");
 					for (int k=0; k < modifList.getLength(); k++) {
@@ -283,7 +293,10 @@ class JavaProcStrategy implements IProcStrategy {
 									break;
 								case "static":
 									fStatic = true;
-									//break;
+									break;
+								case "default":
+									fDefault = true;
+									break;
 								
 								//default:
 									//throw 
@@ -296,7 +309,7 @@ class JavaProcStrategy implements IProcStrategy {
 					
 					/* Список параметров со скобками */
 					parameters="";
-					/* Если параметров нет - останется значение " " */
+					/* Если параметров нет - останется значение "" */
 					NodeList paramList = elem
 							.getElementsByTagName("Parameter");
 					for (int k=0; k < paramList.getLength(); k++) {
@@ -324,8 +337,11 @@ class JavaProcStrategy implements IProcStrategy {
 									reverseSubst(paramDataType);
 							
 							if (k>0) parameters += ", ";
-							parameters += paramDataType + " " 
-								+ paramID;
+							
+							parameters += paramDataType;
+							
+							//parameters += paramID + ":" 
+								//+ paramDataType;
 							
 							/* [Отношения] Зависимость "derive" */
 							dataTypeRelProc(classID, paramDataType,
@@ -338,7 +354,7 @@ class JavaProcStrategy implements IProcStrategy {
 				}  
 				classDescr.addClassElement(new ClassElement(
 						elemName, elemDataType, am, fStatic, fSub,
-						parameters));
+						parameters,fDefault));
 			}
 			//out.println(classDescr.conv2PlantUMLString());
 		//} catch (Exception e) {

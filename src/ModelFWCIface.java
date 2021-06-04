@@ -1,5 +1,5 @@
 /*
- * Интерфейс ModelScannerIface
+ * Интерфейс ModelFWCIface
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -25,15 +25,9 @@ import java.util.ArrayList;
 
 
 /**
- * Интерфейс модели, который используется стратегией распознавания
- * XML файла для добавления обнаруженных отношений
+ * Интерфейс модели, который используется классом FileWithClass
  */
-interface ModelScannerIface {
-	/* Добавить отношение */
-	public void addRelation(Relation r);
-	
-	/* Добавить класс */
-	public void addClass(String className);
-	
+interface ModelFWCIface {
+	public String getPath2Java();
 }
 

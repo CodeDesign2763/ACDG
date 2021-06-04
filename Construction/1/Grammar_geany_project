@@ -29,7 +29,7 @@ long_line_column=70
 
 [files]
 current_page=0
-FILE_NAME_0=4644;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FConstruction%2F1%2Fjava.bnf;0;4
+FILE_NAME_0=10376;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FConstruction%2F1%2Fjava.bnf;0;4
 FILE_NAME_1=649;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FElaboration%2F1%2FFor_Loop.bnf;0;4
 FILE_NAME_2=64;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FConstruction%2F1%2Fsource.txt;0;4
 FILE_NAME_3=4;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2FConstruction%2F1%2FRelation.java;0;4
@@ -39,7 +39,7 @@ FILE_NAME_6=2;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2F
 
 [build-menu]
 EX_00_LB=_Выполнить
-EX_00_CM=java -jar bullwinkle.jar -f xml java.bnf JavaProcStrategy.java_wo_comments
+EX_00_CM=java -jar bullwinkle.jar -f xml java.bnf SimpleClient.java
 EX_00_WD=
 EX_01_LB=Визуализация
 EX_01_CM=java -jar bullwinkle.jar -f dot java.bnf source.txt > output.dot && dot -Tpng output.dot -o output.png && ristretto output.png

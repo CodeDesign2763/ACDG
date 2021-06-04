@@ -33,15 +33,21 @@ class CProgramLanguage {
 	private String grammarFileName;
 	private ProgramLanguage plID;
 	private IProcStrategy strategy;
+	private String extension;
+	
+	public String getExt() {
+		return extension;
+	}
 	
 	
 	public CProgramLanguage(String name, boolean fs, String g, 
-			ProgramLanguage pl, IProcStrategy str) {
+			ProgramLanguage pl, IProcStrategy str, String ext) {
 		plName=name;
 		fSupported=fs;
 		grammarFileName=g;
 		plID=pl;
 		strategy=str;
+		extension=ext;
 	}
 	
 	public String getPLName() {
