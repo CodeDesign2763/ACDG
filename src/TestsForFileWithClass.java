@@ -159,35 +159,4 @@ class TestsForFileWithClass {
 		
 		
 	}
-	
-	//@Test
-	//@DisplayName("Проверка удаления ошибочных тэгов token")
-	//public void testExtraTokenTagsDeletion() {
-		//Method targetMethod;
-		//Object retValue;
-		//Class fwcClass;
-		//try {
-				//FileWithClass fwc1 = new FileWithClass(
-					//"../data/WrongTagDeletionTest.xml");
-				///* Сделаем тестируемый метод видимым при помощи
-				//* рефлексии */
-				//fwcClass=Class.forName("ACDG.FileWithClass");
-				//targetMethod=fwcClass.getDeclaredMethod(
-						//"xmlWrongTagDeletion");
-				//targetMethod.setAccessible(true);
-				//retValue=targetMethod.invoke(fwc1);
-				///* Простейший способ сравнить 2 файла */
-				//CorrectResult= Files.readAllBytes(Paths.get(
-					//"../data/" + 
-					//"WrongTagDeletionTestCorrect.xml"));
-				//TestResult= Files.readAllBytes(Paths.get(
-					//"../temp/" + 
-					//"JavaCommentsDeletionTest.txt_wo_comments"));
-			
-			///* Нужно именно использовать Arrays */
-			//assertEquals(true,
-					//Arrays.equals(CorrectResult,TestResult));
-				
-		
-	//}
 }

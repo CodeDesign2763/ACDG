@@ -43,7 +43,8 @@ public class FunctionsForTesting {
 	 * записывающего что-то в файл 
 	 * obj - объект класса className, метод которого нужно выполнить
 	 * */
-	public static boolean checkPrivMethodWOParameters(Object obj, String className, 
+	public static boolean checkPrivMethodWOParameters(Object obj, 
+			String className, 
 			String methodName, String path2OutputFile,
 			String path2CorrectFile) {
 		boolean result=false;
@@ -54,8 +55,6 @@ public class FunctionsForTesting {
 		Class fwcClass;
 
 		try {
-			
-			
 			/* Сделаем тестируемый метод видимым при помощи
 			 * рефлексии */
 			fwcClass=Class.forName(className);
@@ -68,7 +67,6 @@ public class FunctionsForTesting {
 					Paths.get(path2CorrectFile));
 			TestResult= Files.readAllBytes(Paths.get(
 					path2OutputFile));
-			
 		
 			result=Arrays.equals(CorrectResult,TestResult);
 		}	catch (IOException e) {
@@ -113,6 +111,5 @@ public class FunctionsForTesting {
 		}
 		
 		return result;
-			
 	}
 }

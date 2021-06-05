@@ -25,9 +25,10 @@ import java.io.File;
 import java.io.IOException;
 import static java.lang.System.out;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 enum CLIProcMode {INITIAL,CHECK_PATH, ADD_FWC, ADD_CLASS, 
-		ADD_ALL_FWC, SET_PROJ_NAME, SET_PL, SET_EXCL}
+		ADD_ALL_FWC, SET_PROJ_NAME, SET_PL, SET_EXCL, SET_PPM}
 
 
 /**
@@ -50,7 +51,7 @@ class SimpleClient implements ACDGEventListener {
 	private CProgramLanguage programLanguage;
 	private String excludePattern;
 	
-	
+	private ParamProcMode paramProcMode;
 	
 	public SimpleClient(String args[]) {
 		cliArgs=args;
@@ -59,9 +60,11 @@ class SimpleClient implements ACDGEventListener {
 		path2Java="";
 		programLanguage=null;
 		excludePattern="";
+		paramProcMode=ParamProcMode.ONLY_DATATYPE;
 		cliArgsProc();
 		checkDataFromCLIArgs();
-		model = new Model(programLanguage, projectName, path2Java);
+		model = new Model(programLanguage, projectName, path2Java, 
+				paramProcMode);
 		model.addACDGEventListener(this);
 		
 		for (String s : paths2FilesWithClasses) {
@@ -74,17 +77,19 @@ class SimpleClient implements ACDGEventListener {
 		
 		model.genFinalPlantUMLFile();
 		model.genClassDiagr();
-				
 		
-		
+		out.println("Сгенерирован PlantUML-код диаграммы классов:");
+		out.println(model.getPath2FinalPlantUMLFile());
+		out.println("Сгенерирована диаграмма классов:");
+		out.println(model.getPath2FinalPlantUMLDiagram());
 	}
 	
-	
-	
-	
+	/* Обработка аргументов командной строки */
 	public void cliArgsProc() {
 		CLIProcMode mode = CLIProcMode.INITIAL;
-		for (String s : cliArgs) {
+		String s;
+		for (int i=0; i<cliArgs.length; i++) {
+			s=cliArgs[i];
 			switch (s) {
 				case "-path2java" : 
 					mode=CLIProcMode.CHECK_PATH;
@@ -107,6 +112,28 @@ class SimpleClient implements ACDGEventListener {
 				case "-exclude" :
 					mode=CLIProcMode.SET_EXCL;
 					break;
+				case "-setppm" :
+					mode=CLIProcMode.SET_PPM;
+					break;
+				case "-help" : 
+					/* Вывести подсказку */
+					try {
+						File f=new File("../data/README.TXT");
+						Scanner scanfile;
+			
+						scanfile=new Scanner(f);
+						String str;
+						while (scanfile.hasNext()) {
+							str=scanfile.nextLine();
+							out.println(str);
+						}
+					} catch (Exception e) {
+						out.println("Ошибка! Файл с описанием команд "
+								+ "не найден!");
+					}
+					System.exit(1);
+					break;
+					
 				default : 
 					switch (mode) {
 						case SET_PL :
@@ -162,26 +189,50 @@ class SimpleClient implements ACDGEventListener {
 						case SET_EXCL :
 							excludePattern = s;
 							break;
+						case SET_PPM :
+							switch (s) {
+								case "ONLY_DATATYPE":
+									paramProcMode=
+											ParamProcMode
+											.ONLY_DATATYPE;
+									break;
+								case "ONLY_ID":
+									paramProcMode=
+											ParamProcMode
+											.ONLY_ID;
+									break;
+								case "ALL":
+									paramProcMode=
+											ParamProcMode
+											.ALL;
+									break;
+								default :
+									out.println(
+											"Неверный режим"
+											+" обработки параметров");
+									System.exit(1);
+							}
 					}
 			}
 		}
 		
 		/* Для отладки */
-		out.println("path2Java=" + path2Java);
-		out.println("FWC:");
-		for (String s : paths2FilesWithClasses) {
-			out.println(s);
-		}
+		//out.println("path2Java=" + path2Java);
+		//out.println("FWC:");
+		//for (String s : paths2FilesWithClasses) {
+			//out.println(s);
+		//}
 		
-		out.println("Classes:");
-		for (String s : classNames) {
-			out.println(s);
-		}
-		out.println("ProjectName=" + projectName);
-		out.println("PL=" + programLanguage.getPLName());
-		
+		//out.println("Classes:");
+		//for (String s : classNames) {
+			//out.println(s);
+		//}
+		//out.println("ProjectName=" + projectName);
+		//out.println("PL=" + programLanguage.getPLName());
 	}
 	
+	/* Проверка достаточности данных, 
+	 * полученных из командной строки */
 	private void checkDataFromCLIArgs() {
 		if ((path2Java=="")
 				|| (paths2FilesWithClasses.size()==0)
@@ -197,24 +248,31 @@ class SimpleClient implements ACDGEventListener {
 			out.println(((String) event.getPayload()));
 	}
 	
+	/* Получить список путей ко всем файлам заданного расширения из
+	 * заданного каталога */
 	private  ArrayList<String> getAllFilesFromDir(String path, 
 			String ext) {
+		
 		ArrayList<String> resultList = new ArrayList<String>();
-		File myFolder = new File(path);
-		File[] files = myFolder.listFiles();
-		for (File f : files) {
-			String s=f.getName();
-			if (s.indexOf("."+ext)>-1) {
-				resultList.add(s);
+		try {
+			File myFolder = new File(path);
+			File[] files = myFolder.listFiles();
+			for (File f : files) {
+				String s=f.getCanonicalPath();
+				if (s.indexOf("."+ext)>-1) {
+					resultList.add(s);
+				}
 			}
-		}
+		} catch (Exception e) {};
 		return resultList;
 	}
 	
-	private  File NULL_FILE = new File(
+	/* Для подавления вывода при проверки пути к Java */
+	private  File NULL_F = new File(
           (System.getProperty("os.name")
                      .startsWith("Windows") ? "NUL" : "/dev/null"));
 
+	/* Проверка пути к Java */
 	private  boolean checkPath2Java(String path) {
 		boolean fResult=true;
 		Process proc;
@@ -222,7 +280,7 @@ class SimpleClient implements ACDGEventListener {
 			
 			var processBuilder = new ProcessBuilder();
 			processBuilder.command(path);
-			processBuilder.redirectOutput(NULL_FILE);
+			processBuilder.redirectOutput(NULL_F);
 			proc = processBuilder.start();
 			proc.waitFor();
 		
@@ -232,6 +290,4 @@ class SimpleClient implements ACDGEventListener {
 		} 
 		return fResult;
 	}
-	
-		
 }

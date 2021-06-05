@@ -51,8 +51,6 @@ class TestsForModel {
 		m1.addFileWithClass("../src/CProgramLanguage.java");
 		m1.addFileWithClass("../src/Relation.java");
 		m1.addFileWithClass("../src/JavaProcStrategy.java");
-		//FileWithClass fwc= new FileWithClass("../src/JavaProcStrategy.java", AvailablePLs.getPLbyEnum(ProgramLanguage.JAVA));
-		//fwc.deleteCommentsAndOtherStuff();
 		m1.genFinalPlantUMLFile();
 		
 		try {
@@ -68,7 +66,6 @@ class TestsForModel {
 			e.printStackTrace();
 			fail();
 		}
-			
 
 		assertEquals(true,
 				Arrays.equals(CorrectResult,TestResult));
@@ -89,8 +86,6 @@ class TestsForModel {
 		m1.addFileWithClass("../src/CProgramLanguage.java");
 		m1.addFileWithClass("../src/Relation.java");
 		m1.addFileWithClass("../src/JavaProcStrategy.java");
-		//FileWithClass fwc= new FileWithClass("../src/JavaProcStrategy.java", AvailablePLs.getPLbyEnum(ProgramLanguage.JAVA));
-		//fwc.deleteCommentsAndOtherStuff();
 		m1.genFinalPlantUMLFile();
 		m1.genClassDiagr();
 		
@@ -107,10 +102,8 @@ class TestsForModel {
 			e.printStackTrace();
 			fail();
 		}
-			
 
 		assertEquals(true,
 				Arrays.equals(CorrectResult,TestResult));
 	}
-	
 }

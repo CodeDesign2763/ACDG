@@ -1,5 +1,5 @@
 /*
- * Класс Repo
+ * Класс Model
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -37,19 +37,20 @@ enum ProgramLanguage {
 }
 
 /**
- * Класс RelationRepo, реализующий шаблонированный интефейс 
- * Repository
+ * Класс реализует Модель - компонент паттерна MVP.
  */
+ 
 class Model implements ModelScannerIface, ModelRelationIface, 
 		ModelFWCIface, ACDGEventListener, ACDGEventSource {
-	//private IRepository<Relation> relations;
-	//private IRepository<FileWithClass> filesWithClasses;
+
 	private ArrayList<Relation> relations;
 	private ArrayList<FileWithClass> filesWithClasses;
 	private ArrayList<String> classes;
 	private String projectName;
 	private String path2Java;
+	private ParamProcMode paramProcMode;
 	
+	/* Результат генерации диаграммы классов */
 	private boolean classDiagrGenResult;
 	
 	private ArrayList<ACDGEventListener> eventListeners;
@@ -91,6 +92,7 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		classDiagrGenResult=false;
 		path2Java="java";
 		eventListeners = new ArrayList<ACDGEventListener>();
+		paramProcMode=ParamProcMode.ONLY_DATATYPE;
 	}
 	
 	public Model(CProgramLanguage pl, String pName) {
@@ -102,6 +104,7 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		classDiagrGenResult=false;
 		path2Java="java";
 		eventListeners = new ArrayList<ACDGEventListener>();
+		paramProcMode=ParamProcMode.ONLY_DATATYPE;
 	}
 	
 	public Model(CProgramLanguage pl, String pName, String p2J) {
@@ -113,6 +116,20 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		classDiagrGenResult=false;
 		path2Java=p2J;
 		eventListeners = new ArrayList<ACDGEventListener>();
+		paramProcMode=ParamProcMode.ONLY_DATATYPE;
+	}
+	
+	public Model(CProgramLanguage pl, String pName, String p2J,
+			ParamProcMode ppm) {
+		cProgramLanguage=pl;
+		relations=new ArrayList<Relation>();
+		filesWithClasses=new ArrayList<FileWithClass>();
+		classes = new ArrayList<String>();
+		projectName=pName;
+		classDiagrGenResult=false;
+		path2Java=p2J;
+		eventListeners = new ArrayList<ACDGEventListener>();
+		paramProcMode=ppm;
 	}
 	
 	/* Имеется ли такое отношение */
@@ -147,7 +164,7 @@ class Model implements ModelScannerIface, ModelRelationIface,
 	public void addFileWithClass(String path2File) {
 		FileWithClass newFWC = 
 				new FileWithClass(path2File, cProgramLanguage,
-				this,this,this);
+				this,this,this,paramProcMode);
 		newFWC.addACDGEventListener(this);
 				
 		filesWithClasses.add(newFWC);
@@ -169,6 +186,11 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		return res;
 	}
 	
+	/* Путь до итогового PlantUML файла */
+	public String getPath2FinalPlantUMLDiagram() {
+		String res="../output/"+projectName+".png";
+		return res;
+	}
 	
 	/* Сгенерировать итоговый PlantUML код */
 	public void genFinalPlantUMLFile() {
@@ -195,7 +217,6 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	/* Сгенерировать диаграмму классов */
@@ -218,13 +239,9 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		} 
 	}
 	
-	
 	/* Добавить класс */
 	@Override
 	public void addClass(String className) {
 		classes.add(className);
 	}
-	
-	
-		
 }

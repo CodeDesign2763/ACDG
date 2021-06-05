@@ -76,7 +76,9 @@ class ClassElement {
 		
 		if (fSub) res=res+parameters;
 		
-		res=res+":"+elemType;
+		if (!elemType.equals(""))
+			res=res+":"+elemType;
+		
 		return res;
 	}	
 	

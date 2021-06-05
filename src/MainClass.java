@@ -1,5 +1,5 @@
 /*
- * Класс Repo
+ * Класс MainClass
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -21,43 +21,24 @@
 
 package ACDG;
 import static java.lang.System.out;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import static java.lang.System.out;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
+
 /**
- * Класс RelationRepo, реализующий шаблонированный интефейс 
- * Repository
+ * Класс является точкой входа
  */
-class Repository<T> implements IRepository<T> {
+class MainClass {
+	private static SimpleClient client;
 	
-	private ArrayList<T> list;
-	
-	public Repository() {
-		list = new ArrayList<T>();
+	public static void main(String args[]) {
+		client = new SimpleClient(args);
 	}
-	
-	@Override
-	public void add(T entity) {
-		list.add(entity);
-	}
-	
-	@Override
-	public T get(int index) {
-		return list.get(index);
-	}
-	
-	@Override
-	public void update(int index, T entity) {
-		list.remove(index);
-		list.add(index,entity);
-	}
-	
-	@Override
-	public void delete(int index) {
-		list.remove(index);
-	}
-	
-	@Override
-	public boolean contains(T entity) {
-		return list.contains(entity);
-	}
+		
 }

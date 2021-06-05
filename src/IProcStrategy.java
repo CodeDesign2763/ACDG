@@ -23,9 +23,10 @@ package ACDG;
 import static java.lang.System.out;
 import java.util.ArrayList;
 
+enum ParamProcMode {ONLY_DATATYPE,ONLY_ID, ALL};
 
 /**
- * Интерфейс для стратегия распознавания xml-дерева
+ * Интерфейс для стратегии распознавания xml-дерева
  */
 interface IProcStrategy {
 	/* Обратная подстановка для символов "<", ">", "&" */
@@ -51,13 +52,12 @@ interface IProcStrategy {
 			dataType2 = 
 					dataType.substring(dataType.indexOf("<")
 					+ 1,dataType.indexOf(">")).trim();
-			//try {
 			if (modelRelIFace.getClassInd(dataType1)>-1) {
 				modelScanIFace.addRelation(
 						new Relation(cl1Name, dataType1,
 						relCode, stereotype,
 						modelRelIFace));
-			} //} catch (Exception e) {out.println("XXX:"+dataType +"\n"+dataType1+"|"+dataType2); out.println(modelRelIFace.getClassInd(dataType1));}
+			} 
 			if (modelRelIFace.getClassInd(dataType2)>-1) {
 				modelScanIFace.addRelation(
 						new Relation(cl1Name, dataType2,
@@ -72,13 +72,12 @@ interface IProcStrategy {
 						modelRelIFace));
 			}
 		}
-		
 	}
 	
 	/* Метод для распознавания XML-дерева */
 	public ClassDescr readXMLFile(String path2File, 
 			ModelScannerIface model,
-			ModelRelationIface modelRelIface)
+			ModelRelationIface modelRelIface,
+			ParamProcMode paramProcMode)
 			throws Exception;
 }
-

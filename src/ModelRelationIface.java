@@ -29,8 +29,8 @@ import java.util.ArrayList;
  * генерации PlantUML-кода
  */
 interface ModelRelationIface {
-	/* Получить имя класса по индексу */
 	public String getClassName(int index);
+	/* Получить имя класса по индексу */
 	public int getClassInd(String name);
 	
 }

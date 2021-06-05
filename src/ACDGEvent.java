@@ -52,6 +52,5 @@ class ACDGEvent {
 	public ACDGEventType getEventType() {
 		return eventType;
 	}
-	
 }
 

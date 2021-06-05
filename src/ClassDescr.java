@@ -23,7 +23,6 @@ package ACDG;
 import static java.lang.System.out;
 import java.util.ArrayList;
 
-
 /**
  * Описание класса (интефейса) с точки зрения plantuml
  */
@@ -54,6 +53,5 @@ class ClassDescr {
 		return res;
 		
 	}
-	
 }
 

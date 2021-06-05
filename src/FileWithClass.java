@@ -19,8 +19,6 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-
 package ACDG;
 import static java.lang.System.out;
 
@@ -50,27 +48,38 @@ import java.util.ArrayList;
 
 /**
  * Класс предметной области
- * описывающий файл с описанием класса на языке Java
+ * описывающий файл с исходным кодом
  */
- 
 class FileWithClass implements ACDGEventSource {
 	private String path2File;
 	private String fileName;
 	
+	/* Результат преобразования в XML */
 	private boolean conv2XMLResult;
+	
+	/* Результат распознавания XML-дерева */
 	private boolean xmlFileAnalysisResult;
+	
+	/* Результат предварительной процедурной обработки */
 	private boolean fClearedOfComments;
+	
+	/* Формируется в результате распознавания XML-дерева */
 	private ClassDescr classDescription;
-	
-	
 	
 	private CProgramLanguage programLanguage;
 	
+	/* Интерфейсы для взаимодействия с моделью */
 	private ModelScannerIface modScanIFace;
 	private ModelRelationIface modRelIFace;
 	private ModelFWCIface modFWCIface;
 	
 	private ArrayList<ACDGEventListener> eventListeners;
+	
+	/* Режим обработки параметров при распознавании XML-дерева */
+	private ParamProcMode paramProcMode;
+	
+	/* Число попыток преобразования в XML-дерево */
+	private int nAttempts;
 	
 	@Override
 	public void addACDGEventListener(ACDGEventListener listener) {
@@ -83,6 +92,8 @@ class FileWithClass implements ACDGEventSource {
 		}
 	}
 	
+	/* Текстовое сообщения для контроллера/презентера.
+	 * Передается через модель */
 	private void textMessage(String s) {
 		fireEvent(new ACDGEvent(this, ACDGEventType.TEXTMESSAGE,
 				s));
@@ -98,11 +109,13 @@ class FileWithClass implements ACDGEventSource {
 		modRelIFace=null;
 		modFWCIface=new FWCIfaceMock();
 		eventListeners = new ArrayList<ACDGEventListener>();
+		paramProcMode=ParamProcMode.ONLY_DATATYPE;
 		
 	}
 	
 	public FileWithClass(String fn, CProgramLanguage pl,
-			ModelScannerIface scanIFace, ModelRelationIface relIFace) {
+			ModelScannerIface scanIFace, ModelRelationIface relIFace) 
+			{
 		path2File=fn;
 		conv2XMLResult=false;
 		fClearedOfComments=false;
@@ -112,6 +125,7 @@ class FileWithClass implements ACDGEventSource {
 		modRelIFace=relIFace;
 		modFWCIface=new FWCIfaceMock();
 		eventListeners = new ArrayList<ACDGEventListener>();
+		paramProcMode=ParamProcMode.ONLY_DATATYPE;
 		
 	}
 	
@@ -127,6 +141,22 @@ class FileWithClass implements ACDGEventSource {
 		modRelIFace=relIFace;
 		modFWCIface=mFWCI;
 		eventListeners = new ArrayList<ACDGEventListener>();
+		paramProcMode=ParamProcMode.ONLY_DATATYPE;
+	}
+	
+	public FileWithClass(String fn, CProgramLanguage pl,
+			ModelScannerIface scanIFace, ModelRelationIface relIFace,
+			ModelFWCIface mFWCI, ParamProcMode ppm) {
+		path2File=fn;
+		conv2XMLResult=false;
+		fClearedOfComments=false;
+		xmlFileAnalysisResult=false;
+		programLanguage=pl;
+		modScanIFace=scanIFace;
+		modRelIFace=relIFace;
+		modFWCIface=mFWCI;
+		eventListeners = new ArrayList<ACDGEventListener>();
+		paramProcMode=ppm;
 	}
 	
 	public boolean getXMLFileAnalysisResult() {
@@ -136,10 +166,6 @@ class FileWithClass implements ACDGEventSource {
 	public boolean isClearedOfComments() {
 		return fClearedOfComments;
 	}
-	
-	//public void setConvResult(boolean result) {
-		//conv2XMLResult=result;
-	//}
 	
 	private String getPath2File() {
 		return path2File;
@@ -180,9 +206,6 @@ class FileWithClass implements ACDGEventSource {
 		/* Классы для работы с регулярными выражениями */
 		/* Экранирование двойным \\ */
 		
-		/* FIXME */
-		/* Это жесть - нужно все переписать !!! */
-		/* S меняется, а паттерн все ищет там что-то */
 		fClearedOfComments = true;
 		
 		Pattern patternImport = Pattern.compile("^import");
@@ -214,7 +237,6 @@ class FileWithClass implements ACDGEventSource {
 		Matcher matcherEnum;
 		Matcher matcherRBrace;
 		
-		
 		/* В строке найден import */
 		boolean fImport;
 		/* В строке найден package */
@@ -236,8 +258,6 @@ class FileWithClass implements ACDGEventSource {
 		
 		/* Строка для хранения строки файла для отладки при ошибках */
 		String s1="Строка отсутствует";
-		
-		 
 		
 		ProgramLanguage progLang = programLanguage.getPLID();
 		
@@ -278,7 +298,6 @@ class FileWithClass implements ACDGEventSource {
 				matcherEnum = patternEnum.matcher(s);
 				matcherRBrace = patternRBrace.matcher(s);
 				
-				
 				/* Получение значений флагов */
 				fImport = matcherImport.find();
 				fPackage = matcherPackage.find();
@@ -303,9 +322,7 @@ class FileWithClass implements ACDGEventSource {
 					//textMessage(s);
 				}
 				
-				
 				/* Удаление enum */
-				
 				if (!fClass) {
 				
 					/* Enum на одной строке */
@@ -324,7 +341,6 @@ class FileWithClass implements ACDGEventSource {
 						fEnumMode=false;
 						/* А строка все равно будет удалена */
 					}
-						
 				}
 				
 				/* Если включен режим комментариев С или
@@ -346,7 +362,6 @@ class FileWithClass implements ACDGEventSource {
 					fCComment=true;
 				}
 				
-				
 				if ((fCCommentClose) && 
 						(!fCCommentOpen)) {
 					if (s.indexOf("*/") + 2 < s.length()) {
@@ -355,8 +370,6 @@ class FileWithClass implements ACDGEventSource {
 					fCComment=false;
 					//textMessage("RR" +s);
 				}
-				
-				
 				
 				if ((fCCommentOpen) 
 						&& (fCCommentClose)) {
@@ -368,7 +381,6 @@ class FileWithClass implements ACDGEventSource {
 					} else s=s.substring(0,s.indexOf("/*"));
 					//textMessage("CR");
 				}
-				
 				
 				if ((!fDontWriteLine) && (!s.equals(""))
 						&& 	(!fCComment)) {
@@ -387,8 +399,6 @@ class FileWithClass implements ACDGEventSource {
 			}
 			scanfile.close();
 			writer.close();
-			
-			
 		}	catch (IOException ex1) {
 				ex1.printStackTrace();
 				fClearedOfComments = false;
@@ -401,84 +411,101 @@ class FileWithClass implements ACDGEventSource {
 			
 	}
 	
-	
 	private String getPath2XMLTree() {
 		return getPath2FileWOComments()+"_XML";
 	}
 	
+	/* Выполняется после предварительной процедурной обработки */
 	public void convSourceFile2XML() {
+		
 		ProgramLanguage pl = programLanguage.getPLID();
-		Process proc;
-		boolean fSuccess=true;
-		
-		/* Удаляем комментарии и некоторые инструкции */
-		deleteCommentsAndOtherStuff();
-		
-		/* Если предыдущий шаг выполнить не удалось, то итог
-		 * выполнения метода convSourceFile2XML - неудача */
-		fSuccess=isClearedOfComments();
-		
 		String path2Grammar=
 				programLanguage.getPath2Grammar();
+		Process proc;
 		String errStr;
 		String stoutStr;
-					 
-		try {
-			
-			/* Запускаем bullwinkle.jar и перенаправляем stdout
-			 * в xml-файл */
-			//textMessage(path2Grammar);
-			var processBuilder = new ProcessBuilder();
-			processBuilder.command(modFWCIface.getPath2Java(),
-					"-jar",
-					"../bin/bullwinkle.jar",
-					path2Grammar,
-					getPath2FileWOComments());
-			var fileXML = new File(getPath2XMLTree());
-			processBuilder.redirectOutput(fileXML);
-			proc = processBuilder.start();
-			proc.waitFor();
-			
-			/* Определяем, удачно ли произведено преобразование через
-			 * подсчет числа строк в полученном xml-файле */
-			BufferedReader reader = 
-					new BufferedReader(
-					new FileReader(getPath2XMLTree()));
-			long lines=0;
-			while (reader.readLine()!=null) lines++;
-			reader.close();
-			
-			if (lines>5) {
-				//textMessage("Преобразование прошло удачно");
-			} else {
-				//textMessage("Преобразование прошло неудачно");
-				fSuccess=false;
-			}
-
-			//textMessage("Выполнение программы завершено");
-			
 		
-		} catch (Exception e) { 
-			fSuccess=false;
-			e.printStackTrace();
-		} finally {
+		boolean fSuccess;
+		boolean fExtraCheck;
+		
+		/* Иногда Bullwinkle дает сбой и на преобразование 1 файла
+		 * в XML отводится до 5 попыток */
+		int i=0;
+		do  {
+			fSuccess=true;
+		
+			/* Удаляем комментарии и некоторые инструкции */
+			deleteCommentsAndOtherStuff();
+		
+			/* Если предыдущий шаг выполнить не удалось, то итог
+			* выполнения метода convSourceFile2XML - неудача */
+			fSuccess=isClearedOfComments();
+					 
+			try {
+			
+				/* Запускаем bullwinkle.jar и перенаправляем stdout
+				* в xml-файл */
+				//textMessage(path2Grammar);
+				var processBuilder = new ProcessBuilder();
+				processBuilder.command(modFWCIface.getPath2Java(),
+						"-jar",
+						"../bin/bullwinkle.jar",
+						path2Grammar,
+						getPath2FileWOComments());
+				var fileXML = new File(getPath2XMLTree());
+				processBuilder.redirectOutput(fileXML);
+				proc = processBuilder.start();
+				proc.waitFor();
+			
+				/* Определяем, удачно ли произведено 
+				 * преобразование через
+				 * подсчет числа строк в полученном xml-файле */
+				BufferedReader reader = 
+						new BufferedReader(
+						new FileReader(getPath2XMLTree()));
+				long lines=0;
+				while (reader.readLine()!=null) lines++;
+				reader.close();
+			
+				if (lines>5) {
+					//textMessage("Преобразование прошло удачно");
+				} else {
+					//textMessage("Преобразование прошло неудачно");
+					fSuccess=false;
+				}
+
+				//textMessage("Выполнение программы завершено");
+			} catch (Exception e) { 
+				fSuccess=false;
+				e.printStackTrace();
+			} finally {
+				/* Дополнительная проверка, выявляющая сбой 
+				 * Bullwinkle */
+				fExtraCheck=xmlTreeExtraCheck();
+				
+				try {
+					/* Удаляем промежуточный файл */
+					Files.deleteIfExists(
+							Paths.get(getPath2FileWOComments()));
+				}	catch (Exception e) {}
+			}
+		
+			/* Удаляем с XML-файла лишние вложенные тэги token */
+			fSuccess = fSuccess && xmlWrongTagDeletion();
+			/* Удаляем промежуточный файл */
 			try {
 				/* Удаляем промежуточный файл */
 				Files.deleteIfExists(
-						Paths.get(getPath2FileWOComments()));
+				Paths.get(getPath2XMLTree()));
 			}	catch (Exception e) {}
-		}
 		
-		/* Удаляем с XML-файла лишние вложенные тэги token */
-		fSuccess = fSuccess && xmlWrongTagDeletion();
-		/* Удаляем промежуточный файл */
-		try {
-			/* Удаляем промежуточный файл */
-			Files.deleteIfExists(
-			Paths.get(getPath2XMLTree()));
-		}	catch (Exception e) {}
+			i++;
+			//if (i>0) textMessage("Попытка "+String.valueOf(i));
 		
-		
+		/* Повторяем пока не будет сбоя Bullwinkle (до 5 раз) */
+		} while ((!fExtraCheck) && (i<5));
+
+		nAttempts=i;
 		conv2XMLResult=fSuccess;
 		/* Для отладки */
 		//textMessage(fSuccess);
@@ -549,25 +576,58 @@ class FileWithClass implements ACDGEventSource {
 		try {
 			classDescription = programLanguage.getProcStrategy()
 					.readXMLFile(getPath2XMLTreeWOFalseTags(),
-					modScanIFace, modRelIFace);
+					modScanIFace, modRelIFace, paramProcMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			xmlFileAnalysisResult = false;
+		} finally {
+			/* Удаляем промежуточный файл */
+			try {
+				Files.deleteIfExists(
+				Paths.get(getPath2XMLTreeWOFalseTags()));
+		}	catch (Exception e) {}
 		}
-				
 	}
 	
+	/* Дополнительная проверка XML-дерева, выявляющая сбой 
+	 * в работе Bullwinkle */
+	private boolean xmlTreeExtraCheck() {
+		boolean res=true;
+		try {
+			File f=new File(getPath2XMLTree());
+			Scanner scanfile;
+			scanfile=new Scanner(f);
+			String s=""; 
+			s=scanfile.nextLine();
+			if (s.equals("#")) res=false;
+			scanfile.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			res=false;
+		} finally {
+			
+		}
+		return res;
+	}
+	
+	/* Преобразование типа boolean в "Успешно" / "Ошибка" */
+	private String bool2String(boolean a) {
+		return (a) ? new String("Успешно") : new String("Ошибка");
+	}
+	
+	/* Сгенерировать описание класса */
 	public void genClassDescr() {
 		convSourceFile2XML();
 		readXMLFile();
 		/* Для отладки */
-		textMessage("Имя файла:" + getFileName() + "\n"
-				+ "Предварительная обработка:"
-				+ String.valueOf(isClearedOfComments()) + "\n"
-				+ "Преобразование в XML-дерево:" 
-				+ String.valueOf(getConv2XMLResult()) + "\n"
-				+ "Анализ XML-дерева:"
-				+ String.valueOf(
+		textMessage("Имя файла: " + getFileName() + "\n"
+				+ "Предварительная обработка: "
+				+ bool2String(isClearedOfComments()) + "\n"
+				+ "Преобразование в XML-дерево: " 
+				+ bool2String(getConv2XMLResult()) + "\n"
+				+ "Число попыток: " + String.valueOf(nAttempts) + "\n"
+				+ "Анализ XML-дерева: "
+				+ bool2String(
 				getXMLFileAnalysisResult()) + "\n");
 	}
 	
@@ -576,10 +636,8 @@ class FileWithClass implements ACDGEventSource {
 		return classDescription.conv2PlantUMLString();
 	}
 	
-	
 	/* Для отладки - вывод списка методов на экран */
 	public void showMethodsList() {
-		
 		try {
 			File f=new File(getPath2XMLTreeWOFalseTags());
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
@@ -590,17 +648,17 @@ class FileWithClass implements ACDGEventSource {
 			NodeList nodeList = doc.getElementsByTagName("Method"); 
 			for (int i = 0; i < nodeList.getLength(); i++) {  
 				Node node = nodeList.item(i);  
-				//System.textMessage("\nNode Name :" + node.getNodeName());  
 				if (node.getNodeType() == Node.ELEMENT_NODE) {  
 					Element eElement = (Element) node;
-					textMessage("Название метода: "+ eElement.getElementsByTagName("MethodIdentifier").item(0).getTextContent().trim());  
+					textMessage("Название метода: "
+							+ eElement.getElementsByTagName(
+							"MethodIdentifier")
+							.item(0).getTextContent().trim());  
 				}  
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
 }
 

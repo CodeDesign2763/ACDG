@@ -23,14 +23,12 @@ package ACDG;
 import static java.lang.System.out;
 
 enum RelationCode{
-  
     INHERITANCE,
     REALIZATION,
     DEPENDENCY,
     AGREGATION,
     COMPOSITION,
     ASSOCIATION,
-    
 }
 
 /**
@@ -51,7 +49,6 @@ class Relation {
 		relationCode=rcode;
 		stereotype=st;
 		mRelIface = m;
-		
 	}
 	
 	public Relation(String c1Name, String c2Name, RelationCode rcode, 
@@ -67,9 +64,6 @@ class Relation {
 					+ "Неверный индекс класса\n"
 					+ c1Name + "," + c2Name);
 		}
-		
-	
-		
 	}
 	
 	public int getClass1Ind() {

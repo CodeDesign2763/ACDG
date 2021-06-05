@@ -28,6 +28,4 @@ import static java.lang.System.out;
  */
 interface ACDGEventSource {
 	public void addACDGEventListener(ACDGEventListener listener);
-	
 }
-

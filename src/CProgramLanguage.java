@@ -22,23 +22,25 @@
 package ACDG;
 import static java.lang.System.out;
 
-
 /**
  * Класс предметной области
  * описывающий поддерживаемый язык программирования
  */
 class CProgramLanguage {
 	private String plName;
+	
+	/* Поддерживается ли данный язык */
 	private boolean fSupported;
 	private String grammarFileName;
 	private ProgramLanguage plID;
 	private IProcStrategy strategy;
+	
+	/* Расширение файла */
 	private String extension;
 	
 	public String getExt() {
 		return extension;
 	}
-	
 	
 	public CProgramLanguage(String name, boolean fs, String g, 
 			ProgramLanguage pl, IProcStrategy str, String ext) {
@@ -69,6 +71,5 @@ class CProgramLanguage {
 	public IProcStrategy getProcStrategy() {
 		return strategy;
 	}
-	
 }
 

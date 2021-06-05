@@ -34,6 +34,5 @@ interface ModelScannerIface {
 	
 	/* Добавить класс */
 	public void addClass(String className);
-	
 }
 

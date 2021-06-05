@@ -30,7 +30,6 @@ import static java.lang.System.out;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-
 /**
  * Класс-заглушка предназначенный для обеспечения 
  * обратной совместимости устаревших конструкторов класса 

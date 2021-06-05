@@ -30,6 +30,5 @@ import static java.lang.System.out;
  
 interface ACDGEventListener {
 	public void onACDGEventReceived(ACDGEvent event);
-	
 }
 

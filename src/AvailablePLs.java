@@ -30,7 +30,6 @@ import static java.lang.System.out;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-
 /**
  * Доступные языки программирования
  */
@@ -67,5 +66,4 @@ class AvailablePLs {
 		}
 		return res;
 	}
-		
 }
