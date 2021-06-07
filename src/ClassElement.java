@@ -1,5 +1,5 @@
 /*
- * Класс Repo
+ * Класс ClassElement
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 

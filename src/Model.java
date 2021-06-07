@@ -55,6 +55,12 @@ class Model implements ModelScannerIface, ModelRelationIface,
 	
 	private ArrayList<ACDGEventListener> eventListeners;
 	
+	private CProgramLanguage cProgramLanguage;
+	
+	/* Running under Windows? */
+	private static boolean fWindows=System.getProperty("os.name")
+			.startsWith("Windows");
+	
 	public boolean getClassDiagrGenResult()	{
 		return classDiagrGenResult;
 	}
@@ -81,8 +87,6 @@ class Model implements ModelScannerIface, ModelRelationIface,
 			fireEvent(event);
 	}
 	
-	private CProgramLanguage cProgramLanguage;
-		
 	public Model(CProgramLanguage pl) {
 		cProgramLanguage=pl;
 		relations=new ArrayList<Relation>();
@@ -130,6 +134,7 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		path2Java=p2J;
 		eventListeners = new ArrayList<ACDGEventListener>();
 		paramProcMode=ppm;
+		
 	}
 	
 	/* Имеется ли такое отношение */
@@ -182,13 +187,23 @@ class Model implements ModelScannerIface, ModelRelationIface,
 	
 	/* Путь до итогового PlantUML файла */
 	public String getPath2FinalPlantUMLFile() {
-		String res="../output/"+projectName+".plantuml";
+		String res;
+		if (!fWindows) {
+			res="../output/"+projectName+".plantuml";
+		} else {
+			res="..\\output\\"+projectName+".plantuml";
+		}
 		return res;
 	}
 	
 	/* Путь до итогового PlantUML файла */
 	public String getPath2FinalPlantUMLDiagram() {
-		String res="../output/"+projectName+".png";
+		String res;
+		if (!fWindows) {
+			res="../output/"+projectName+".png";
+		} else {
+			res="..\\output\\"+projectName+".png";
+		}
 		return res;
 	}
 	
@@ -223,13 +238,22 @@ class Model implements ModelScannerIface, ModelRelationIface,
 	public void genClassDiagr() {
 		classDiagrGenResult=true;
 		Process proc;
+		
+		File NULL_F = new File(
+          (System.getProperty("os.name")
+                     .startsWith("Windows") ? "NUL" : "/dev/null"));
 		try {
 			
 			var processBuilder = new ProcessBuilder();
+			String path2PlantUML = (fWindows) ? 
+					"..\\bin\\plantuml.jar" 
+					: "../bin/plantuml.jar";
 			processBuilder.command(path2Java,
 					"-jar",
-					"../bin/plantuml.jar",
+					path2PlantUML,
 					"-tpng", getPath2FinalPlantUMLFile());
+			processBuilder.redirectOutput(NULL_F);
+			processBuilder.redirectError(NULL_F);
 			proc = processBuilder.start();
 			proc.waitFor();
 		

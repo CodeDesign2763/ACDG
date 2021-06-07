@@ -35,6 +35,10 @@ class CProgramLanguage {
 	private ProgramLanguage plID;
 	private IProcStrategy strategy;
 	
+	/* Running under Windows? */
+	private static boolean fWindows=System.getProperty("os.name")
+			.startsWith("Windows");
+	
 	/* Расширение файла */
 	private String extension;
 	
@@ -65,7 +69,9 @@ class CProgramLanguage {
 	}
 	
 	public String getPath2Grammar() {
-		return "../src/"+grammarFileName;
+		String res;
+		res = ((fWindows) ? "..\\src\\" : "../src/");
+		return res+grammarFileName;
 	}
 	
 	public IProcStrategy getProcStrategy() {

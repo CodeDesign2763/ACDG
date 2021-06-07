@@ -1,0 +1,45 @@
+@startuml
+class AvailablePLs {
+- {static} availablePLList:ArrayList<CProgramLanguage>
++ {static} getPLbyEnum(ProgramLanguage):CProgramLanguage
++ {static} getPLbyName(String):CProgramLanguage
+} 
+class CProgramLanguage {
+- plName:String
+- fSupported:boolean
+- grammarFileName:String
+- plID:ProgramLanguage
+- strategy:IProcStrategy
+- extension:String
++ getExt():String
++ CProgramLanguage(String, boolean, String, ProgramLanguage, IProcStrategy, String)
++ getPLName():String
++ getPLID():ProgramLanguage
++ isSupported():boolean
++ getPath2Grammar():String
++ getProcStrategy():IProcStrategy
+} 
+class Relation {
+- class1Ind:int
+- class2Ind:int
+- relationCode:RelationCode
+- stereotype:String
+- mRelIface:ModelRelationIface
++ Relation(int, int, RelationCode, String, ModelRelationIface)
++ Relation(String, String, RelationCode, String, ModelRelationIface)
++ getClass1Ind():int
++ getClass2Ind():int
++ getRelationCode():RelationCode
++ getStereotype():String
++ conv2String():String
++ genPlantUMLCode():String
++ equals(Object):boolean
+} 
+class JavaProcStrategy {
++ readXMLFile(String, ModelScannerIface, ModelRelationIface, ParamProcMode):ClassDescr
+} 
+
+AvailablePLs --> CProgramLanguage
+AvailablePLs ..> CProgramLanguage : Create
+JavaProcStrategy ..|> IProcStrategy
+@enduml

@@ -53,16 +53,39 @@ class SimpleClient implements ACDGEventListener {
 	
 	private ParamProcMode paramProcMode;
 	
+	/* Running under Windows? */
+	private static boolean fWindows=System.getProperty("os.name")
+			.startsWith("Windows");
+	
 	public SimpleClient(String args[]) {
+		String osMessage;
+		osMessage = (fWindows) ? "OS is Windows-like" :
+				"OS is Unix-like";
+		out.println(osMessage);
+		
+		/* Default project name */
+		projectName="DefaultProjectName";
+		
+		/* Path to Java test */
+		path2Java="java";
+		if (checkPath2Java(path2Java)) {
+			out.println("Path to Java is correct");
+		} else {
+			out.println("Path to Java is incorrect");
+			System.exit(1);
+		}
 		cliArgs=args;
 		paths2FilesWithClasses = new ArrayList<String>();
 		classNames = new ArrayList<String>();
-		path2Java="";
+		
 		programLanguage=null;
 		excludePattern="";
 		paramProcMode=ParamProcMode.ONLY_DATATYPE;
+		
 		cliArgsProc();
+		
 		checkDataFromCLIArgs();
+		
 		model = new Model(programLanguage, projectName, path2Java, 
 				paramProcMode);
 		model.addACDGEventListener(this);
@@ -78,22 +101,23 @@ class SimpleClient implements ACDGEventListener {
 		model.genFinalPlantUMLFile();
 		model.genClassDiagr();
 		
-		out.println("Сгенерирован PlantUML-код диаграммы классов:");
+		out.println("File with class diagram PlantUml code"
+				+ " generated:");
 		out.println(model.getPath2FinalPlantUMLFile());
-		out.println("Сгенерирована диаграмма классов:");
+		out.println("Class diagram generated:");
 		out.println(model.getPath2FinalPlantUMLDiagram());
 	}
 	
-	/* Обработка аргументов командной строки */
+	/* Command line arguments processing */
 	public void cliArgsProc() {
 		CLIProcMode mode = CLIProcMode.INITIAL;
 		String s;
 		for (int i=0; i<cliArgs.length; i++) {
 			s=cliArgs[i];
 			switch (s) {
-				case "-path2java" : 
-					mode=CLIProcMode.CHECK_PATH;
-					break;
+				//case "-path2java" : 
+					//mode=CLIProcMode.CHECK_PATH;
+					//break;
 				case "-addfwc" : 
 					mode=CLIProcMode.ADD_FWC;
 					break;
@@ -128,8 +152,7 @@ class SimpleClient implements ACDGEventListener {
 							out.println(str);
 						}
 					} catch (Exception e) {
-						out.println("Ошибка! Файл с описанием команд "
-								+ "не найден!");
+						out.println("Error! README file not found!");
 					}
 					System.exit(1);
 					break;
@@ -145,21 +168,21 @@ class SimpleClient implements ACDGEventListener {
 										null;
 								break;
 							} else {
-								out.println("Некорректное название"
-										+ " языка программирования");
+								out.println("Error! Incorrect PL name"
+										);
 								System.exit(1);
 							}
 							
-						case CHECK_PATH :
-							if (checkPath2Java(s)) {
-								out.println("Путь к Java корректный");
-								path2Java=s;
-							} else {
-								out.println(
-										"Путь к Java некорректный");
-								System.exit(1);
-							}
-							break;
+						//case CHECK_PATH :
+							//if (checkPath2Java(s)) {
+								//out.println("Путь к Java корректный");
+								//path2Java=s;
+							//} else {
+								//out.println(
+										//"Путь к Java некорректный");
+								//System.exit(1);
+							//}
+							//break;
 						case ADD_FWC : 
 							paths2FilesWithClasses.add(s);
 							break;
@@ -179,8 +202,8 @@ class SimpleClient implements ACDGEventListener {
 							}
 							break;
 							} else {
-								out.println("Ошибка аргументов "
-										+ "командной строки");
+								out.println("Command line arguments"
+										+ " error");
 								System.exit(1);
 							}
 						case SET_PROJ_NAME :
@@ -208,8 +231,9 @@ class SimpleClient implements ACDGEventListener {
 									break;
 								default :
 									out.println(
-											"Неверный режим"
-											+" обработки параметров");
+											"Error! Incorrect"
+											+ " parameters "
+											+ " processing mode");
 									System.exit(1);
 							}
 					}
@@ -234,10 +258,13 @@ class SimpleClient implements ACDGEventListener {
 	/* Проверка достаточности данных, 
 	 * полученных из командной строки */
 	private void checkDataFromCLIArgs() {
-		if ((path2Java=="")
-				|| (paths2FilesWithClasses.size()==0)
+		//if ((path2Java=="")
+				//|| (paths2FilesWithClasses.size()==0)
+				//|| (programLanguage == null)) {
+		if ((paths2FilesWithClasses.size()==0)
 				|| (programLanguage == null)) {
-			out.println("Неверные данные из командной строки");
+			out.println("Command line arguments error:"
+					+ " need more data");
 			System.exit(1);
 		}
 	}
@@ -267,20 +294,19 @@ class SimpleClient implements ACDGEventListener {
 		return resultList;
 	}
 	
-	/* Для подавления вывода при проверки пути к Java */
-	private  File NULL_F = new File(
-          (System.getProperty("os.name")
-                     .startsWith("Windows") ? "NUL" : "/dev/null"));
-
 	/* Проверка пути к Java */
 	private  boolean checkPath2Java(String path) {
 		boolean fResult=true;
 		Process proc;
 		try {
 			
+			File NULL_F = new File(
+			(System.getProperty("os.name")
+                     .startsWith("Windows") ? "NUL" : "/dev/null"));
 			var processBuilder = new ProcessBuilder();
 			processBuilder.command(path);
 			processBuilder.redirectOutput(NULL_F);
+			processBuilder.redirectError(NULL_F);
 			proc = processBuilder.start();
 			proc.waitFor();
 		

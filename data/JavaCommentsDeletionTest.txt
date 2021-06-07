@@ -1,0 +1,12 @@
+package foobar;
+import foo;
+import bar;
+/* This is C style comment */
+asdasdad // Trailing comment
+//
+asd
+/* Multi-line
+comment */
+/* Multi-line
+commend */ asdad
+another line

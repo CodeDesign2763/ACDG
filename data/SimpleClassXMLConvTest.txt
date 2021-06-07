@@ -1,0 +1,7 @@
+class ClassA {
+	public int a;
+	public void method1() {
+		print(XXX);
+	}
+}
+

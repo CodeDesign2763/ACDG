@@ -1,0 +1,61 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007f3ff1917d80, pid=350, tid=351
+#
+# JRE version: OpenJDK Runtime Environment (11.0.6+10) (build 11.0.6+10-post-Debian-1bpo91)
+# Java VM: OpenJDK 64-Bit Server VM (11.0.6+10-post-Debian-1bpo91, mixed mode, sharing, tiered, compressed oops, g1 gc, linux-amd64)
+# Problematic frame:
+# C  0x00007f3ff1917d80
+#
+# No core dump will be written. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# An error report file with more information is saved as:
+# /home/user1/text/edu/VSTU/ВвРПО/Контрольная работа/bin/hs_err_pid350.log
+Compiled method (c1)     355  384       3       ca.uqac.lif.bullwinkle.TokenString::toString (63 bytes)
+ total in heap  [0x00007f4030f35010,0x00007f4030f36b28] = 6936
+ relocation     [0x00007f4030f35188,0x00007f4030f35318] = 400
+ main code      [0x00007f4030f35320,0x00007f4030f36480] = 4448
+ stub code      [0x00007f4030f36480,0x00007f4030f365b8] = 312
+ oops           [0x00007f4030f365b8,0x00007f4030f365c8] = 16
+ metadata       [0x00007f4030f365c8,0x00007f4030f36658] = 144
+ scopes data    [0x00007f4030f36658,0x00007f4030f36898] = 576
+ scopes pcs     [0x00007f4030f36898,0x00007f4030f36b08] = 624
+ dependencies   [0x00007f4030f36b08,0x00007f4030f36b10] = 8
+ nul chk table  [0x00007f4030f36b10,0x00007f4030f36b28] = 24
+Compiled method (c1)     355  388       3       ca.uqac.lif.bullwinkle.BnfParser::log (60 bytes)
+ total in heap  [0x00007f4030f37a90,0x00007f4030f38b38] = 4264
+ relocation     [0x00007f4030f37c08,0x00007f4030f37d00] = 248
+ main code      [0x00007f4030f37d00,0x00007f4030f386a0] = 2464
+ stub code      [0x00007f4030f386a0,0x00007f4030f38798] = 248
+ oops           [0x00007f4030f38798,0x00007f4030f387b0] = 24
+ metadata       [0x00007f4030f387b0,0x00007f4030f387f8] = 72
+ scopes data    [0x00007f4030f387f8,0x00007f4030f38988] = 400
+ scopes pcs     [0x00007f4030f38988,0x00007f4030f38b18] = 400
+ dependencies   [0x00007f4030f38b18,0x00007f4030f38b20] = 8
+ nul chk table  [0x00007f4030f38b20,0x00007f4030f38b38] = 24
+Compiled method (c1)     355  409       3       ca.uqac.lif.bullwinkle.BnfRule::toString (82 bytes)
+ total in heap  [0x00007f4030f44010,0x00007f4030f45928] = 6424
+ relocation     [0x00007f4030f44188,0x00007f4030f44310] = 392
+ main code      [0x00007f4030f44320,0x00007f4030f452c0] = 4000
+ stub code      [0x00007f4030f452c0,0x00007f4030f45408] = 328
+ oops           [0x00007f4030f45408,0x00007f4030f45420] = 24
+ metadata       [0x00007f4030f45420,0x00007f4030f45480] = 96
+ scopes data    [0x00007f4030f45480,0x00007f4030f456a8] = 552
+ scopes pcs     [0x00007f4030f456a8,0x00007f4030f458f8] = 592
+ dependencies   [0x00007f4030f458f8,0x00007f4030f45900] = 8
+ nul chk table  [0x00007f4030f45900,0x00007f4030f45928] = 40
+Compiled method (c1)     355  399   !   3       java.util.regex.Pattern::matcher (44 bytes)
+ total in heap  [0x00007f4030f40d90,0x00007f4030f41530] = 1952
+ relocation     [0x00007f4030f40f08,0x00007f4030f40f60] = 88
+ main code      [0x00007f4030f40f60,0x00007f4030f41380] = 1056
+ stub code      [0x00007f4030f41380,0x00007f4030f41438] = 184
+ metadata       [0x00007f4030f41438,0x00007f4030f41440] = 8
+ scopes data    [0x00007f4030f41440,0x00007f4030f414a0] = 96
+ scopes pcs     [0x00007f4030f414a0,0x00007f4030f41510] = 112
+ dependencies   [0x00007f4030f41510,0x00007f4030f41518] = 8
+ handler table  [0x00007f4030f41518,0x00007f4030f41530] = 24
+#
+# If you would like to submit a bug report, please visit:
+#   https://bugs.debian.org/openjdk-11
+#

@@ -81,6 +81,10 @@ class FileWithClass implements ACDGEventSource {
 	/* Число попыток преобразования в XML-дерево */
 	private int nAttempts;
 	
+	/* Running under Windows? */
+	private static boolean fWindows=System.getProperty("os.name")
+			.startsWith("Windows");
+	
 	@Override
 	public void addACDGEventListener(ACDGEventListener listener) {
 		eventListeners.add(listener);
@@ -172,8 +176,17 @@ class FileWithClass implements ACDGEventSource {
 	}
 	
 	public String getFileName() {
-		return (path2File.lastIndexOf("/") > -1) ? 
-		path2File.substring(path2File.lastIndexOf("/")+1) : path2File;
+		String res;
+		if (!fWindows) {
+			res = (path2File.lastIndexOf("/") > -1) ? 
+					path2File.substring(path2File.lastIndexOf("/")+1) 
+					: path2File;
+		} else {
+			res = (path2File.lastIndexOf("\\") > -1) ? 
+					path2File.substring(path2File.lastIndexOf("\\")+1) 
+					: path2File;
+		}
+		return res;
 	}
 	
 	public boolean getConv2XMLResult() {
@@ -192,11 +205,21 @@ class FileWithClass implements ACDGEventSource {
 	}
 	
 	private String getPath2FileWOComments() {
-		return "../temp/"+getFileName()+"_wo_comments";
+		String res;
+		if (!fWindows) {
+			res = "../temp/"+getFileName()+"_wo_comments";
+		} else {
+			res = "..\\temp\\"+getFileName()+"_wo_comments";
+		}
+		return res;
 	}
 	
 	private String getPath2XMLTreeWOFalseTags() {
 		return getPath2XMLTree()+"_WFT";
+	}
+	
+	private String getPath2XMLTree() {
+		return getPath2FileWOComments()+"_XML";
 	}
 	
 	/* Убирает из исходного файла комментарии и некоторые декларации
@@ -405,14 +428,10 @@ class FileWithClass implements ACDGEventSource {
 		}	catch (Exception e) {
 				e.printStackTrace();
 				fClearedOfComments = false;
-				textMessage("Строка, которая вызвала ошибку:"
+				textMessage("A line that caused the error:"
 						+ s1);
 		}
 			
-	}
-	
-	private String getPath2XMLTree() {
-		return getPath2FileWOComments()+"_XML";
 	}
 	
 	/* Выполняется после предварительной процедурной обработки */
@@ -446,14 +465,28 @@ class FileWithClass implements ACDGEventSource {
 				/* Запускаем bullwinkle.jar и перенаправляем stdout
 				* в xml-файл */
 				//textMessage(path2Grammar);
+				String path2Bullwinkle;
+				path2Bullwinkle = ((!fWindows) ? 
+						"../bin/bullwinkle.jar"
+						: "..\\bin\\bullwinkle.jar");
+				//if (fWindows) {
+					//path2Bullwinkle = "..\\bin\\bullwinkle.jar";
+				//} else {
+					//path2Bullwinkle = "../bin/bullwinkle.jar";
+				//}
+				
+				File NULL_F = new File(
+						((fWindows)  
+						? "NUL" : "/dev/null"));
 				var processBuilder = new ProcessBuilder();
 				processBuilder.command(modFWCIface.getPath2Java(),
 						"-jar",
-						"../bin/bullwinkle.jar",
+						path2Bullwinkle,
 						path2Grammar,
 						getPath2FileWOComments());
 				var fileXML = new File(getPath2XMLTree());
 				processBuilder.redirectOutput(fileXML);
+				//processBuilder.redirectError(NULL_F);
 				proc = processBuilder.start();
 				proc.waitFor();
 			
@@ -612,7 +645,7 @@ class FileWithClass implements ACDGEventSource {
 	
 	/* Преобразование типа boolean в "Успешно" / "Ошибка" */
 	private String bool2String(boolean a) {
-		return (a) ? new String("Успешно") : new String("Ошибка");
+		return (a) ? new String("Successful") : new String("Failed");
 	}
 	
 	/* Сгенерировать описание класса */
@@ -620,13 +653,18 @@ class FileWithClass implements ACDGEventSource {
 		convSourceFile2XML();
 		readXMLFile();
 		/* Для отладки */
-		textMessage("Имя файла: " + getFileName() + "\n"
-				+ "Предварительная обработка: "
+		textMessage("File: " + getFileName() + "\n"
+		//+ "File Path:" + getPath2File() + "\n"
+		//+ "Path 2 file wo comments:" +getPath2FileWOComments() +"\n"
+		//+ "Path 2 xml tree:" + getPath2XMLTree() + "\n"
+		//+ "Path 2 xml tree WFT:" + getPath2XMLTreeWOFalseTags() + "\n"
+				+ "Pre-processing: "
 				+ bool2String(isClearedOfComments()) + "\n"
-				+ "Преобразование в XML-дерево: " 
+				+ "Conversion to XML tree: " 
 				+ bool2String(getConv2XMLResult()) + "\n"
-				+ "Число попыток: " + String.valueOf(nAttempts) + "\n"
-				+ "Анализ XML-дерева: "
+				+ "Number of attempts: " + 
+				String.valueOf(nAttempts) + "\n"
+				+ "XML tree analysis: "
 				+ bool2String(
 				getXMLFileAnalysisResult()) + "\n");
 	}
@@ -640,7 +678,8 @@ class FileWithClass implements ACDGEventSource {
 	public void showMethodsList() {
 		try {
 			File f=new File(getPath2XMLTreeWOFalseTags());
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
+			DocumentBuilderFactory dbf = 
+					DocumentBuilderFactory.newInstance();  
 			DocumentBuilder db = dbf.newDocumentBuilder();  
 			Document doc = db.parse(f);  
 			doc.getDocumentElement().normalize();  
