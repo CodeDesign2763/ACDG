@@ -1,5 +1,5 @@
 /*
- * Интерфейс ModelRelationIface
+ * Интерфейс ModelScannerIface
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -19,19 +19,20 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package ACDG;
+package com.acdg;
 import static java.lang.System.out;
 import java.util.ArrayList;
 
 
 /**
- * Интерфейс модели, который используется классом Relation для 
- * генерации PlantUML-кода
+ * Интерфейс модели, который используется стратегией распознавания
+ * XML файла для добавления обнаруженных отношений
  */
-interface ModelRelationIface {
-	public String getClassName(int index);
-	/* Получить имя класса по индексу */
-	public int getClassInd(String name);
+interface ModelScannerIface {
+	/* Добавить отношение */
+	public void addRelation(Relation r);
 	
+	/* Добавить класс */
+	public void addClass(String className);
 }
 

@@ -1,9 +1,7 @@
 /*
- * Интерфейс ACDGEventListener
+ * Тесты для класса Relation
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
- * 
- * This is a part of ACDG.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
  * published by the Free Software Foundation, either version 3 of the 
@@ -16,19 +14,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  
- * If not, see <https://www.gnu.org/licenses/>.
-*/
+ * If not, see <https://www.gnu.org/licenses/>. */
 
-package ACDG;
-import static java.lang.System.out;
+package com.acdg;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
 
 /**
- * Интефейс слушателя событий ACDGEvent
- * реализует паттерн "Наблюдатель"
+ * Класс c набором тестов для класса Relation
  */
- 
-interface ACDGEventListener {
-	public void onACDGEventReceived(ACDGEvent event);
+class TestsForRelation {
+	
+	@Test
+	@DisplayName("Методы get")
+	public void testGetMethods() {
+		Relation rel1 = new Relation(10, 20, RelationCode.ASSOCIATION,
+				"", null);
+		assertEquals(rel1.getClass1Ind(),10);
+		assertEquals(rel1.getClass2Ind(),20);
+		assertEquals(rel1.getRelationCode(),RelationCode.ASSOCIATION);
+	}	
 }
-

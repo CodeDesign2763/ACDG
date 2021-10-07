@@ -19,7 +19,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package ACDG;
+package com.acdg;
 import static java.lang.System.out;
 
 enum RelationCode{

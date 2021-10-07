@@ -16,13 +16,14 @@
  * along with this program.  
  * If not, see <https://www.gnu.org/licenses/>. */
 
-package ACDG;
+package com.acdg;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Disabled;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import static java.lang.System.out;
 import java.io.IOException;
@@ -33,7 +34,7 @@ import java.io.File;
 /* Для тестирования приватных методов */
 import java.lang.reflect.*;
 
-import FunctionsForJUnit.FunctionsForTesting;
+import com.functionsforjunit.FunctionsForTesting;
 /**
  * Класс c набором тестов для класса Model
  */
@@ -45,14 +46,22 @@ class TestsForModel {
 		byte[] CorrectResult=null;
 		byte[] TestResult=null;
 		
+		/* Отладка */
+		//String pwdString = Path.of("").toAbsolutePath().toString();
+		//System.out.println("!!!!! PWD IS:"+ pwdString);
+		//assertEquals("",pwdString);
+		/* Выяснили, что рабочий каталог - src */
+		/* /home/user1/text/edu/VSTU/ВвРПО/Контрольная работа/src */
+		
 		Model m1 = new Model(
 				AvailablePLs.getPLbyEnum(ProgramLanguage.JAVA));
-		m1.addFileWithClass("../src/AvailablePLs.java");
-		m1.addFileWithClass("../src/CProgramLanguage.java");
-		m1.addFileWithClass("../src/Relation.java");
-		m1.addFileWithClass("../src/JavaProcStrategy.java");
+		m1.addFileWithClass("main/java/com/acdg/AvailablePLs.java");
+		m1.addFileWithClass("main/java/com/acdg/CProgramLanguage.java");
+		m1.addFileWithClass("main/java/com/acdg/Relation.java");
+		m1.addFileWithClass("main/java/com/acdg/JavaProcStrategy.java");
 		m1.genFinalPlantUMLFile();
 		
+				
 		try {
 
 			/* Простейший способ сравнить 2 файла */
@@ -82,10 +91,10 @@ class TestsForModel {
 		Model m1 = new Model(
 				AvailablePLs.getPLbyEnum(ProgramLanguage.JAVA),
 				pName);
-		m1.addFileWithClass("../src/AvailablePLs.java");
-		m1.addFileWithClass("../src/CProgramLanguage.java");
-		m1.addFileWithClass("../src/Relation.java");
-		m1.addFileWithClass("../src/JavaProcStrategy.java");
+		m1.addFileWithClass("main/java/com/acdg/AvailablePLs.java");
+		m1.addFileWithClass("main/java/com/acdg/CProgramLanguage.java");
+		m1.addFileWithClass("main/java/com/acdg/Relation.java");
+		m1.addFileWithClass("main/java/com/acdg/JavaProcStrategy.java");
 		m1.genFinalPlantUMLFile();
 		m1.genClassDiagr();
 		

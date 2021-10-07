@@ -1,7 +1,9 @@
 /*
- * Тесты для класса Relation
+ * Класс ACDGEvent
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
+ * 
+ * This is a part of ACDG.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
  * published by the Free Software Foundation, either version 3 of the 
@@ -14,27 +16,41 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  
- * If not, see <https://www.gnu.org/licenses/>. */
+ * If not, see <https://www.gnu.org/licenses/>.
+*/
 
-package ACDG;
+package com.acdg;
+import static java.lang.System.out;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Disabled;
+enum ACDGEventType{
+  
+    TEXTMESSAGE
+}
 
 /**
- * Класс c набором тестов для класса Relation
+ * Класс для описания универсального события
  */
-class TestsForRelation {
+class ACDGEvent {
+	private ACDGEventType eventType;
+	private Object payload;
+	private Object source;
 	
-	@Test
-	@DisplayName("Методы get")
-	public void testGetMethods() {
-		Relation rel1 = new Relation(10, 20, RelationCode.ASSOCIATION,
-				"", null);
-		assertEquals(rel1.getClass1Ind(),10);
-		assertEquals(rel1.getClass2Ind(),20);
-		assertEquals(rel1.getRelationCode(),RelationCode.ASSOCIATION);
-	}	
+	public ACDGEvent(Object s, ACDGEventType type, Object pload) {
+		source=s;
+		eventType=type;
+		payload=pload;
+	}
+	
+	public Object getSource() {
+		return source;
+	}
+	
+	public Object getPayload() {
+		return payload;
+	}
+	
+	public ACDGEventType getEventType() {
+		return eventType;
+	}
 }
+

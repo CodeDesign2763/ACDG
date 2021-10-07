@@ -1,5 +1,5 @@
 /*
- * Интерфейс ACDGEventSource
+ * Интерфейс ModelRelationIface
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -19,13 +19,19 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package ACDG;
+package com.acdg;
 import static java.lang.System.out;
+import java.util.ArrayList;
 
 
 /**
- * Интерфейс источника событий ACDGEvent
+ * Интерфейс модели, который используется классом Relation для 
+ * генерации PlantUML-кода
  */
-interface ACDGEventSource {
-	public void addACDGEventListener(ACDGEventListener listener);
+interface ModelRelationIface {
+	public String getClassName(int index);
+	/* Получить имя класса по индексу */
+	public int getClassInd(String name);
+	
 }
+

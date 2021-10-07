@@ -16,7 +16,7 @@
  * along with this program.  
  * If not, see <https://www.gnu.org/licenses/>. */
 
-package ACDG;
+package com.acdg;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import java.lang.Exception;
 import java.io.File;
 
 /* Для тестирования приватных методов */
-import java.lang.reflect.*;
+//import java.lang.reflect.*;
 
 /**
  * Класс c набором тестов для класса ClassElement

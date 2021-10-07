@@ -1,5 +1,5 @@
 /*
- * Класс MainClass
+ * Интерфейс ACDGEventListener
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -19,26 +19,16 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package ACDG;
+package com.acdg;
 import static java.lang.System.out;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.Scanner;
-import java.io.File;
-import java.io.IOException;
-import static java.lang.System.out;
-import java.io.FileWriter;
-import java.util.ArrayList;
 
 
 /**
- * Класс является точкой входа
+ * Интефейс слушателя событий ACDGEvent
+ * реализует паттерн "Наблюдатель"
  */
-class MainClass {
-	private static SimpleClient client;
-	
-	public static void main(String args[]) {
-		client = new SimpleClient(args);
-	}
-		
+ 
+interface ACDGEventListener {
+	public void onACDGEventReceived(ACDGEvent event);
 }
+

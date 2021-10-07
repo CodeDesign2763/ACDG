@@ -19,7 +19,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package FunctionsForJUnit;
+package com.functionsforjunit;
 import static java.lang.System.out;
 
 import java.nio.file.Files;

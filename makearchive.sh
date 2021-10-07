@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 
 #Script for automatic creation of an archive with the program.
  
@@ -35,7 +34,7 @@ archive_name="$current_dir_name""_exp"
 #Jar creation
 cd bin
 rm ACDG.jar
-jar cfe ACDG.jar ACDG.MainClass ACDG/*.class
+jar cfe ACDG.jar com.acdg.MainClass com/acdg/*class com/functionsforjunit/*class
 cd ..
 
 #Deleting files

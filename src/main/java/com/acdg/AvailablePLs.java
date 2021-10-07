@@ -19,7 +19,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package ACDG;
+package com.acdg;
 import static java.lang.System.out;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,16 +40,19 @@ class AvailablePLs {
 	static {
 		availablePLList=new ArrayList<CProgramLanguage>();
 		JavaProcStrategy javaProcStrategy = new JavaProcStrategy();
+		JavaCodePreprocStrategy javaPreprocStrategy = new
+				JavaCodePreprocStrategy();
 		
 		availablePLList.add((int) ProgramLanguage.JAVA.ordinal(),
 				new CProgramLanguage("Java",true,"java.bnf",
-				ProgramLanguage.JAVA,javaProcStrategy, "java"));
+				ProgramLanguage.JAVA,javaProcStrategy, "java",
+				javaPreprocStrategy));
 		availablePLList.add((int) ProgramLanguage.CSHARP.ordinal(),
 				new CProgramLanguage("C#",false,"cs.bnf",
-				ProgramLanguage.CSHARP,null,"cs"));
+				ProgramLanguage.CSHARP,null,"cs", null));
 		availablePLList.add((int) ProgramLanguage.CPP.ordinal(),
 				new CProgramLanguage("C++",false,"cpp.bnf",
-				ProgramLanguage.CPP,null,"cpp"));
+				ProgramLanguage.CPP,null,"cpp", null));
 	}
 	
 	public static CProgramLanguage getPLbyEnum(ProgramLanguage pl) {

@@ -10,14 +10,17 @@ class CProgramLanguage {
 - grammarFileName:String
 - plID:ProgramLanguage
 - strategy:IProcStrategy
+- codePreprocStrategy:ICodePreprocStrategy
+- {static} fWindows:boolean
 - extension:String
 + getExt():String
-+ CProgramLanguage(String, boolean, String, ProgramLanguage, IProcStrategy, String)
++ CProgramLanguage(String, boolean, String, ProgramLanguage, IProcStrategy, String, ICodePreprocStrategy)
 + getPLName():String
 + getPLID():ProgramLanguage
 + isSupported():boolean
 + getPath2Grammar():String
 + getProcStrategy():IProcStrategy
++ getCodePreprocStrategy():ICodePreprocStrategy
 } 
 class Relation {
 - class1Ind:int

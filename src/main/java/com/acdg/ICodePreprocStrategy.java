@@ -1,5 +1,5 @@
 /*
- * Класс ACDGEvent
+ * Интерфейс ICodePreprocStrategy
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -19,38 +19,16 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package ACDG;
+package com.acdg;
 import static java.lang.System.out;
-
-enum ACDGEventType{
-  
-    TEXTMESSAGE
-}
+import java.util.ArrayList;
 
 /**
- * Класс для описания универсального события
+ * Интерфейс для стратегии предварительной обработки исходного кода
  */
-class ACDGEvent {
-	private ACDGEventType eventType;
-	private Object payload;
-	private Object source;
-	
-	public ACDGEvent(Object s, ACDGEventType type, Object pload) {
-		source=s;
-		eventType=type;
-		payload=pload;
-	}
-	
-	public Object getSource() {
-		return source;
-	}
-	
-	public Object getPayload() {
-		return payload;
-	}
-	
-	public ACDGEventType getEventType() {
-		return eventType;
-	}
+interface ICodePreprocStrategy {
+	/* Метод для предварительной обработки исходного кода */
+	public boolean deleteCommentsAndOtherStuff(String path2File,
+			String path2FileWOComments,
+			ACDGEventListener debugMessageListener);
 }
-

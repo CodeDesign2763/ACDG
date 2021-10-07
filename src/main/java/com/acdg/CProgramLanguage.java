@@ -19,7 +19,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package ACDG;
+package com.acdg;
 import static java.lang.System.out;
 
 /**
@@ -34,6 +34,7 @@ class CProgramLanguage {
 	private String grammarFileName;
 	private ProgramLanguage plID;
 	private IProcStrategy strategy;
+	private ICodePreprocStrategy codePreprocStrategy;
 	
 	/* Running under Windows? */
 	private static boolean fWindows=System.getProperty("os.name")
@@ -47,13 +48,15 @@ class CProgramLanguage {
 	}
 	
 	public CProgramLanguage(String name, boolean fs, String g, 
-			ProgramLanguage pl, IProcStrategy str, String ext) {
+			ProgramLanguage pl, IProcStrategy str, String ext,
+			ICodePreprocStrategy preprocStr) {
 		plName=name;
 		fSupported=fs;
 		grammarFileName=g;
 		plID=pl;
 		strategy=str;
 		extension=ext;
+		codePreprocStrategy=preprocStr;
 	}
 	
 	public String getPLName() {
@@ -76,6 +79,10 @@ class CProgramLanguage {
 	
 	public IProcStrategy getProcStrategy() {
 		return strategy;
+	}
+	
+	public ICodePreprocStrategy getCodePreprocStrategy() {
+		return codePreprocStrategy;
 	}
 }
 

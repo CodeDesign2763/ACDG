@@ -1,5 +1,5 @@
 /*
- * Интерфейс ModelScannerIface
+ * Класс ClassDescr
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -19,20 +19,39 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package ACDG;
+package com.acdg;
 import static java.lang.System.out;
 import java.util.ArrayList;
 
-
 /**
- * Интерфейс модели, который используется стратегией распознавания
- * XML файла для добавления обнаруженных отношений
+ * Описание класса (интефейса) с точки зрения plantuml
  */
-interface ModelScannerIface {
-	/* Добавить отношение */
-	public void addRelation(Relation r);
+class ClassDescr {
+	/* Класс или интерфейс? */
+	private boolean fClass;
+	private String id;
+	ArrayList<ClassElement> classElementList;
 	
-	/* Добавить класс */
-	public void addClass(String className);
+	public ClassDescr(boolean fC, String name) {
+		fClass=fC;
+		id=name;
+		classElementList=new ArrayList<ClassElement>();
+	}
+	
+	public void addClassElement(ClassElement ce) {
+		classElementList.add(ce);
+	}
+	
+	public String conv2PlantUMLString() {
+		String res="";
+		res = (fClass) ? "class" : "interface";
+		res=res + " " + id + " {\n";
+		for (ClassElement ce : classElementList) {
+			res = res + ce.genPlantUMLCode()+"\n";
+		}
+		res=res+"} \n";
+		return res;
+		
+	}
 }
 

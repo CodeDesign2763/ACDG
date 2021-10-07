@@ -16,7 +16,7 @@
  * along with this program.  
  * If not, see <https://www.gnu.org/licenses/>. */
 
-package ACDG;
+package com.acdg;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,8 @@ import java.io.File;
 /* Для тестирования приватных методов */
 import java.lang.reflect.*;
 
-import FunctionsForJUnit.FunctionsForTesting;
+import com.functionsforjunit.FunctionsForTesting;
+
 /**
  * Класс c набором тестов для класса FileWithClass
  */
@@ -85,7 +86,7 @@ class TestsForFileWithClass {
 			
 			assertEquals(true, 
 					FunctionsForTesting.checkPrivMethodWOParameters(
-					fwc1, "ACDG.FileWithClass", 
+					fwc1, "com.acdg.FileWithClass", 
 					"deleteCommentsAndOtherStuff", "../temp/" + 
 					"JavaCommentsDeletionTest.txt_wo_comments", 
 					"../data/" + 
@@ -154,7 +155,7 @@ class TestsForFileWithClass {
 				javaPL);
 		assertEquals("../temp/MainForm.java_wo_comments",
 				(String) FunctionsForTesting.checkPrivMethod(
-				fwc1, "ACDG.FileWithClass",
+				fwc1, "com.acdg.FileWithClass",
 				"getPath2FileWOComments",null,null));
 		
 		

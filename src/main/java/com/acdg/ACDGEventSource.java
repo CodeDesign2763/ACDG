@@ -1,5 +1,5 @@
 /*
- * Класс FWCIfaceMock
+ * Интерфейс ACDGEventSource
  * 
  * Copyright 2021 Alexander Chernokrylov <CodeDesign2763@gmail.com>
  * 
@@ -19,25 +19,13 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package ACDG;
+package com.acdg;
 import static java.lang.System.out;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.Scanner;
-import java.io.File;
-import java.io.IOException;
-import static java.lang.System.out;
-import java.io.FileWriter;
-import java.util.ArrayList;
+
 
 /**
- * Класс-заглушка предназначенный для обеспечения 
- * обратной совместимости устаревших конструкторов класса 
- * FileWithClass
+ * Интерфейс источника событий ACDGEvent
  */
-class FWCIfaceMock implements ModelFWCIface {
-	@Override
-	public String getPath2Java() {
-		return new String("java");
-	}
+interface ACDGEventSource {
+	public void addACDGEventListener(ACDGEventListener listener);
 }

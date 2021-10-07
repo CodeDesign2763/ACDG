@@ -19,7 +19,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
 */
 
-package ACDG;
+package com.acdg;
 import static java.lang.System.out;
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +80,7 @@ class SimpleClient implements ACDGEventListener {
 		
 		programLanguage=null;
 		excludePattern="";
-		paramProcMode=ParamProcMode.ONLY_DATATYPE;
+		paramProcMode=ParamProcMode.ALL;
 		
 		cliArgsProc();
 		
