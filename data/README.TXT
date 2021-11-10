@@ -47,3 +47,20 @@ java -jar ACDG.jar -setppm ALL -exclude Test -setpl Java
 -allfwcfromdir 
 "path 2 dir" 
 -setprojname ClassDiagramOfItsOwnCode -addclasses ClassA
+
+
+Special commands:
+	
+	java -jar ACDG.jar -version
+Show the program version
+
+	java -jar ACDG.jar -test
+Creates a class diagram based on its own code with additional external
+class ClassA. 
+It is used for simplified testing of the program's functionality.
+Equals to following command:
+java -jar ACDG.jar -setppm ALL -exclude Test -setpl Java 
+-allfwcfromdir path 2 dir -setprojname  ClassDiagramOfItsOwnCode
+-addclasses ClassA
+
+

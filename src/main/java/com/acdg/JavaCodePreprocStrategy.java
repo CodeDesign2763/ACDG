@@ -47,6 +47,62 @@ class JavaCodePreprocStrategy implements ICodePreprocStrategy {
 		
 	}		
 	
+	/* Некоторые флаги для работы с комментариями */
+	/* В строке найден /* */
+	private boolean fCCommentOpen;
+	/* В строке найдена закр комб коммент Си*/
+	private boolean fCCommentClose; 
+	/* В строке найдены коммент CPP*/
+	private boolean fCPPComment; 
+	
+	/* Обновление флагов для работы с комментариями */
+	private void refreshCommentFlags(String s) {
+		Pattern patternCPPComment = Pattern.compile("\\/\\/");
+		Pattern patternCCommentOpen = Pattern.compile("\\/\\*");
+		Pattern patternCCommentClose = Pattern.compile("\\*\\/");
+		
+		Pattern patternCPPCommentInsideDQ = 
+				Pattern.compile("\\\".*\\/\\/.*\\\"");
+ 				
+		Pattern patternCCommentOpenInsideDQ = 
+				Pattern.compile("\".*\\/\\*.*\"");
+		Pattern patternCCommentCloseInsideDQ = 
+				Pattern.compile("\".*\\*\\/.*\"");
+				
+		Matcher matcherCPPComment;
+		Matcher matcherCCommentOpen;
+		Matcher matcherCCommentClose;
+		Matcher matcherCPPCommentInsideDQ;
+		Matcher matcherCCommentOpenInsideDQ;
+		Matcher matcherCCommentCloseInsideDQ;
+		
+		matcherCPPComment = patternCPPComment.matcher(s);
+		
+		matcherCCommentOpen = patternCCommentOpen.matcher(s);
+		matcherCCommentClose = 
+				patternCCommentClose.matcher(s);
+		matcherCPPCommentInsideDQ = 
+				patternCPPCommentInsideDQ.matcher(s);
+		matcherCCommentOpenInsideDQ = 
+				patternCCommentOpenInsideDQ.matcher(s);
+		matcherCCommentCloseInsideDQ = 
+				patternCCommentCloseInsideDQ.matcher(s);
+				
+		fCPPComment = matcherCPPComment.find()
+			& (!matcherCPPCommentInsideDQ.find());
+		fCCommentOpen= matcherCCommentOpen.find()
+			& (!matcherCCommentOpenInsideDQ.find());
+		fCCommentClose= matcherCCommentClose.find()
+			& (!matcherCCommentCloseInsideDQ.find());
+			
+		matcherCPPCommentInsideDQ = 
+				patternCPPCommentInsideDQ.matcher(s);
+		
+		//fCPPComment=matcherCPPComment.find();
+		//fCCommentOpen= matcherCCommentOpen.find();
+		//fCCommentClose= matcherCCommentClose.find();
+	}
+	
 	/* Текстовое сообщения для контроллера/презентера.
 	 * Передается через FileWithClass */
 	private void textMessage(String s, 
@@ -54,58 +110,68 @@ class JavaCodePreprocStrategy implements ICodePreprocStrategy {
 		debugMessageListener.onACDGEventReceived(
 				new ACDGEvent(this, ACDGEventType.TEXTMESSAGE,
 				s) );
+		/* Для отладки */
+		//out.println(" ОТЛАДКА "+s);
 	}
 	
 	@Override
 	public boolean deleteCommentsAndOtherStuff(String path2File,
 			String path2FileWOComments,
 			ACDGEventListener debugMessageListener) {
-		/* Классы для работы с регулярными выражениями */
-		/* Экранирование двойным \\ */
+				
+		/* Счетчик строк для отладки */
+		int lineCounter=0;
 		
 		/* Теперь это локальная переменная */
 		boolean fClearedOfComments = true;
 		
+		/* Классы для работы с регулярными выражениями */
+		
 		Pattern patternImport = Pattern.compile("^import");
 		Pattern patternPackage = Pattern.compile("^package");
-		Pattern patternCPPComment = Pattern.compile("\\/\\/");
-		Pattern patternCCommentOpen = Pattern.compile("\\/\\*");;
-		Pattern patternCCommentClose = Pattern.compile("\\*\\/");;
 		
-		Pattern patternCPPCommentInsideDQ = 
-				Pattern.compile("\".*\\/\\/.*\"");
-		Pattern patternCCommentOpenInsideDQ = 
-				Pattern.compile("\".*\\/\\*.*\"");
-		Pattern patternCCommentCloseInsideDQ = 
-				Pattern.compile("\".*\\*\\/.*\"");
+		//Pattern patternCPPComment = Pattern.compile("\\/\\/");
+		//Pattern patternCCommentOpen = Pattern.compile("\\/\\*");
+		//Pattern patternCCommentClose = Pattern.compile("\\*\\/");
+		//Pattern patternCPPCommentInsideDQ = 
+				//Pattern.compile("\".*\\/\\/.*\"");
+				
+		//Pattern patternCPPCommentInsideDQ = 
+				//Pattern.compile("\\\".*\\/\\/.*\\\"");
+				
+		//Pattern patternCCommentOpenInsideDQ = 
+				//Pattern.compile("\".*\\/\\*.*\"");
+		//Pattern patternCCommentCloseInsideDQ = 
+				//Pattern.compile("\".*\\*\\/.*\"");
 		
 		Pattern patternClass = Pattern.compile("^class");
 		Pattern patternEnum = Pattern.compile("enum");
 		Pattern patternRBrace = Pattern.compile("\\}");
 		
+		Pattern patternOneLineCComment = 
+				Pattern.compile("\\/\\*.*\\*\\/");
+		
 		Matcher matcherImport;
 		Matcher matcherPackage;
-		Matcher matcherCPPComment;
-		Matcher matcherCCommentOpen;
-		Matcher matcherCCommentClose;
-		Matcher matcherCPPCommentInsideDQ;
-		Matcher matcherCCommentOpenInsideDQ;
-		Matcher matcherCCommentCloseInsideDQ;
+		
+		//Matcher matcherCPPComment;
+		//Matcher matcherCCommentOpen;
+		//Matcher matcherCCommentClose;
+		//Matcher matcherCPPCommentInsideDQ;
+		//Matcher matcherCCommentOpenInsideDQ;
+		//Matcher matcherCCommentCloseInsideDQ;
+		
 		Matcher matcherClass;
 		Matcher matcherEnum;
 		Matcher matcherRBrace;
+		
+		//Matcher matcherOneLineCComment;
 		
 		/* В строке найден import */
 		boolean fImport;
 		/* В строке найден package */
 		boolean fPackage;
-		/* В строке найден /* */
-		boolean fCCommentOpen;
-		/* В строке найдена закр комб коммент Си*/
-		boolean fCCommentClose; 
-		/* В строке найдены коммент CPP*/
-		boolean fCPPComment; 
-		/* "class" уже встречался */
+		
 		boolean fClass=false;
 		/* В строке найдена "enum" */
 		boolean fEnum;
@@ -113,6 +179,9 @@ class JavaCodePreprocStrategy implements ICodePreprocStrategy {
 		boolean fEnumMode=false;
 		/* В строке найдена "}" */
 		boolean fRBrace;
+		
+		/* Найден символ "///*" */
+		//boolean fTripleComment;
 		
 		/* Строка для хранения строки файла для отладки при ошибках */
 		String s1="Строка отсутствует";
@@ -138,19 +207,37 @@ class JavaCodePreprocStrategy implements ICodePreprocStrategy {
 			{
 				s=scanfile.nextLine();
 				s1=s;
-				textMessage("Строка из файла "+s, debugMessageListener);
+				
+				lineCounter++;
+
 				matcherImport = patternImport.matcher(s);
 				matcherPackage = patternPackage.matcher(s);
-				matcherCPPComment = patternCPPComment.matcher(s);
-				matcherCCommentOpen = patternCCommentOpen.matcher(s);
-				matcherCCommentClose = 
-						patternCCommentClose.matcher(s);
-				matcherCPPCommentInsideDQ = 
-						patternCPPCommentInsideDQ.matcher(s);
-				matcherCCommentOpenInsideDQ = 
-						patternCCommentOpenInsideDQ.matcher(s);
-				matcherCCommentCloseInsideDQ = 
-						patternCCommentCloseInsideDQ.matcher(s);
+				
+				//matcherCPPComment = patternCPPComment.matcher(s);
+				//matcherCCommentOpen = patternCCommentOpen.matcher(s);
+				//matcherCCommentClose = 
+						//patternCCommentClose.matcher(s);
+				
+				//matcherCPPCommentInsideDQ = 
+						//patternCPPCommentInsideDQ.matcher(s);
+						
+				//matcherCCommentOpenInsideDQ = 
+						//patternCCommentOpenInsideDQ.matcher(s);
+				//matcherCCommentCloseInsideDQ = 
+						//patternCCommentCloseInsideDQ.matcher(s);
+				//matcherOneLineCComment = 
+					//patternOneLineCComment.matcher(s);
+				
+				/* Удаление комментариев внутри строк (в кавычках) */
+				
+				//s=matcherCCommentOpenInsideDQ.replaceAll("");
+				//s=matcherCCommentCloseInsideDQ.replaceAll("");
+				s=s.replaceAll("\\\".*\\/\\/.*\\\"","");
+				s=s.replaceAll("\".*\\/\\*.*\"","");
+				s=s.replaceAll("\".*\\*\\/.*\"","");
+				
+				/* Удаление однострочных комментариев Си */
+				//s=matcherOneLineCComment.replaceAll("");
 						
 				matcherClass = patternClass.matcher(s);
 				matcherEnum = patternEnum.matcher(s);
@@ -159,16 +246,17 @@ class JavaCodePreprocStrategy implements ICodePreprocStrategy {
 				/* Получение значений флагов */
 				fImport = matcherImport.find();
 				fPackage = matcherPackage.find();
-				fCPPComment = matcherCPPComment.find()
-						& (!matcherCPPCommentInsideDQ.find());
-				fCCommentOpen= matcherCCommentOpen.find()
-						& (!matcherCCommentOpenInsideDQ.find());
-				fCCommentClose= matcherCCommentClose.find()
-						& (!matcherCCommentCloseInsideDQ.find());
+				refreshCommentFlags(s);
+				
+				//fCPPComment = matcherCPPComment.find()
+						//& (!matcherCPPCommentInsideDQ.find());
+				//fCCommentOpen= matcherCCommentOpen.find()
+						//& (!matcherCCommentOpenInsideDQ.find());
+				//fCCommentClose= matcherCCommentClose.find()
+						//& (!matcherCCommentCloseInsideDQ.find());
 						
 				fRBrace = matcherRBrace.find();
 				fEnum = matcherEnum.find();
-				
 				
 				if (matcherClass.find()) {
 					fClass=true; 
@@ -210,8 +298,10 @@ class JavaCodePreprocStrategy implements ICodePreprocStrategy {
 				
 				if ((!fCComment) && (fCPPComment)) {
 					s=s.substring(0,s.indexOf("//"));
+					/* Обновление флагов */
+					refreshCommentFlags(s);
 				}
-				
+					
 				if ((fCCommentOpen) && 
 						(!fCCommentClose) ){
 					s=s.substring(0,s.indexOf("/*"));
@@ -229,7 +319,7 @@ class JavaCodePreprocStrategy implements ICodePreprocStrategy {
 				
 				if ((fCCommentOpen) 
 						&& (fCCommentClose)) {
-					
+				
 					if (s.indexOf("*/") + 2 < s.length()) {
 						/* BOGUS */
 						s=s.substring(0,s.indexOf("/*")) + 
@@ -237,7 +327,13 @@ class JavaCodePreprocStrategy implements ICodePreprocStrategy {
 					} else s=s.substring(0,s.indexOf("/*"));
 					//textMessage("CR");
 				}
-				
+
+				/* Отладка */
+				//if (fCComment) {
+					//out.println(String.valueOf(lineCounter) + 
+							//":::" + "ВВС::: " + s + ":::" + 
+							//String.valueOf(fCComment));
+				//}
 				if ((!fDontWriteLine) && (!s.equals(""))
 						&& 	(!fCComment)) {
 					/* Замена "<" и ">" на "я" и "ч" */
@@ -250,6 +346,9 @@ class JavaCodePreprocStrategy implements ICodePreprocStrategy {
 					 * в режиме ленивой квантификации */
 					s=s.replaceAll("\".*?\"","");
 					writer.write(s + "\n");
+					
+					/* Для отладки */
+					//out.println(String.valueOf(lineCounter)+"\t"+s);
 					//textMessage(s);
 				}
 			}
@@ -262,12 +361,12 @@ class JavaCodePreprocStrategy implements ICodePreprocStrategy {
 				e.printStackTrace();
 				fClearedOfComments = false;
 				textMessage("A line that caused the error:"
-						+ s1,debugMessageListener);
+						+ s1 + " \n Line number: " 
+						+ String.valueOf(lineCounter) + "\n"
+						+ "File: "+ path2File,
+						debugMessageListener);
 		}
 		return fClearedOfComments;
-			
 	}
-	
-	
 }
 

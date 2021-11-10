@@ -1,0 +1,370 @@
+<?xml version="1.0"?>
+<project name="acdg" basedir="." default="compile">
+	
+	<!-- Variables initalization -->
+	<property name="source.dir" value="./src"/>
+	<property name="build.dir" value="./bin"/>
+	
+	<property name="project.name" value="ACDG"/>
+	
+	
+	<!-- classpath for compilation (external jar libraries) -->
+	<path id="main.classpath">
+		<fileset dir="./lib">
+			<include name="**/junit*jar"/>
+		</fileset>
+	</path>
+	
+	<echo message="${main.classpath}" />
+   
+<!--
+   <path id="master-classpath">
+      <fileset dir="${web.dir}/WEB-INF/lib">
+         <include name="*.jar"/>
+      </fileset>
+      <pathelement path="${build.dir}"/>
+   </path>
+-->
+
+	<target name="compile" 
+		description="Compile source java files"
+		depends="getplantuml, getbullwinkle, getjunit">
+		
+		<echo message="Compiling the source code:"/>
+			
+		<javac destdir="${build.dir}" >
+			<compilerarg value="-Xlint:unchecked" />
+		
+			<!-- Defining paths to source directories -->
+			<src path="${source.dir}/main/java/com/acdg"/>
+			<src path="${source.dir}/test/java/com/acdg"/>
+			<src path="${source.dir}/test/java/com/functionsforjunit"/>
+		 
+			<classpath refid="main.classpath"/>
+		</javac>
+   </target>
+   
+	<target name="build" depends="compile" 
+		description="Builds jar file">
+		<echo message="Building JAR file:"/>
+		
+		<!-- JAR file creation -->
+		<jar destfile="${build.dir}/${project.name}.jar" basedir="${build.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="com.acdg.MainClass" />
+			</manifest>
+			<include name="com/acdg/*class" />
+			<include name="com/functionsforjunit/*class" />
+		</jar>
+	</target>
+	
+	<target name="deploy_nix4nix" depends="build"
+		description="Creates ready-for-use archive">
+		<echo message="Create ready-for-use archive with ACDG now:"/>
+		
+		<mkdir dir="${project.name}"/>
+		<mkdir dir="./${project.name}/temp"/>
+		<mkdir dir="./${project.name}/output"/>
+		
+		<!-- Copy directory to another directory -->
+		<!-- Copy lib directory -->
+		<copy todir="./${project.name}/lib">
+			<fileset dir="./lib"/>
+		</copy>
+		
+		<!-- Copy bin directory -->
+		<copy todir="./${project.name}/${build.dir}">
+			<fileset dir="./${build.dir}">
+				<!-- this is how the directory is specified -->
+				<exclude name="**/com/**"/>
+				
+				<exclude name="**/*log"/>
+			</fileset>
+		</copy>
+		
+		<!-- Copy src directory -->
+		<copy todir="./${project.name}/${source.dir}">
+			<fileset dir="./${source.dir}">
+				<exclude name="**/*log"/>
+			</fileset>
+		</copy>
+		
+		<!-- Copy data directory -->
+		<copy todir="./${project.name}/data">
+			<fileset dir="./data"/>
+		</copy>
+		
+		<!-- Copy single file (licence) -->
+		<copy file="./COPYING" todir="./${project.name}"/>
+		
+		<!-- Create archive ACDG.zip -->
+		<zip destfile="./${project.name}.zip"
+			basedir="./${project.name}"/>
+		
+		<!-- Delete the temporary directory ACDG
+			that was used to create the archive -->
+		<delete dir="./${project.name}"/>
+	</target>
+	
+	<target name="deploy_nix4win" depends="build"
+		description="Creates ready-for-use archive">
+		<echo message=
+			"Create ready-for-use archive with ACDG for Windows now:"
+			/>
+		
+		<mkdir dir="${project.name}"/>
+		<mkdir dir="./${project.name}/temp"/>
+		<mkdir dir="./${project.name}/output"/>
+		
+		<!-- Copy directory to another directory -->
+		<!-- Copy lib directory -->
+		<copy todir="./${project.name}/lib">
+			<fileset dir="./lib"/>
+		</copy>
+		
+		<!-- Copy bin directory -->
+		<copy todir="./${project.name}/${build.dir}">
+			<fileset dir="./${build.dir}">
+				<!-- this is how the directory is specified -->
+				<exclude name="**/com/**"/>
+				
+				<exclude name="**/*log"/>
+			</fileset>
+		</copy>
+		
+		<!-- Transcoding source code files to cp1251 encoding -->
+<!--
+		<antcall target="codepage2cp1251"/> 
+-->
+		
+		<!-- Copy src directory -->
+<!--
+		<copy todir="./${project.name}/${source.dir}">
+			<fileset dir="./${source.dir}">
+				<exclude name="**/*log"/>
+			</fileset>
+		</copy>
+-->
+		
+		<copy todir="${project.name}/${source.dir}/main/java/com/acdg" 
+			overwrite="true"
+			encoding="UTF-8" outputencoding="windows-1251">
+			<fileset dir="${source.dir}/main/java/com/acdg" 
+			includes="*.java" />
+		</copy>
+		
+		<copy todir="${project.name}/${source.dir}/test/java/com/acdg" 
+			overwrite="true"
+			encoding="UTF-8" outputencoding="windows-1251">
+			<fileset dir="${source.dir}/test/java/com/acdg" 
+			includes="*.java" />
+		</copy>
+		
+		<copy todir="${project.name}/${source.dir}/test/java/com/functionsforjunit" 
+			overwrite="true"
+			encoding="UTF-8" outputencoding="windows-1251">
+			<fileset 
+				dir="${source.dir}/test/java/com/functionsforjunit" 
+				includes="*.java" />
+		</copy>
+		
+		<!-- This is how one target is called from another -->
+		<!-- Reverse transcoding -->
+<!--
+		<antcall target="codepage2utf8"/> 
+-->
+		
+		<!-- Copy data directory -->
+		<copy todir="./${project.name}/data">
+			<fileset dir="./data"/>
+		</copy>
+		
+		<!-- Copy single file (licence) -->
+		<copy file="./COPYING" todir="./${project.name}"/>
+		
+		<!-- Copy ant script -->
+		<copy file="./build.xml" todir="./${project.name}"/>
+		
+		
+		<!-- Create archive ACDG.zip -->
+		<zip destfile="./${project.name}.zip"
+			basedir="./${project.name}"/>
+		
+		<!-- Delete the temporary directory ACDG
+			that was used to create the archive -->
+		<delete dir="./${project.name}"/>
+	</target>
+	
+	<target name="deploy_win4win"
+		description=
+		"Creates ready-for-use archive on Windows for Windows">
+		
+		<antcall target="codepage2cp1251"/> 
+		<antcall target="deploy"/> 
+		
+	</target>
+   
+	<target name="clean" description="Clean output directories">
+		<echo message="Cleaning output directories:"/>
+		<delete includeEmptyDirs="true">
+			<fileset dir="${build.dir}">
+				<include name="**/*.log"/>
+				<!-- deleting the directory failed -->
+				<!-- <include name="**/com"/> -->
+				
+				<!-- This is correct -->
+				<include name="**/com/**"/>
+				
+				<include name="**/${project.name}.jar"/>
+			</fileset>
+			
+			<!-- <fileset dir="./${build.dir}/com"/> -->
+			
+			<fileset dir=".">
+				<include name="**/*.log"/>
+			</fileset>
+		</delete>
+		<!-- Removes ./bin/com  directory -->
+		<!-- <delete dir="./bin/com"/> -->
+   </target>
+
+	
+
+   <target name="getplantuml" 
+		description="Download plantuml.jar from the internet">
+		<echo message="Downloading plantuml.jar from the Internet:"/>
+		
+		<get 
+		src="https://sourceforge.net/projects/plantuml/files/plantuml.jar/download" 
+		dest="./${build.dir}/plantuml.jar"/>
+		
+   </target>
+   
+   <target name="getbullwinkle" 
+		description="Prepare bullwinkle.jar">
+		
+		<!-- Download zip-archive from Github -->
+		<get 
+		src="https://codeload.github.com/sylvainhalle/Bullwinkle/zip/refs/heads/master" 
+		dest="."/>
+		
+		<!-- Unpack archive -->
+		<unzip src="./bullwinkle.zip" 
+			dest="./bullwinkle"/>
+		
+		<!-- Build bullwinkle.jar -->
+		<ant antfile="./bullwinkle/Bullwinkle-master/build.xml" 
+			target="dist"
+			inheritAll="false" 
+			inheritRefs="false" 
+			useNativeBaseDir="true" />
+		<!-- You don't need to use this "ant" task option -->
+		<!--
+			dir="./bullwinkle/Bullwinkle-master"
+		-->
+		
+		<!-- Copy plantuml.jar -->
+		<copy file="./bullwinkle/Bullwinkle-master/bullwinkle.jar" 
+			todir="./${build.dir}"/>
+		
+		<!-- Delete temporary bullwinkle dir --> 
+		<delete dir="./bullwinkle"/>
+		
+		<!-- Delete bullwinkle.zip -->
+		<delete file="./bullwinkle.zip"/>
+   </target>
+   
+   <target name="getjunit" 
+		description="Download junit*.jar from the internet">
+		<echo message="Downloading junit.jar from the Internet:"/>
+		
+		<echo message="Downloading junit.jar:" />
+		<get 
+		src="https://search.maven.org/remotecontent?filepath=junit/junit/4.13.2/junit-4.13.2.jar" 
+		dest="./lib/junit.jar"/>
+		
+   </target>
+
+	<target name="codepage2cp1251"
+		description="Transcoding source code files to cp866 encoding">
+		
+		<copy todir="${source.dir}/main/java/com/acdg_temp" 
+			overwrite="true"
+			encoding="UTF-8" outputencoding="windows-1251">
+			<fileset dir="${source.dir}/main/java/com/acdg" 
+			includes="*.java" />
+		</copy>
+		
+		<move todir="${source.dir}/main/java/com/acdg">
+			<fileset dir="${source.dir}/main/java/com/acdg_temp"/>
+		</move>
+		
+		<copy todir="${source.dir}/test/java/com/acdg_temp" 
+			overwrite="true"
+			encoding="UTF-8" outputencoding="windows-1251">
+			<fileset dir="${source.dir}/test/java/com/acdg" 
+			includes="*.java" />
+		</copy>
+		
+		<move todir="${source.dir}/test/java/com/acdg">
+			<fileset dir="${source.dir}/test/java/com/acdg_temp"/>
+		</move>
+		
+		<copy 
+			todir="${source.dir}/test/java/com/functionsforjunit_temp" 
+			overwrite="true"
+			encoding="UTF-8" outputencoding="windows-1251">
+			<fileset 
+				dir="${source.dir}/test/java/com/functionsforjunit" 
+				includes="*.java" />
+		</copy>
+		
+		<move todir="${source.dir}/test/java/com/functionsforjunit">
+			<fileset 
+			dir="${source.dir}/test/java/com/functionsforjunit_temp"/>
+		</move>
+		
+	</target>
+	
+	<target name="codepage2utf8"
+		description="Transcoding source code files to UTF-8 encoding">
+		
+		<copy todir="${source.dir}/main/java/com/acdg_temp" 
+			overwrite="true"
+			encoding="windows-1251" outputencoding="UTF-8">
+			<fileset dir="${source.dir}/main/java/com/acdg"
+			includes="*.java" />
+		</copy>
+		
+		<move todir="${source.dir}/main/java/com/acdg">
+			<fileset dir="${source.dir}/main/java/com/acdg_temp"/>
+		</move>
+		
+		<copy todir="${source.dir}/test/java/com/acdg_temp" 
+			overwrite="true"
+			encoding="windows-1251" outputencoding="UTF-8">
+			<fileset dir="${source.dir}/test/java/com/acdg" 
+			includes="*.java" />
+		</copy>
+		
+		<move todir="${source.dir}/test/java/com/acdg">
+			<fileset dir="${source.dir}/test/java/com/acdg_temp"/>
+		</move>
+		
+		<copy 
+			todir="${source.dir}/test/java/com/functionsforjunit_temp" 
+			overwrite="true"
+			encoding="windows-1251" outputencoding="UTF-8">
+			<fileset 
+				dir="${source.dir}/test/java/com/functionsforjunit" 
+				includes="*.java" />
+		</copy>
+		
+		<move todir="${source.dir}/test/java/com/functionsforjunit">
+			<fileset 
+			dir="${source.dir}/test/java/com/functionsforjunit_temp"/>
+		</move>
+		
+	</target>
+   
+</project>

@@ -58,6 +58,13 @@ class SimpleClient implements ACDGEventListener {
 			.startsWith("Windows");
 	
 	public SimpleClient(String args[]) {
+		/* Constant for self-test */
+		final String[] selfTestCLIArgs = {"-setppm", "ONLY_DATATYPE", "-exclude",
+				"Test", "-setpl", "Java", "-allfwcfromdir",
+				"../src/main/java/com/acdg", "-setprojname", 
+				"ClassDiagramOfItsOwnCode", "-addclasses", "ClassA"};
+			
+		// java -jar ACDG.jar -setppm ALL -exclude Test -setpl Java -allfwcfromdir path 2 dir -setprojname ClassDiagramOfItsOwnCode -addclasses ClassA
 		String osMessage;
 		osMessage = (fWindows) ? "OS is Windows-like" :
 				"OS is Unix-like";
@@ -74,7 +81,25 @@ class SimpleClient implements ACDGEventListener {
 			out.println("Path to Java is incorrect");
 			System.exit(1);
 		}
-		cliArgs=args;
+		
+		/* Self-test check */
+		if (args[0].equals("-test")) {
+			cliArgs=selfTestCLIArgs;
+			out.println("Self-test mode");
+			out.println("CLI arguments have been replaced by:");
+			out.println("-setppm ALL -exclude Test -setpl Java"  
+					+ "-allfwcfromdir ../src/main/java/com/acdg"
+					+ "-setprojname ClassDiagramOfItsOwnCode" 
+					+ "-addclasses ClassA");
+		} else 
+			cliArgs=args;
+		
+		/* Version information */
+		if (args[0].equals("-version")) {
+			out.println("Version 0.8");
+			System.exit(0);
+		}
+			
 		paths2FilesWithClasses = new ArrayList<String>();
 		classNames = new ArrayList<String>();
 		

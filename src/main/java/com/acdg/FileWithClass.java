@@ -382,7 +382,7 @@ class FileWithClass implements ACDGEventSource, ACDGEventListener {
 				//}
 				
 				//if ((!fCComment) && (fCPPComment)) {
-					//s=s.substring(0,s.indexOf("//"));
+					//s=s.substring(0,s.indexOf("//")); XXXXXXXX
 				//}
 				
 				//if ((fCCommentOpen) && 
