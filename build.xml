@@ -11,7 +11,7 @@
 	<!-- classpath for compilation (external jar libraries) -->
 	<path id="main.classpath">
 		<fileset dir="./lib">
-			<include name="**/junit*jar"/>
+			<include name="**/junit.jar"/>
 		</fileset>
 	</path>
 	

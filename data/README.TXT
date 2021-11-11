@@ -48,6 +48,8 @@ java -jar ACDG.jar -setppm ALL -exclude Test -setpl Java
 "path 2 dir" 
 -setprojname ClassDiagramOfItsOwnCode -addclasses ClassA
 
+The files with the diagram and code for plantuml 
+should appear in the output directory.
 
 Special commands:
 	
