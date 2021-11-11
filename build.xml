@@ -246,7 +246,7 @@
 		<!-- Download zip-archive from Github -->
 		<get 
 		src="https://codeload.github.com/sylvainhalle/Bullwinkle/zip/refs/heads/master" 
-		dest="."/>
+		dest="./bullwinkle.zip"/>
 		
 		<!-- Unpack archive -->
 		<unzip src="./bullwinkle.zip" 
