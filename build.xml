@@ -62,7 +62,7 @@
    
    <target name="compile_without_junit" 
 		description="Compile source java files without JUnit tests"
-		depends="getplantuml, getbullwinkle, getjunit">
+		depends="getplantuml, getbullwinkle">
 		
 		<echo message="Compiling the source code:"/>
 			
@@ -97,9 +97,11 @@
 		
 		<!-- Copy directory to another directory -->
 		<!-- Copy lib directory -->
+<!--
 		<copy todir="./${project.name}/lib">
 			<fileset dir="./lib"/>
 		</copy>
+-->
 		
 		<!-- Copy bin directory -->
 		<copy todir="./${project.name}/${build.dir}">
