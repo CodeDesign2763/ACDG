@@ -11,7 +11,7 @@
 	<!-- classpath for compilation (external jar libraries) -->
 	<path id="main.classpath">
 		<fileset dir="./lib">
-			<include name="**/junit.jar"/>
+			<include name="**/junit*jar"/>
 		</fileset>
 	</path>
 	
@@ -26,9 +26,9 @@
    </path>
 -->
 
-	<target name="compile" 
-		description="Compile source java files"
-		depends="getplantuml, getbullwinkle, getjunit">
+	<target name="compile_with_junit" 
+	description="Compile source java files (along with JUnit unit tests)"
+		depends="">
 		
 		<echo message="Compiling the source code:"/>
 			
@@ -44,7 +44,36 @@
 		</javac>
    </target>
    
-	<target name="build" depends="compile" 
+
+	<target name="runjunittests" 
+		description="Run JUnit tests">
+
+		<java dir="./bin"
+			jar="./lib/junit.jar"
+			fork="true">
+		
+			<arg value="-cp"/>
+			<arg value="./bin"/>
+			<arg value="--scan-class-path"/>
+		</java>
+		
+	</target>   
+
+   
+   <target name="compile_without_junit" 
+		description="Compile source java files without JUnit tests"
+		depends="getplantuml, getbullwinkle, getjunit">
+		
+		<echo message="Compiling the source code:"/>
+			
+		<javac destdir="${build.dir}" >
+			<compilerarg value="-Xlint:unchecked" />
+			<!-- Defining paths to source directories -->
+			<src path="${source.dir}/main/java/com/acdg"/>
+		</javac>
+   </target>
+   
+	<target name="build" depends="compile_without_junit" 
 		description="Builds jar file">
 		<echo message="Building JAR file:"/>
 		
@@ -280,7 +309,7 @@
 		
 		<echo message="Downloading junit.jar:" />
 		<get 
-		src="https://search.maven.org/remotecontent?filepath=junit/junit/4.13.2/junit-4.13.2.jar" 
+		src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.8.1/junit-platform-console-standalone-1.8.1.jar" 
 		dest="./lib/junit.jar"/>
 		
    </target>
