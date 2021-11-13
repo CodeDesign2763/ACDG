@@ -98,7 +98,7 @@ class SimpleClient implements ACDGEventListener {
 			out.println("-setppm ALL -exclude Test -setpl Java"  
 					+ "-allfwcfromdir ../src/main/java/com/acdg"
 					+ "-setprojname ClassDiagramOfItsOwnCode" 
-					+ "-addclasses ClassA");
+					+ "--use-smetana");
 		} else 
 			cliArgs=args;
 		
