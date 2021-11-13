@@ -53,18 +53,26 @@ class SimpleClient implements ACDGEventListener {
 	
 	private ParamProcMode paramProcMode;
 	
+	private boolean fUseSmetana;
+	
 	/* Running under Windows? */
 	private static boolean fWindows=System.getProperty("os.name")
 			.startsWith("Windows");
 	
 	public SimpleClient(String args[]) {
 		/* Constant for self-test */
-		final String[] selfTestCLIArgs = {"-setppm", "ONLY_DATATYPE", "-exclude",
-				"Test", "-setpl", "Java", "-allfwcfromdir",
-				"../src/main/java/com/acdg", "-setprojname", 
-				"ClassDiagramOfItsOwnCode", "-addclasses", "ClassA"};
+		final String[] selfTestCLIArgs = {"-setppm", "ONLY_DATATYPE", 
+				"-exclude", "Test", "-setpl", "Java", 
+				"-allfwcfromdir", "../src/main/java/com/acdg", 
+				"-setprojname", "ClassDiagramOfItsOwnCode", 
+				//"-addclasses", "ClassA"
+				"--use-smetana"
+				};
 			
-		// java -jar ACDG.jar -setppm ALL -exclude Test -setpl Java -allfwcfromdir path 2 dir -setprojname ClassDiagramOfItsOwnCode -addclasses ClassA
+		// java -jar ACDG.jar -setppm ALL -exclude Test -setpl Java 
+		// -allfwcfromdir path 2 dir -setprojname 
+		// ClassDiagramOfItsOwnCode -addclasses ClassA
+		
 		String osMessage;
 		osMessage = (fWindows) ? "OS is Windows-like" :
 				"OS is Unix-like";
@@ -106,13 +114,14 @@ class SimpleClient implements ACDGEventListener {
 		programLanguage=null;
 		excludePattern="";
 		paramProcMode=ParamProcMode.ALL;
+		fUseSmetana=false;
 		
 		cliArgsProc();
 		
 		checkDataFromCLIArgs();
 		
 		model = new Model(programLanguage, projectName, path2Java, 
-				paramProcMode);
+				paramProcMode, fUseSmetana);
 		model.addACDGEventListener(this);
 		
 		for (String s : paths2FilesWithClasses) {
@@ -180,6 +189,10 @@ class SimpleClient implements ACDGEventListener {
 						out.println("Error! README file not found!");
 					}
 					System.exit(1);
+					break;
+				
+				case "--use-smetana" :
+					fUseSmetana=true;
 					break;
 					
 				default : 

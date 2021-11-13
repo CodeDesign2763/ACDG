@@ -37,6 +37,9 @@ the "allfwcfromdir" option.
 Select a parameter processing mode
 ONLY_DATATYPE, ONLY_ID, ALL
 (last parameter specified)
+
+	--use-smetana
+Use built-in Smetana engine instead of Graphviz.
 			
 The minimum requiered data:
 1. At least one source file.

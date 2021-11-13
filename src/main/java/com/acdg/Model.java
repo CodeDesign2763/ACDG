@@ -50,6 +50,9 @@ class Model implements ModelScannerIface, ModelRelationIface,
 	private String path2Java;
 	private ParamProcMode paramProcMode;
 	
+	/* Use built-in Smetana engine instead of Graphviz */ 
+	private boolean fUseSmetana;
+	
 	/* Результат генерации диаграммы классов */
 	private boolean classDiagrGenResult;
 	
@@ -81,6 +84,13 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		}
 	}
 	
+	/* Текстовое сообщения для контроллера/презентера.
+	 * Передается через модель */
+	private void textMessage(String s) {
+		fireEvent(new ACDGEvent(this, ACDGEventType.TEXTMESSAGE,
+				s));
+	}
+	
 	@Override
 	public void onACDGEventReceived(ACDGEvent event) {
 		if (event.getEventType() == ACDGEventType.TEXTMESSAGE)
@@ -97,6 +107,7 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		path2Java="java";
 		eventListeners = new ArrayList<ACDGEventListener>();
 		paramProcMode=ParamProcMode.ONLY_DATATYPE;
+		fUseSmetana=false;
 	}
 	
 	public Model(CProgramLanguage pl, String pName) {
@@ -109,6 +120,7 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		path2Java="java";
 		eventListeners = new ArrayList<ACDGEventListener>();
 		paramProcMode=ParamProcMode.ONLY_DATATYPE;
+		fUseSmetana=false;
 	}
 	
 	public Model(CProgramLanguage pl, String pName, String p2J) {
@@ -121,6 +133,7 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		path2Java=p2J;
 		eventListeners = new ArrayList<ACDGEventListener>();
 		paramProcMode=ParamProcMode.ONLY_DATATYPE;
+		fUseSmetana=false;
 	}
 	
 	public Model(CProgramLanguage pl, String pName, String p2J,
@@ -134,7 +147,21 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		path2Java=p2J;
 		eventListeners = new ArrayList<ACDGEventListener>();
 		paramProcMode=ppm;
-		
+		fUseSmetana=false;
+	}
+	
+	public Model(CProgramLanguage pl, String pName, String p2J,
+			ParamProcMode ppm, boolean fSmetana) {
+		cProgramLanguage=pl;
+		relations=new ArrayList<Relation>();
+		filesWithClasses=new ArrayList<FileWithClass>();
+		classes = new ArrayList<String>();
+		projectName=pName;
+		classDiagrGenResult=false;
+		path2Java=p2J;
+		eventListeners = new ArrayList<ACDGEventListener>();
+		paramProcMode=ppm;
+		fUseSmetana=fSmetana;
 	}
 	
 	/* Имеется ли такое отношение */
@@ -196,7 +223,7 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		return res;
 	}
 	
-	/* Путь до итогового PlantUML файла */
+	/* Путь до итогового графического файла */
 	public String getPath2FinalPlantUMLDiagram() {
 		String res;
 		if (!fWindows) {
@@ -242,25 +269,47 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		File NULL_F = new File(
           (System.getProperty("os.name")
                      .startsWith("Windows") ? "NUL" : "/dev/null"));
-		try {
+        
+        /* Иногда диаграмма не генерируется с первого раза */
+        int i;
+        for (i=0;i<=3;i++) {
+			try {
 			
-			var processBuilder = new ProcessBuilder();
-			String path2PlantUML = (fWindows) ? 
-					"..\\bin\\plantuml.jar" 
-					: "../bin/plantuml.jar";
-			processBuilder.command(path2Java,
-					"-jar",
-					path2PlantUML,
-					"-tpng", getPath2FinalPlantUMLFile());
-			processBuilder.redirectOutput(NULL_F);
-			processBuilder.redirectError(NULL_F);
-			proc = processBuilder.start();
-			proc.waitFor();
+				var processBuilder = new ProcessBuilder();
+				String path2PlantUML = (fWindows) ? 
+						"..\\bin\\plantuml.jar" 
+						: "../bin/plantuml.jar";
+				if (fUseSmetana) {
+					processBuilder.command(path2Java,
+							"-jar",
+							path2PlantUML,
+							"-Playout=smetana",
+							"-tpng", getPath2FinalPlantUMLFile());
+				} else {
+					processBuilder.command(path2Java,
+							"-jar",
+							path2PlantUML,
+							"-tpng", getPath2FinalPlantUMLFile());
+				}
+				processBuilder.redirectOutput(NULL_F);
+				processBuilder.redirectError(NULL_F);
+				proc = processBuilder.start();
+				proc.waitFor();
 		
-		} catch (Exception e) { 
-			classDiagrGenResult=false;
-			e.printStackTrace();
-		} 
+			} catch (Exception e) { 
+				classDiagrGenResult=false;
+				e.printStackTrace();
+			} 
+			
+			/* Существует ли файл с диаграммой? */
+			File f = new File(getPath2FinalPlantUMLFile());
+			if (f.exists()) 
+				break;
+			
+			if (i>0) 
+				textMessage(
+					"Another attempt to generate the class diagram");
+		}
 	}
 	
 	/* Добавить класс */
