@@ -275,6 +275,10 @@
 				<include name="**/*.log"/>
 			</fileset>
 		</delete>
+		
+		<!-- See problem description in the target "getbullwinkle" -->
+		<!-- Delete temporary bullwinkle dir --> 
+		<delete dir="./bullwinkle"/>
 		<!-- Removes ./bin/com  directory -->
 		<!-- <delete dir="./bin/com"/> -->
    </target>
@@ -326,8 +330,13 @@
 		<copy file="./bullwinkle/Bullwinkle-master/bullwinkle.jar" 
 			todir="./${build.dir}"/>
 		
+		<!-- Deleting this directory in this target results 
+		in an error on Windows -->
+		<!-- The division of this target into 2 targets, 
+		one of which is dependent on the other, 
+		did not help to resolve with the problem -->
 		<!-- Delete temporary bullwinkle dir --> 
-		<delete dir="./bullwinkle"/>
+		<!-- <delete dir="./bullwinkle"/> -->
 		
 		<!-- Delete bullwinkle.zip -->
 		<delete file="./bullwinkle.zip"/>
@@ -343,6 +352,28 @@
 		dest="./lib/junit.jar"/>
 		
    </target>
+   
+   <target name="getvizant" 
+		description="Download vizant.jar from the internet">
+		<echo message="Downloading vizant.jar from the Internet:"/>
+		
+		<get 
+		src="https://sourceforge.net/projects/vizant/files/latest/download" 
+		dest="./bin/vizant.jar"/>
+		
+   </target>
+   
+   <target name="gen_scr_viz" 
+		description="Generate graphviz *.dot file from xml file">
+		<echo message="Generate graphviz *.dot file from xml file:"/>
+		
+		<taskdef name="vizant" classname="net.sourceforge.vizant.Vizant" classpath="bin/vizant.jar"/>
+		<vizant antfile="build.xml" outfile="build.dot"/>
+		<exec executable="dot" ><arg line="-Tpng build.dot -o build.png"/></exec> 
+		
+   </target>
+   
+   
 
 	<target name="codepage2cp1251"
 		description="Transcoding source code files to cp866 encoding">
