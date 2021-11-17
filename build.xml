@@ -107,7 +107,7 @@
 		</jar>
 	</target>
 	
-	<target name="deploy_nix4nix" depends="build"
+	<target name="deploy" depends="build"
 		description="Creates ready-for-use archive">
 		<echo message="Create ready-for-use archive with ACDG now:"/>
 		
@@ -259,7 +259,7 @@
 		"Creates ready-for-use archive on Windows for Windows">
 		
 		<antcall target="codepage2cp1251"/> 
-		<antcall target="deploy_nix4nix"/> 
+		<antcall target="deploy"/> 
 		
 	</target>
    
