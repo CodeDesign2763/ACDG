@@ -47,7 +47,7 @@ class TestsForFileWithClass {
 	}
 	
 	@Test
-	@DisplayName("Метод getClassName")
+	@DisplayName("Method getClassName")
 	public void testConstructorAndConv2String() {
 		FileWithClass cfc1 = new FileWithClass("ClassA.java",
 				javaPL
@@ -56,7 +56,7 @@ class TestsForFileWithClass {
 	}	
 	
 	@Test
-	@DisplayName("Метод getFileName")
+	@DisplayName("Method getFileName")
 	public void testGetFileName() {
 		FileWithClass fwc1= 
 				new FileWithClass("/home/user1/ClassB.java",
@@ -65,7 +65,7 @@ class TestsForFileWithClass {
 	}
 	
 	@Test
-	@DisplayName("Предварительное удаление комментариев")
+	@DisplayName("Preliminary deletion of comments")
 	public void testCommentDeletion2() {
 		byte[] CorrectResult;
 		byte[] TestResult;
@@ -103,7 +103,7 @@ class TestsForFileWithClass {
 	}
 	
 	@Test
-	@DisplayName("Синт. анализ файла SimpleClassXMLConvTest.txt")
+	@DisplayName("Parsing file SimpleClassXMLConvTest.txt")
 	public void testSimpleClassXMLConv() {
 		FileWithClass fwc1 = new 
 				FileWithClass("../data/SimpleClassXMLConvTest.txt",
@@ -114,7 +114,7 @@ class TestsForFileWithClass {
 	}
 	
 	@Test
-	@DisplayName("Синт. анализ несуществующего файла")
+	@DisplayName("Parsing a non-existent file")
 	public void testXMLConvIncorrectFilePath() {
 		FileWithClass fwc1 = new FileWithClass("../data/source2.txt",
 				javaPL);
@@ -124,7 +124,7 @@ class TestsForFileWithClass {
 	}
 	
 	@Test
-	@DisplayName("Синт. анализ SpecialityForm.java")
+	@DisplayName("Parsing SpecialityForm.java")
 	public void testSpecialityFormXMLConv() {
 		FileWithClass fwc1 = 
 				new FileWithClass("../data/SpecialityForm.java",
@@ -137,7 +137,7 @@ class TestsForFileWithClass {
 	}
 	
 	@Test
-	@DisplayName("Синт. анализ MainForm.java")
+	@DisplayName("Parsing MainForm.java")
 	public void testMainFormXMLConv() {
 		FileWithClass fwc1 = 
 				new FileWithClass("../data/MainForm.java",
@@ -148,7 +148,7 @@ class TestsForFileWithClass {
 	}
 	
 	@Test
-	@DisplayName("Проверка универсальной функции для тестирования")
+	@DisplayName("Testing universal function for testing")
 	public void testUnivTestFunction() {
 		FileWithClass fwc1 = 
 				new FileWithClass("../data/MainForm.java",
@@ -157,7 +157,6 @@ class TestsForFileWithClass {
 				(String) FunctionsForTesting.checkPrivMethod(
 				fwc1, "com.acdg.FileWithClass",
 				"getPath2FileWOComments",null,null));
-		
 		
 	}
 }

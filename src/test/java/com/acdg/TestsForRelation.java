@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Disabled;
 class TestsForRelation {
 	
 	@Test
-	@DisplayName("Методы get")
+	@DisplayName("<<Get>> methods")
 	public void testGetMethods() {
 		Relation rel1 = new Relation(10, 20, RelationCode.ASSOCIATION,
 				"", null);

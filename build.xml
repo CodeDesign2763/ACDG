@@ -73,7 +73,7 @@
 			fork="true">
 		
 			<arg value="-cp"/>
-			<arg value="./bin"/>
+			<arg value="."/>
 			<arg value="--scan-class-path"/>
 		</java>
 		
@@ -114,6 +114,8 @@
 		<mkdir dir="${project.name}"/>
 		<mkdir dir="./${project.name}/temp"/>
 		<mkdir dir="./${project.name}/output"/>
+		<!-- Create "lib" directory inside the archive -->
+		<mkdir dir="./${project.name}/lib"/>
 		
 		<!-- Copy directory to another directory -->
 		<!-- Copy lib directory -->
@@ -148,6 +150,9 @@
 		<!-- Copy single file (licence) -->
 		<copy file="./COPYING" todir="./${project.name}"/>
 		
+		<!-- Copy Ant script -->
+		<copy file="./build.xml" todir="./${project.name}"/>
+			
 		<!-- Create archive ACDG.zip -->
 		<zip destfile="./${project.name}.zip"
 			basedir="./${project.name}"/>
@@ -166,6 +171,9 @@
 		<mkdir dir="${project.name}"/>
 		<mkdir dir="./${project.name}/temp"/>
 		<mkdir dir="./${project.name}/output"/>
+		
+		<!-- Create "lib" directory inside the archive -->
+		<mkdir dir="./${project.name}/lib"/>
 		
 		<!-- Copy directory to another directory -->
 		<!-- Copy lib directory -->
@@ -233,9 +241,8 @@
 		<!-- Copy single file (licence) -->
 		<copy file="./COPYING" todir="./${project.name}"/>
 		
-		<!-- Copy ant script -->
+		<!-- Copy Ant script -->
 		<copy file="./build.xml" todir="./${project.name}"/>
-		
 		
 		<!-- Create archive ACDG.zip -->
 		<zip destfile="./${project.name}.zip"
@@ -244,6 +251,7 @@
 		<!-- Delete the temporary directory ACDG
 			that was used to create the archive -->
 		<delete dir="./${project.name}"/>
+		
 	</target>
 	
 	<target name="deploy_win4win"

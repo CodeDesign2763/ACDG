@@ -41,7 +41,7 @@ import com.functionsforjunit.FunctionsForTesting;
 class TestsForModel {
 	
 	@Test
-	@DisplayName("Ген-я PlantUML-кода для нек-х файлов")
+	@DisplayName("Generating PlantUML code for some files")
 	public void testPlantUMLGeneration4SomeFiles() {
 		byte[] CorrectResult=null;
 		byte[] TestResult=null;
@@ -82,7 +82,7 @@ class TestsForModel {
 	
 	
 	@Test
-	@DisplayName("Ген-я диаграммы классов для нек-х файлов")
+	@DisplayName("Generating class diagram for some files")
 	public void testDiagrGeneration() {
 		byte[] CorrectResult=null;
 		byte[] TestResult=null;
