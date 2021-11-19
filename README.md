@@ -49,7 +49,7 @@ At first execute this:
 
 	ant codepage2cp1251
 
-then exetute this:
+then execute this:
 
 	ant deploy
 	
