@@ -125,13 +125,27 @@ class JavaProcStrategy implements IProcStrategy {
 							.getTextContent().trim();
 					class2Name = reverseSubst(class2Name);
 					class2Name = class2Name.replaceAll("\\<.*\\>$","");
-					if (modelRelIFace.getClassInd(class2Name)==-1) 
-							{
-						model.addClass(class2Name);
-					}
-					model.addRelation(new Relation(classID, 
+					/* FIX ME
+					 * Perhaps, if there is no such class, 
+					 * then neither this class 
+					 * nor the relation should be added?
+					 * 
+					 * It is also possible to add an 
+					 * additional command line option
+					 */
+					 
+					//if (modelRelIFace.getClassInd(class2Name)==-1) {
+						//model.addClass(class2Name);
+					//}
+					//model.addRelation(new Relation(classID, 
+							//class2Name,
+							//relCode, "", modelRelIFace));
+					 
+					if (modelRelIFace.getClassInd(class2Name)!=-1) {
+						model.addRelation(new Relation(classID, 
 							class2Name,
 							relCode, "", modelRelIFace));
+					}
 				}
 				
 			}
