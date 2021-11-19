@@ -104,7 +104,7 @@ class SimpleClient implements ACDGEventListener {
 		
 		/* Version information */
 		if (args[0].equals("-version")) {
-			out.println("Version 0.8");
+			out.println("Version 1.0.0");
 			System.exit(0);
 		}
 			
