@@ -67,6 +67,8 @@ This command generates a UML class diagram for its own code
 
 The **ACDG.jar** file is located in the **bin** directory. All output files will be placed in the **output** directory.
 
+![Screenshot](./descr/result.png)
+
 ### CLI reference
 
 See file [README.TXT](./data/README.TXT).
