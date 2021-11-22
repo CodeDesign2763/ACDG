@@ -66,7 +66,8 @@
    
 
 	<target name="runjunittests" 
-		description="Run JUnit tests">
+		description="Run JUnit tests"
+		depends="compile_with_junit">
 
 		<java dir="./bin"
 			jar="./lib/junit.jar"

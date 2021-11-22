@@ -71,7 +71,9 @@ The **ACDG.jar** file is located in the **bin** directory. All output files will
 
 ### CLI reference
 
-See file [README.TXT](./data/README.TXT).
+See file [README.TXT](./data/README.TXT) or use option `-help`.
+
+	java -jar ACDG.jar -help
 
 ### Other Ant targets
 
