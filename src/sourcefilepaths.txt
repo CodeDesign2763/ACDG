@@ -19,6 +19,7 @@
 ./main/java/com/acdg/AvailablePLs.java
 ./main/java/com/acdg/MainClass.java
 ./main/java/com/acdg/JavaProcStrategy.java
+./main/java/com/acdg/BypassCodePreprocStrategy.java
 ./test/java/com/acdg/TestsForRelation.java
 ./test/java/com/acdg/TestsForFileWithClass.java
 ./test/java/com/acdg/TestsForModel.java

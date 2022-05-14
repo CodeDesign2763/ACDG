@@ -94,6 +94,35 @@
 		</javac>
    </target>
    
+   <target name="compile_without_junit_debug" 
+		description="Compile source java files without JUnit tests"
+		depends="">
+		
+		<echo message="Compiling the source code: (DEBUG)"/>
+			
+		<javac destdir="${build.dir}" >
+			<compilerarg value="-Xlint:unchecked" />
+			<!-- Defining paths to source directories -->
+			<src path="${source.dir}/main/java/com/acdg"/>
+		</javac>
+   </target>
+   
+   <!-- Быстрая компиляция и сборка JAR-файла без скачивания 
+		зависимостей (для отладки) -->
+   <target name="build_debug" depends="compile_without_junit_debug" 
+		description="Builds jar file">
+		<echo message="Building JAR file:"/>
+		
+		<!-- JAR file creation -->
+		<jar destfile="${build.dir}/${project.name}.jar" basedir="${build.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="com.acdg.MainClass" />
+			</manifest>
+			<include name="com/acdg/*class" />
+			<include name="com/functionsforjunit/*class" />
+		</jar>
+	</target>
+   
 	<target name="build" depends="compile_without_junit" 
 		description="Builds jar file">
 		<echo message="Building JAR file:"/>

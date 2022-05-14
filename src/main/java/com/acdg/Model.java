@@ -33,7 +33,8 @@ import java.util.ArrayList;
 enum ProgramLanguage {
 	JAVA,
 	CSHARP,
-	CPP
+	CPP,
+	USER_DEFINED
 }
 
 /**
@@ -182,6 +183,7 @@ class Model implements ModelScannerIface, ModelRelationIface,
 	/* Возвращает имя класса по индексу файла с классом */
 	@Override
 	public String getClassName(int index) {
+		/* XXX */
 		return classes.get(index);
 	}
 	
@@ -200,6 +202,10 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		newFWC.addACDGEventListener(this);
 				
 		filesWithClasses.add(newFWC);
+		/* Имя класса определяется как имя файла,
+		 * а не при разборе дерева.
+		 * Это может давать ошибку, когда имя класса
+		 * отличается от имени файла. */
 		classes.add(newFWC.getClassName());
 	}
 	

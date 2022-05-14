@@ -69,4 +69,8 @@ class AvailablePLs {
 		}
 		return res;
 	}
+	
+	public static void addPL(int index, CProgramLanguage pl) {
+		availablePLList.add(index, pl);
+	}
 }

@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 enum CLIProcMode {INITIAL,CHECK_PATH, ADD_FWC, ADD_CLASS, 
-		ADD_ALL_FWC, SET_PROJ_NAME, SET_PL, SET_EXCL, SET_PPM}
+		ADD_ALL_FWC, SET_PROJ_NAME, SET_PL, SET_EXCL, SET_PPM,
+		SETUP_USER_PL_GRAMMAR, SETUP_USER_PL_STRATEGY,
+		SETUP_USER_PL_EXT};
 
 
 /**
@@ -144,6 +146,9 @@ class SimpleClient implements ACDGEventListener {
 	
 	/* Command line arguments processing */
 	public void cliArgsProc() {
+		String path2Grammar="";
+		String strategyPLName="Java";
+		String extension4UserDefPL="txt";
 		CLIProcMode mode = CLIProcMode.INITIAL;
 		String s;
 		for (int i=0; i<cliArgs.length; i++) {
@@ -194,6 +199,30 @@ class SimpleClient implements ACDGEventListener {
 				case "--use-smetana" :
 					fUseSmetana=true;
 					break;
+				
+				case "--user-def-pl-grammar" :
+					mode=CLIProcMode.SETUP_USER_PL_GRAMMAR;
+					break;
+				case "--user-def-pl-strategy" :
+					mode=CLIProcMode.SETUP_USER_PL_GRAMMAR;
+					break;
+				case "--user-def-pl-ext" :
+					mode=CLIProcMode.SETUP_USER_PL_EXT;
+					break;
+
+				case "--user-def-pl" :
+					AvailablePLs.addPL(
+						ProgramLanguage.USER_DEFINED
+							.ordinal(),
+						new CProgramLanguage(
+							"USER_DEFINED", true, path2Grammar, 
+							ProgramLanguage.USER_DEFINED,
+							AvailablePLs.getPLbyName(strategyPLName)
+							.getProcStrategy(),
+							extension4UserDefPL, 
+							new BypassCodePreprocStrategy()));
+					programLanguage=AvailablePLs.getPLbyName(
+						"USER_DEFINED");
 					
 				default : 
 					switch (mode) {
@@ -274,6 +303,28 @@ class SimpleClient implements ACDGEventListener {
 											+ " processing mode");
 									System.exit(1);
 							}
+						case SETUP_USER_PL_GRAMMAR :
+							path2Grammar=s;
+							break;
+						case SETUP_USER_PL_STRATEGY :
+							strategyPLName=s;
+							break;
+						case SETUP_USER_PL_EXT :
+							extension4UserDefPL=s;
+						break;
+						
+							
+						
+						// МЕНЯТЬ ЗДЕСЬ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+							//AvailablePLs.addPL(
+								//ProgramLanguage.USER_DEFINED
+									//.ordinal(),
+								//new CProgramLanguage(
+								//"USER_DEFINED", true, s, 
+								//ProgramLanguage.USER_DEFINED,
+								
+								
+								
 					}
 			}
 		}

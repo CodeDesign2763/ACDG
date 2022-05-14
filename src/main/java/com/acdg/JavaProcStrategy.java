@@ -38,7 +38,7 @@ class JavaProcStrategy implements IProcStrategy {
 	@Override
 	public ClassDescr readXMLFile(String path2File, 
 			ModelScannerIface model,
-			ModelRelationIface modelRelIFace,
+			ModelRelationIface modelRelIface,
 			ParamProcMode paramProcMode) throws Exception {
 		
 		NodeList nodeList;
@@ -91,7 +91,13 @@ class JavaProcStrategy implements IProcStrategy {
 				"Identifier").item(0).getTextContent().trim();
 		classID = reverseSubst(classID);
 		classID = classID.replaceAll("\\<.*\\>$","");
-			
+		
+		/* Защита от ситуации, когда реальное имя класса
+		 * отличается от имени файла вопреки конвенции. */
+		if (modelRelIface.getClassInd(classID)==-1) {
+			model.addClass(classID);
+		}
+		
 		classDescr= new ClassDescr(fClass, classID);
 			
 		/* [Отношения] Наследование / реализация */
@@ -134,17 +140,17 @@ class JavaProcStrategy implements IProcStrategy {
 					 * additional command line option
 					 */
 					 
-					//if (modelRelIFace.getClassInd(class2Name)==-1) {
+					//if (modelRelIface.getClassInd(class2Name)==-1) {
 						//model.addClass(class2Name);
 					//}
 					//model.addRelation(new Relation(classID, 
 							//class2Name,
-							//relCode, "", modelRelIFace));
+							//relCode, "", modelRelIface));
 					 
-					if (modelRelIFace.getClassInd(class2Name)!=-1) {
+					if (modelRelIface.getClassInd(class2Name)!=-1) {
 						model.addRelation(new Relation(classID, 
 							class2Name,
-							relCode, "", modelRelIFace));
+							relCode, "", modelRelIface));
 					}
 				}
 				
@@ -185,7 +191,7 @@ class JavaProcStrategy implements IProcStrategy {
 				
 				/* [Отношения] Ассоциация */
 				dataTypeRelProc(classID, elemDataType,
-						modelRelIFace, model, 
+						modelRelIface, model, 
 						RelationCode.ASSOCIATION, "");
 				
 				/* Изучаем модификаторы */
@@ -270,7 +276,7 @@ class JavaProcStrategy implements IProcStrategy {
 				
 				/* [Отношения] Зависимость "Создание" */
 				dataTypeRelProc(classID, elemDataType,
-						modelRelIFace, model, 
+						modelRelIface, model, 
 						RelationCode.DEPENDENCY, "Create");
 				
 				
@@ -355,7 +361,7 @@ class JavaProcStrategy implements IProcStrategy {
 						
 						/* [Отношения] Зависимость "derive" */
 						dataTypeRelProc(classID, paramDataType,
-						modelRelIFace, model, 
+						modelRelIface, model, 
 						RelationCode.DEPENDENCY, "Derive");
 					}
 				}

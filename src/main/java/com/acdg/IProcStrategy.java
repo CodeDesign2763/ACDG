@@ -39,10 +39,12 @@ interface IProcStrategy {
 	}
 	
 	/* Распознавание отношений из типов данных */
+	/* XXX */
 	default public void dataTypeRelProc(String cl1Name,
 			String dataType, ModelRelationIface modelRelIFace,
 			ModelScannerIface modelScanIFace,
 			RelationCode relCode, String stereotype) {
+		
 		String dataType1;
 		String dataType2;
 		if (dataType.indexOf("<")>-1) {
@@ -52,6 +54,7 @@ interface IProcStrategy {
 			dataType2 = 
 					dataType.substring(dataType.indexOf("<")
 					+ 1,dataType.indexOf(">")).trim();
+		
 			if (modelRelIFace.getClassInd(dataType1)>-1) {
 				modelScanIFace.addRelation(
 						new Relation(cl1Name, dataType1,

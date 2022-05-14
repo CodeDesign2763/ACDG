@@ -38,14 +38,36 @@ Select a parameter processing mode
 ONLY_DATATYPE, ONLY_ID, ALL
 (last parameter specified)
 
-	--use-smetana
+	--use-smetana :
 Use built-in Smetana engine instead of Graphviz.
+
+	--user-def-pl-grammar :
+Set BNF-grammar file for the user-defined programming 
+language mode.
+(last parameter specified)
+
+	--user-def-pl-strategy :
+Select a programming language whose XML-tree processing 
+strategy will be used for the user-defined programming 
+language mode.
+(last parameter specified)
+
+	--user-def-pl-ext :
+Set file extension for the user-defined programming 
+language mode.
+(last parameter specified)
+
+	--user-def-pl :
+Select the user-defined programming language mode. 
+Apply this option only after the previous "--user-def-pl"
+options!
 			
 The minimum requiered data:
 1. At least one source file.
 2. Program language.
 
 Examples:
+
 java -jar ACDG.jar -setppm ALL -exclude Test -setpl Java 
 -allfwcfromdir 
 "path 2 dir" 
@@ -67,5 +89,13 @@ Equals to following command:
 java -jar ACDG.jar -setppm ALL -exclude Test -setpl Java 
 -allfwcfromdir path 2 dir -setprojname  ClassDiagramOfItsOwnCode
 -addclasses ClassA
+
+	java -jar ACDG.jar -setppm ALL --user-def-pl-strategy Java 
+--user-def-pl-ext java --user-def-pl-grammar java.bnf 
+--user-def-pl -allfwcfromdir . -setprojname TestUserDefPL 
+-addclasses ClassB
+
+An example of using user-defined programming language mode.
+
 
 
