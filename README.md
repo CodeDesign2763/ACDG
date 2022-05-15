@@ -28,7 +28,7 @@ An additional programming language can be added without changing the ACDG code. 
 
 ![CLI example for special mode](./descr/SpecialModeTest.png)
 
-We use the [java.bnf](./src/java.bnf) grammar file, as well as one of the XML tree processing strategies available in the program (for the Java language). In the future, a more versatile strategy will probably be developed specifically for this mode.
+This example uses the [java.bnf](./src/java.bnf) grammar file as well as one of the XML tree processing strategies available in the program (for the Java language). In the future, perhaps a more versatile strategy will be developed specifically for this mode. 
 
 #### The resulting UML class diagram
 
@@ -89,6 +89,12 @@ This command generates a UML class diagram for its own code
 The **ACDG.jar** file is located in the **bin** directory. All output files will be placed in the **output** directory.
 
 ![Screenshot](./descr/result.png)
+
+### Quick compilation and creation of a jar file
+
+Quick code compilation and JAR file creation without installing dependencies for debugging purposes:
+
+	ant build_debug
 
 ### CLI reference
 
