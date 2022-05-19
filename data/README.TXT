@@ -30,7 +30,7 @@ paths separated by spaces)
 	-exclude : 
 Exclude any file that contains
 the given substring. The option is used together with
-the "allfwcfromdir" option. 
+the "allfwcfromdir" option. Must be located before it.
 (last parameter specified)
 			
 	-setppm : 
