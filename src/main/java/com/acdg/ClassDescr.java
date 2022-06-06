@@ -42,13 +42,14 @@ class ClassDescr {
 		classElementList.add(ce);
 	}
 	
-	public String conv2PlantUMLString() {
+	public String conv2PlantUMLString(boolean fSimpleClassDescr) {
 		String res="";
 		res = (fClass) ? "class" : "interface";
 		res=res + " " + id + " {\n";
-		for (ClassElement ce : classElementList) {
-			res = res + ce.genPlantUMLCode()+"\n";
-		}
+		if (!fSimpleClassDescr)
+			for (ClassElement ce : classElementList) {
+				res = res + ce.genPlantUMLCode()+"\n";
+			}
 		res=res+"} \n";
 		return res;
 		

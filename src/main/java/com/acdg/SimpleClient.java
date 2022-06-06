@@ -56,6 +56,7 @@ class SimpleClient implements ACDGEventListener {
 	private ParamProcMode paramProcMode;
 	
 	private boolean fUseSmetana;
+	private boolean fSimpleClassDescr=false;
 	
 	/* Running under Windows? */
 	private static boolean fWindows=System.getProperty("os.name")
@@ -69,6 +70,13 @@ class SimpleClient implements ACDGEventListener {
 				"-setprojname", "ClassDiagramOfItsOwnCode", 
 				//"-addclasses", "ClassA"
 				"--use-smetana"
+				};
+		final String[] selfTestSDCLIArgs = {"-setppm", "ONLY_DATATYPE", 
+				"-exclude", "Test", "-setpl", "Java", 
+				"-allfwcfromdir", "../src/main/java/com/acdg", 
+				"-setprojname", "ClassDiagramOfItsOwnCode", 
+				//"-addclasses", "ClassA"
+				"--use-smetana", "--simple-class-descr"
 				};
 			
 		// java -jar ACDG.jar -setppm ALL -exclude Test -setpl Java 
@@ -98,10 +106,18 @@ class SimpleClient implements ACDGEventListener {
 			out.println("Self-test mode");
 			out.println("CLI arguments have been replaced by:");
 			out.println("-setppm ALL -exclude Test -setpl Java"  
-					+ "-allfwcfromdir ../src/main/java/com/acdg"
-					+ "-setprojname ClassDiagramOfItsOwnCode" 
-					+ "--use-smetana");
-		} else 
+					+ " -allfwcfromdir ../src/main/java/com/acdg"
+					+ " -setprojname ClassDiagramOfItsOwnCode" 
+					+ " --use-smetana");
+		} else if (args[0].equals("-test-simple-class-descr")) {
+			cliArgs=selfTestSDCLIArgs;
+			out.println("Self-test mode");
+			out.println("CLI arguments have been replaced by:");
+			out.println("-setppm ALL -exclude Test -setpl Java"  
+					+ " -allfwcfromdir ../src/main/java/com/acdg"
+					+ " -setprojname ClassDiagramOfItsOwnCode" 
+					+ " --use-smetana" + " --simple-class-descr");
+		} else
 			cliArgs=args;
 		
 		/* Version information */
@@ -117,13 +133,14 @@ class SimpleClient implements ACDGEventListener {
 		excludePattern="";
 		paramProcMode=ParamProcMode.ALL;
 		fUseSmetana=false;
+		fSimpleClassDescr=false;
 		
 		cliArgsProc();
 		
 		checkDataFromCLIArgs();
 		
 		model = new Model(programLanguage, projectName, path2Java, 
-				paramProcMode, fUseSmetana);
+				paramProcMode, fUseSmetana, fSimpleClassDescr);
 		model.addACDGEventListener(this);
 		
 		for (String s : paths2FilesWithClasses) {
@@ -134,7 +151,7 @@ class SimpleClient implements ACDGEventListener {
 			model.addClass(s);
 		}
 		
-		model.genFinalPlantUMLFile();
+		model.genFinalPlantUMLFile(fSimpleClassDescr);
 		model.genClassDiagr();
 		
 		out.println("File with class diagram PlantUml code"
@@ -199,7 +216,7 @@ class SimpleClient implements ACDGEventListener {
 				case "--use-smetana" :
 					fUseSmetana=true;
 					break;
-				
+					
 				case "--user-def-pl-grammar" :
 					mode=CLIProcMode.SETUP_USER_PL_GRAMMAR;
 					break;
@@ -223,6 +240,10 @@ class SimpleClient implements ACDGEventListener {
 							new BypassCodePreprocStrategy()));
 					programLanguage=AvailablePLs.getPLbyName(
 						"USER_DEFINED");
+				
+				case "--simple-class-descr" : 
+						fSimpleClassDescr=true;
+					break;
 					
 				default : 
 					switch (mode) {

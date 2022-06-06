@@ -54,6 +54,9 @@ class Model implements ModelScannerIface, ModelRelationIface,
 	/* Use built-in Smetana engine instead of Graphviz */ 
 	private boolean fUseSmetana;
 	
+	/* Simple class description */
+	private boolean fSimpleClassDescr=false;
+	
 	/* Результат генерации диаграммы классов */
 	private boolean classDiagrGenResult;
 	
@@ -165,6 +168,23 @@ class Model implements ModelScannerIface, ModelRelationIface,
 		fUseSmetana=fSmetana;
 	}
 	
+	public Model(CProgramLanguage pl, String pName, String p2J,
+			ParamProcMode ppm, boolean fSmetana, 
+			boolean fSimpleClassDescr) {
+		cProgramLanguage=pl;
+		relations=new ArrayList<Relation>();
+		filesWithClasses=new ArrayList<FileWithClass>();
+		classes = new ArrayList<String>();
+		projectName=pName;
+		classDiagrGenResult=false;
+		path2Java=p2J;
+		eventListeners = new ArrayList<ACDGEventListener>();
+		paramProcMode=ppm;
+		fUseSmetana=fSmetana;
+		this.fSimpleClassDescr=fSimpleClassDescr;
+	}
+	
+	
 	/* Имеется ли такое отношение */
 	private boolean hasRelation(Relation r) {
 		return relations.contains(r);
@@ -241,7 +261,7 @@ class Model implements ModelScannerIface, ModelRelationIface,
 	}
 	
 	/* Сгенерировать итоговый PlantUML код */
-	public void genFinalPlantUMLFile() {
+	public void genFinalPlantUMLFile(boolean fSimpleClassDescr) {
 		try {
 			FileWriter writer = 
 					new 
@@ -252,7 +272,8 @@ class Model implements ModelScannerIface, ModelRelationIface,
 			/* Добавляем описание классов для всех файлов проекта */
 			for (FileWithClass fwc : filesWithClasses) {
 				fwc.genClassDescr();
-				writer.write(fwc.conv2PlantUMLString());
+				writer.write(fwc.conv2PlantUMLString(
+						fSimpleClassDescr));
 			}
 			
 			/* Добавляем описание отношений */

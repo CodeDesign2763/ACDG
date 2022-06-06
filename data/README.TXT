@@ -61,6 +61,9 @@ language mode.
 Select the user-defined programming language mode. 
 Apply this option only after the previous "--user-def-pl"
 options!
+
+	--simple-class-descr :
+Simplified class description mode. Only the class name is displayed.
 			
 The minimum requiered data:
 1. At least one source file.
@@ -94,8 +97,11 @@ java -jar ACDG.jar -setppm ALL -exclude Test -setpl Java
 --user-def-pl-ext java --user-def-pl-grammar java.bnf 
 --user-def-pl -allfwcfromdir . -setprojname TestUserDefPL 
 -addclasses ClassB
-
 An example of using user-defined programming language mode.
+
+	java -jar ACDG.jar -test-simple-class-descr
+the same as the -test option, but the simplified class 
+description mode is used
 
 
 

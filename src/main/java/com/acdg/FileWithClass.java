@@ -682,8 +682,9 @@ class FileWithClass implements ACDGEventSource, ACDGEventListener {
 	}
 	
 	/* Получение PlantUML кода для файла с классом */
-	public String conv2PlantUMLString() {
-		return classDescription.conv2PlantUMLString();
+	public String conv2PlantUMLString(boolean fSimpleClassDescr) {
+		return classDescription.conv2PlantUMLString(
+				fSimpleClassDescr);
 	}
 	
 	/* Для отладки - вывод списка методов на экран */
