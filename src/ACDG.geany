@@ -28,20 +28,23 @@ long_line_behaviour=1
 long_line_column=70
 
 [files]
-current_page=12
+current_page=15
 FILE_NAME_0=1430;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Ftest%2Fjava%2Fcom%2Facdg%2FTestsForFileWithClass.java;0;4
 FILE_NAME_1=258;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2FACDG.geany;0;4
 FILE_NAME_2=0;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Ftest%2Fjava%2Fcom%2Ffunctionsforjunit%2FFunctionsForTesting.java;0;4
 FILE_NAME_3=1040;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Ftest%2Fjava%2Fcom%2Facdg%2FTestsForModel.java;0;4
-FILE_NAME_4=1262;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FModel.java;0;4
-FILE_NAME_5=3108;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FTestClass.java;0;4
-FILE_NAME_6=1275;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FICodePreprocStrategy.java;0;4
-FILE_NAME_7=691;XML;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fbuild.xml;0;4
-FILE_NAME_8=1183;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FJavaProcStrategy.java;0;4
-FILE_NAME_9=0;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FClassDescr.java;0;4
-FILE_NAME_10=6733;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FSimpleClient.java;0;4
-FILE_NAME_11=2647;PlantUML;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2Fdescr%2FStrategy.plantuml;0;4
-FILE_NAME_12=0;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fsourcefilepaths.txt;0;4
+FILE_NAME_4=7938;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FModel.java;0;4
+FILE_NAME_5=1746;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FTestClass.java;0;4
+FILE_NAME_6=21210;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FFileWithClass.java;0;4
+FILE_NAME_7=1275;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FICodePreprocStrategy.java;0;4
+FILE_NAME_8=691;XML;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fbuild.xml;0;4
+FILE_NAME_9=1183;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FJavaProcStrategy.java;0;4
+FILE_NAME_10=1491;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FClassDescr.java;0;4
+FILE_NAME_11=6502;Java;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fmain%2Fjava%2Fcom%2Facdg%2FSimpleClient.java;0;4
+FILE_NAME_12=2647;PlantUML;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2Fdescr%2FStrategy.plantuml;0;4
+FILE_NAME_13=0;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fsrc%2Fsourcefilepaths.txt;0;4
+FILE_NAME_14=1576;None;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВвРПО%2FКонтрольная%20работа%2Fdata%2FREADME.TXT;0;4
+FILE_NAME_15=48;PlantUML;0;EUTF-8;1;1;0;%2Fhome%2Fuser1%2FРабочий%20стол%2FVSTU%2FВКР%2FПояснительная%20записка%2FPictures%2FPackage.plantuml;0;4
 
 [build-menu]
 EX_00_LB=_Выполнить
